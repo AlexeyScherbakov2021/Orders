@@ -6,10 +6,10 @@ namespace Orders.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class RouteStatu : IEntity
+    public partial class RouteStatus : IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RouteStatu()
+        public RouteStatus()
         {
             Orders = new HashSet<Order>();
         }

@@ -33,7 +33,7 @@ namespace Orders.Models
 
         public DateTime? o_date_created { get; set; }
 
-        public virtual RouteStatu RouteStatu { get; set; }
+        public virtual RouteStatus RouteStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteOrder> RouteOrders { get; set; }

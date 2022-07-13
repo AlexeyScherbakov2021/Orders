@@ -16,7 +16,7 @@ namespace Orders.Models
         public virtual DbSet<RouteAdding> RouteAddings { get; set; }
         public virtual DbSet<RouteOrder> RouteOrders { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
-        public virtual DbSet<RouteStatu> RouteStatus { get; set; }
+        public virtual DbSet<RouteStatus> RouteStatus { get; set; }
         public virtual DbSet<RouteStep> RouteSteps { get; set; }
         public virtual DbSet<RouteType> RouteTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -62,13 +62,13 @@ namespace Orders.Models
                 .WithRequired(e => e.Route)
                 .HasForeignKey(e => e.r_routeId);
 
-            modelBuilder.Entity<RouteStatu>()
+            modelBuilder.Entity<RouteStatus>()
                 .Property(e => e.sr_name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<RouteStatu>()
+            modelBuilder.Entity<RouteStatus>()
                 .HasMany(e => e.Orders)
-                .WithOptional(e => e.RouteStatu)
+                .WithOptional(e => e.RouteStatus)
                 .HasForeignKey(e => e.o_statusId);
 
             modelBuilder.Entity<RouteStep>()
