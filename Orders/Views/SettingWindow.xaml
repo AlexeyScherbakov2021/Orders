@@ -13,7 +13,7 @@
                 <local:UsersControl/>
             </TabItem>
             <TabItem Header="Маршруты">
-
+                <local:RouteControl/>
             </TabItem>
         </TabControl>
     </Grid>
