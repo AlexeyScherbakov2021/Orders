@@ -12,13 +12,13 @@ namespace Orders.ViewModels
     internal class CreateOrderWindowViewModel : ViewModel
     {
         public Order order { get; set; }
-        private readonly IRepository<Route> repoRoute = new RepositoryMain<Route>();
+        private readonly RepositoryBase repoRoute = new RepositoryBase();
         public IEnumerable<Route> ListRoute { get; set; }
 
 
         public CreateOrderWindowViewModel()
         {
-            ListRoute = repoRoute.Items;
+            ListRoute = repoRoute.Routes;
         }
     }
 }

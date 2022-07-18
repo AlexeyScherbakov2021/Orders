@@ -11,10 +11,10 @@ namespace Orders.Repository
     {
         IQueryable<T> Items { get; }
         T Get(int id);
-        T Add(T item, bool Autosave = false);
-        void Delete(int id, bool Autosave = false);
-        void Delete(T item, bool Autosave = false);
-        void Update(T item, bool Autosave = false);
+        bool Add(T item, bool Autosave = false);
+        bool Delete(int id, bool Autosave = false);
+        bool Delete(T item, bool Autosave = false);
+        bool Update(T item, bool Autosave = false);
         void Save();
 
     }

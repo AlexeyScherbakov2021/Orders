@@ -15,7 +15,7 @@ namespace Orders.ViewModels
 {
     internal class LoginWindowViewModel : ViewModel
     {
-        private readonly IRepository<User> repo;
+        private readonly RepositoryBase repo;
         private readonly LoginWindow winLogin;
 
 
@@ -68,8 +68,8 @@ namespace Orders.ViewModels
             winLogin = App.Current.Windows.OfType<LoginWindow>().First();
             //winLogin.Closing += Win_Closing;
 
-            repo = new RepositoryMain<User>();
-            ListUser = repo.Items.ToArray();
+            repo = new RepositoryBase();
+            ListUser = repo.Users.ToArray();
         }
     }
 

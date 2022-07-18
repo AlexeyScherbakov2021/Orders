@@ -2,6 +2,7 @@ namespace Orders.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
@@ -11,18 +12,19 @@ namespace Orders.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Route()
         {
-            RouteSteps = new HashSet<RouteStep>();
+           //RouteSteps = new HashSet<RouteStep>();
+            RouteSteps = new ObservableCollection<RouteStep>();
         }
 
         [Key]
         [Column("idRoute")]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int id { get; set; }
 
         [StringLength(180)]
         public string r_name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteStep> RouteSteps { get; set; }
+        public virtual ObservableCollection<RouteStep> RouteSteps { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Orders.ViewModels
 {
     internal class UsersControlViewModel : ViewModel
     {
-        IRepository<User> repoUser;
+        RepositoryBase repo;
 
         private ObservableCollection<User> _ListUser;
         public ObservableCollection<User> ListUser
@@ -38,7 +38,7 @@ namespace Orders.ViewModels
         private void ListUserView_CurrentChanged(object sender, EventArgs e)
         {
             //IsOpenPopup = false;
-            repoUser.Save();
+            repo.Save();
         }
 
         CollectionViewSource _listUserViewSource;
@@ -57,7 +57,7 @@ namespace Orders.ViewModels
             User newUser = new User { u_login = "Пользователь", u_role = 0 };
             ListUser.Add(newUser);
             ListUserView.MoveCurrentToLast();
-            repoUser.Add(newUser, true);
+            repo.Add(newUser, true);
         }
         //--------------------------------------------------------------------------------
         // Команда Удалить
@@ -68,7 +68,7 @@ namespace Orders.ViewModels
         {
             if (MessageBox.Show($"Удалить {SelectedUser.u_login}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                repoUser.Delete(SelectedUser.id, true);
+                repo.Delete(SelectedUser, true);
                 ListUser.Remove(SelectedUser);
             }
         }
@@ -91,8 +91,8 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         public UsersControlViewModel()
         {
-            repoUser = new RepositoryMain<User>();
-            ListUser = new ObservableCollection<User>(repoUser.Items);
+            repo = new RepositoryBase();
+            ListUser = new ObservableCollection<User>(repo.Users);
         }
 
     }

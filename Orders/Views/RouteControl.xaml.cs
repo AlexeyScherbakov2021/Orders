@@ -24,5 +24,6 @@ namespace Orders.Views
         {
             InitializeComponent();
         }
+
     }
 }

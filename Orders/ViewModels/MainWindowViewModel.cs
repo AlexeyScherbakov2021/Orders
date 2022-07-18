@@ -15,20 +15,20 @@ namespace Orders.ViewModels
 {
     internal class MainWindowViewModel
     {
-        private readonly IRepository<Order> repoOrder;
-        private readonly IRepository<RouteOrder> repoRouteOrder;
+        private readonly RepositoryBase repo;
+        //private readonly IRepository<RouteOrder> repoRouteOrder;
         public ObservableCollection<Order> ListOrders { get; set; }
 
         public MainWindowViewModel()
         {
             App.CurrentUser = new User { id = 1, u_name = "Admin" };
 
-            repoRouteOrder = new RepositoryMain<RouteOrder>();
-            List<RouteOrder> ListRO =  repoRouteOrder.Items
+            //repoRouteOrder = new RepositoryMain<RouteOrder>();
+            List<RouteOrder> ListRO =  repo.RouteOrders
                 .Where(it => it.User.id == App.CurrentUser.id).ToList();
 
-            repoOrder = new RepositoryMain<Order>();
-            ListOrders = new ObservableCollection<Order>(repoOrder.Items);
+            //repo = new RepositoryMain<Order>();
+            ListOrders = new ObservableCollection<Order>(repo.Orders);
 
             //var value = repoOrder.Items
             //    .Select(it => new Order

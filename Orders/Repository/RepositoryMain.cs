@@ -10,47 +10,60 @@ namespace Orders.Repository
 {
     internal class RepositoryMain<T> : IRepository<T> where T : class, IEntity, new()
     {
-        protected readonly  ModelOrder db;
+        public static readonly  ModelOrder db = new ModelOrder();
         protected readonly DbSet<T> _Set;
         public virtual IQueryable<T> Items => _Set;
 
-
         public RepositoryMain()
         {
-            db = new ModelOrder();
             _Set = db.Set<T>();
-
         }
 
-        public T Add(T item, bool Autosave = false)
+        public bool Add(T item, bool Autosave = false)
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
-            db.Entry(item).State = EntityState.Added;
-            if (Autosave)
-                db.SaveChanges();
-            return item;
+
+            try
+            {
+                db.Entry(item).State = EntityState.Added;
+                if (Autosave)
+                    db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public void Delete(int id, bool Autosave = false)
+        public bool Delete(int id, bool Autosave = false)
         {
             if (id < 1)
-                return;
+                return false;
 
-            var item = _Set.Local.FirstOrDefault(i => i.id == id) ?? new T { id = id };
-            Delete(item, Autosave);
+            var item = db.Set<T>().FirstOrDefault(i => i.id == id) ?? new T { id = id };
+            return Delete(item, Autosave);
         }
 
-        public void Delete(T item, bool Autosave = false)
+        public bool Delete(T item, bool Autosave = false)
         {
 
             if (item is null || item.id <= 0)
-                return;
+                return false;
 
-            db.Entry(item).State = EntityState.Deleted;
-            if (Autosave)
-                db.SaveChanges();
+            try
+            {
+                //db.Entry(item).State = EntityState.Deleted;
+                db.Set<T>().Remove(item);
+                if (Autosave)
+                    db.SaveChanges();
 
-
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public T Get(int id)
@@ -60,16 +73,28 @@ namespace Orders.Repository
 
         public void Save()
         {
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch { }
         }
 
-        public void Update(T item, bool Autosave = false)
+        public bool Update(T item, bool Autosave = false)
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
-            db.Entry(item).State = EntityState.Modified;
-            if (Autosave)
-                db.SaveChanges();
 
+            try
+            {
+                db.Entry(item).State = EntityState.Modified;
+                if (Autosave)
+                    db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

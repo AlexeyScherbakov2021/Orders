@@ -4,31 +4,82 @@ using Orders.Repository;
 using Orders.ViewModels.Base;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Orders.ViewModels
 {
     internal class RouteControlViewModel : ViewModel
     {
-        IRepository<Route> repoRoute = new RepositoryMain<Route>();
-        IRepository<User> repoUser = new RepositoryMain<User>();
-        IRepository<RouteType> repoRouteType = new RepositoryMain<RouteType>();
+        //IRepository<Route> repoRoute = new RepositoryMain<Route>();
+        //IRepository<User> repoUser = new RepositoryMain<User>();
+        //IRepository<RouteType> repoRouteType = new RepositoryMain<RouteType>();
+        //IRepository<RouteStep> repoRouteStep = new RepositoryMain<RouteStep>();
 
-        public IEnumerable<User> ListUser { get; set; }
-        public IEnumerable<RouteType> ListRouteType { get; set; }
-        public List<Route> ListRoute { get; set; }
-        public Route SelectedRoute { get; set; }
+        RepositoryBase repo = new RepositoryBase();
+
+        public List<User> ListUser { get; set; }
+        public ObservableCollection<RouteType> ListRouteType { get; set; }
+
+        private ObservableCollection<Route> _ListRoute;
+        public ObservableCollection<Route> ListRoute
+        {
+            get => _ListRoute;
+            set
+            {
+                if (Set(ref _ListRoute, value))
+                {
+                    _listRouteViewSource = new CollectionViewSource();
+                    _listRouteViewSource.Source = value;
+                    _listRouteViewSource.View.Refresh();
+                    ListRouteView.CurrentChanged += ListRouteView_CurrentChanged;
+                }
+            }
+        }
+
+        CollectionViewSource _listRouteViewSource;
+        public ICollectionView ListRouteView => _listRouteViewSource?.View;
+
+
+        public CollectionViewSource _ListRouteStepView { get; set; } = new CollectionViewSource();
+
+        private Route _SelectedRoute;
+        public Route SelectedRoute 
+        { 
+            get => _SelectedRoute; 
+            set 
+            { 
+                if(Set(ref _SelectedRoute, value))
+                {
+                    _ListRouteStepView.Source = value.RouteSteps;
+                    _ListRouteStepView.View.SortDescriptions.Add(new SortDescription { PropertyName = "r_step", Direction = ListSortDirection.Ascending });
+                }
+            } 
+        }
+
+        public RouteStep SelectedStep { get; set; }
+        public User SelectAddUser { get; set; }
+
+
+
+        private void ListRouteView_CurrentChanged(object sender, EventArgs e)
+        {
+            repo.Save();
+        }
 
 
         public RouteControlViewModel()
         {
-            ListUser = repoUser.Items;
-            ListRouteType = repoRouteType.Items;
+            ListUser = repo.Users.Where(it => it.u_role < 1).ToList();
+            ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes);
+            ListRoute = new ObservableCollection<Route>(repo.Routes);
 
-            ListRoute = repoRoute.Items.ToList();
         }
 
 
@@ -42,7 +93,12 @@ namespace Orders.ViewModels
         private bool CanAddCommand(object p) => true;
         private void OnAddCommandExecuted(object p)
         {
-
+            Route route = new Route { r_name = "Новый маршрут" };
+            if (repo.Add(route))
+            {
+                ListRoute.Add(route);
+                ListRouteView.MoveCurrentToLast();
+            }
         }
 
         //--------------------------------------------------------------------------------
@@ -50,9 +106,17 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteCommand = null;
         public ICommand DeleteCommand => _DeleteCommand ?? new LambdaCommand(OnDeleteCommandExecuted, CanDeleteCommand);
-        private bool CanDeleteCommand(object p) => true;
+        private bool CanDeleteCommand(object p) => SelectedRoute != null;
         private void OnDeleteCommandExecuted(object p)
         {
+            //repo.Delete(SelectedRoute, true);
+
+            if (repo.Delete(SelectedRoute, true))
+            {
+                //SelectedRoute.RouteSteps.Clear();
+                ListRoute.Remove(SelectedRoute);
+            }
+            //repoRoute.Save();
 
         }
 
@@ -61,9 +125,23 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddStepCommand = null;
         public ICommand AddStepCommand => _AddStepCommand ?? new LambdaCommand(OnAddStepCommandExecuted, CanAddStepCommand);
-        private bool CanAddStepCommand(object p) => true;
+        private bool CanAddStepCommand(object p) => SelectedRoute != null;
         private void OnAddStepCommandExecuted(object p)
         {
+            int LastStep = SelectedRoute.RouteSteps.Count > 0 
+                ? SelectedRoute.RouteSteps.Max(it => it.r_step).Value + 1
+                : 1;
+
+            RouteStep step = new RouteStep
+            {
+                r_step = LastStep,
+                r_disabled = false,
+                r_userId = SelectAddUser.id,
+                r_type = ListRouteType.Single(it => it.IsCheck == true).id
+            };
+
+            SelectedRoute.RouteSteps.Add(step);
+            repo.Save();
 
         }
 
@@ -72,10 +150,12 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteStepCommand = null;
         public ICommand DeleteStepCommand => _DeleteStepCommand ?? new LambdaCommand(OnDeleteStepCommandExecuted, CanDeleteStepCommand);
-        private bool CanDeleteStepCommand(object p) => true;
+        private bool CanDeleteStepCommand(object p) => SelectedStep != null;
         private void OnDeleteStepCommandExecuted(object p)
         {
-
+            repo.DeleteRouteStep(SelectedStep);
+            Renumerate();
+            repo.Save();
         }
 
         //--------------------------------------------------------------------------------
@@ -83,10 +163,20 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _StepUpCommand = null;
         public ICommand StepUpCommand => _StepUpCommand ?? new LambdaCommand(OnStepUpCommandExecuted, CanStepUpCommand);
-        private bool CanStepUpCommand(object p) => true;
+        private bool CanStepUpCommand(object p) => SelectedStep?.r_step > 1;
         private void OnStepUpCommandExecuted(object p)
         {
+            RouteStep step = SelectedRoute.RouteSteps.FirstOrDefault(it => it.r_step == SelectedStep.r_step - 1);
+            int index = SelectedRoute.RouteSteps.IndexOf(step) + 1;
+            step.r_step++;
+            SelectedStep.r_step--;
 
+            SelectedRoute.RouteSteps.Remove(step);
+            SelectedRoute.RouteSteps.Insert(index, step);
+
+            step.OnPropertyChanged(nameof(step.r_step));
+            SelectedStep.OnPropertyChanged(nameof(SelectedStep.r_step));
+            repo.Save();
         }
 
         //--------------------------------------------------------------------------------
@@ -94,15 +184,37 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _StepDownCommand = null;
         public ICommand StepDownCommand => _StepDownCommand ?? new LambdaCommand(OnStepDownCommandExecuted, CanStepDownCommand);
-        private bool CanStepDownCommand(object p) => true;
+        private bool CanStepDownCommand(object p) => SelectedStep?.r_step < SelectedRoute?.RouteSteps?.Count;
         private void OnStepDownCommandExecuted(object p)
         {
+            RouteStep step = SelectedRoute.RouteSteps.FirstOrDefault(it => it.r_step == SelectedStep.r_step + 1);
+            int index = SelectedRoute.RouteSteps.IndexOf(step) - 1;
+            step.r_step--;
+            SelectedStep.r_step++;
 
+            SelectedRoute.RouteSteps.Remove(step);
+            SelectedRoute.RouteSteps.Insert(index, step);
+
+            step.OnPropertyChanged(nameof(step.r_step));
+            SelectedStep.OnPropertyChanged(nameof(SelectedStep.r_step));
+            repo.Save();
         }
 
-
-
         #endregion
+
+
+        //--------------------------------------------------------------------------------
+        // Перенумерация этапов
+        //--------------------------------------------------------------------------------
+        private void Renumerate()
+        {
+            int i = 1;
+            foreach (var item in SelectedRoute.RouteSteps)
+            {
+                item.r_step = i++;
+                item.OnPropertyChanged(nameof(item.r_step));
+            }
+        }
 
 
 

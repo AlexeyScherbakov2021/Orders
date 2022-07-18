@@ -75,11 +75,6 @@ namespace Orders.Models
                 .Property(e => e.r_email)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<RouteStep>()
-                .HasMany(e => e.RouteOrders)
-                .WithRequired(e => e.RouteStep)
-                .HasForeignKey(e => e.ro_RouteId)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RouteType>()
                 .Property(e => e.rt_name)
