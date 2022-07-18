@@ -6,28 +6,46 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Создание заказа" Height="359" Width="567" WindowStartupLocation="CenterScreen">
+        Title="Создание заказа" Height="448" Width="676" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:CreateOrderWindowViewModel/>
     </Window.DataContext>
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="26,24,0,0" Text="Номер" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="23,51,0,0" Text="Наименование" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="113,22,0,0" VerticalAlignment="Top" Width="218"/>
-        <TextBox HorizontalAlignment="Left" Margin="113,50,0,0" VerticalAlignment="Top" Width="218"/>
+        <TextBox Text="{Binding Order.o_number}" HorizontalAlignment="Left" Margin="113,22,0,0" VerticalAlignment="Top" Width="218"/>
+        <TextBox Text="{Binding Order.o_name}" HorizontalAlignment="Left" Margin="113,50,0,0" VerticalAlignment="Top" Width="218"/>
         <TextBlock Text="Текстовое дополнение" Margin="26,82,398,248" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <TextBox HorizontalAlignment="Left" Margin="26,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" Height="92" AcceptsReturn="True"/>
+        <TextBox Text="{Binding Order.o_body}"  HorizontalAlignment="Left" Margin="26,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Height="68" AcceptsReturn="True"/>
         <TextBlock HorizontalAlignment="Left" Margin="26,218,0,0" Text="Маршрут" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" Margin="89,215,0,0" VerticalAlignment="Top" Width="242"/>
-        <DockPanel HorizontalAlignment="Left" Height="213" Margin="374,24,0,0" VerticalAlignment="Top" Width="171">
+        <ComboBox HorizontalAlignment="Left" DisplayMemberPath="r_name" SelectedItem="{Binding SelectedRoute}" SelectedIndex="0"  ItemsSource="{Binding ListRoute}" Margin="89,215,0,0" VerticalAlignment="Top" Width="242"/>
+        <ListBox ItemsSource="{Binding ListRouteStep}" Margin="23,258,345,10" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox IsChecked="{Binding r_disabled}" />
+                        <TextBlock Text="{Binding r_step}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding User.u_name}" Grid.Column="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel HorizontalAlignment="Left" Height="213" Margin="461,27,0,0" VerticalAlignment="Top" Width="171">
             <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <UniformGrid Columns="2" DockPanel.Dock="Bottom">
-                <Button Content="+"/>
-                <Button Content="-"/>
+                <Button Content="+" Command="{Binding AddFileCommand}"/>
+                <Button Content="-" Command="{Binding RemoveFileCommand}"/>
             </UniformGrid>
-            <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" AllowDrop="True"/>
+            <ListBox ItemsSource="{Binding Order.RouteOrders[0].RouteAddings}" AllowDrop="True"/>
 
         </DockPanel>
+        <Button Content="Создать" Command="{Binding CreateCommand}" HorizontalAlignment="Left" Margin="514,265,0,0" VerticalAlignment="Top" Width="102"/>
+        <Button Content="Отменить" Command="{Binding CancelCommand}" HorizontalAlignment="Left" Margin="514,299,0,0" VerticalAlignment="Top" Width="110"/>
 
     </Grid>
 </Window>

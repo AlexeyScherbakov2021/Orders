@@ -22,13 +22,13 @@ namespace Orders.Models
         [ForeignKey("Route")]
         public int r_routeId { get; set; }
 
-        public int? r_step { get; set; }
+        public int r_step { get; set; }
 
-        public int? r_userId { get; set; }
+        public int r_userId { get; set; }
 
-        public int? r_type { get; set; }
+        public int r_type { get; set; }
 
-        public bool? r_disabled { get; set; }
+        public bool r_disabled { get; set; }
 
         [StringLength(100)]
         public string r_email { get; set; }

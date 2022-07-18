@@ -40,7 +40,7 @@ namespace Orders.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteAdding> RouteAddings { get; set; }
 
-        public virtual RouteStep RouteStep { get; set; }
+        //public virtual Route RouteStep { get; set; }
 
         public virtual RouteType RouteType { get; set; }
 

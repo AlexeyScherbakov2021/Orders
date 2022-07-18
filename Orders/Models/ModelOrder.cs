@@ -69,7 +69,8 @@ namespace Orders.Models
             modelBuilder.Entity<RouteStatus>()
                 .HasMany(e => e.Orders)
                 .WithOptional(e => e.RouteStatus)
-                .HasForeignKey(e => e.o_statusId);
+                .HasForeignKey(e => e.o_statusId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RouteStep>()
                 .Property(e => e.r_email)

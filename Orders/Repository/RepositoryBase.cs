@@ -40,7 +40,8 @@ namespace Orders.Repository
 
             try
             {
-                db.Entry(item).State = EntityState.Added;
+                //db.Entry(item).State = EntityState.Added;
+                db.Set<T>().Add(item);
                 if (Autosave)
                     db.SaveChanges();
                 return true;

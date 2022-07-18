@@ -129,7 +129,7 @@ namespace Orders.ViewModels
         private void OnAddStepCommandExecuted(object p)
         {
             int LastStep = SelectedRoute.RouteSteps.Count > 0 
-                ? SelectedRoute.RouteSteps.Max(it => it.r_step).Value + 1
+                ? SelectedRoute.RouteSteps.Max(it => it.r_step) + 1
                 : 1;
 
             RouteStep step = new RouteStep

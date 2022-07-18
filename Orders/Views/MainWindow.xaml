@@ -23,6 +23,20 @@
             <Button Content="Создать" Command="{Binding CreateCommand}"/>
         </ToolBarPanel>
         <ListBox Grid.Row="1" ItemsSource="{Binding ListOrders}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding o_number}" />
+                        <TextBlock Text="{Binding o_name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding o_date_created}" Grid.Column="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
     </Grid>
 </Window>

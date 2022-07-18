@@ -29,9 +29,9 @@ namespace Orders.Models
 
         public string o_body { get; set; }
 
-        public int? o_stepRoute { get; set; }
+        public int o_stepRoute { get; set; }
 
-        public DateTime? o_date_created { get; set; }
+        public DateTime o_date_created { get; set; }
 
         public virtual RouteStatus RouteStatus { get; set; }
 

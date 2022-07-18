@@ -21,11 +21,11 @@ namespace Orders.ViewModels
 
         public MainWindowViewModel()
         {
-            App.CurrentUser = new User { id = 1, u_name = "Admin" };
+            App.CurrentUser = new User { id = 3, u_name = "Ivanov" };
 
-            //repoRouteOrder = new RepositoryMain<RouteOrder>();
-            List<RouteOrder> ListRO =  repo.RouteOrders
-                .Where(it => it.User.id == App.CurrentUser.id).ToList();
+            repo = new RepositoryBase();
+            //List<RouteOrder> ListRO = repo.RouteOrders
+            //    .Where(it => it.ro_userId == App.CurrentUser.id).ToList();
 
             //repo = new RepositoryMain<Order>();
             ListOrders = new ObservableCollection<Order>(repo.Orders);
