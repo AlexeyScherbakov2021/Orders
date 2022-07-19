@@ -23,35 +23,55 @@
         <TextBlock HorizontalAlignment="Left" Margin="206,98,0,0" Text="{Binding order.o_body}" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="206,118,0,0" Text="{Binding order.o_date_created}" VerticalAlignment="Top"/>
 
-        <TextBox Text="Добавить сопроводительный текст" Margin="56,158,454,341" />
-        <TextBlock HorizontalAlignment="Left" Margin="56,260,0,0" TextWrapping="Wrap" Text="Прикрепить файлы" VerticalAlignment="Top"/>
-        <ItemsControl HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding CurrentStep.RouteAddings}" Width="290" Height="190" Margin="56,284,0,0" BorderBrush="Black" BorderThickness="1,1,1,1">
+        <TextBox Text="{Binding order.o_body}" Margin="56,162,454,0" IsReadOnly="True" VerticalAlignment="Top" Height="76" />
+        <TextBlock HorizontalAlignment="Left" Margin="56,269,0,0" Text="Добавить сообщение" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding CurrentStep.ro_text}" Margin="56,292,454,0" VerticalAlignment="Top" Height="74" />
+        <TextBlock HorizontalAlignment="Left" Margin="56,382,0,0" Text="Прикрепить файлы" VerticalAlignment="Top"/>
+        <Button Content="..." Command="{Binding BrowseCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="166,381,0,0" Width="35"/>
+        <ItemsControl HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding CurrentStep.RouteAddings}" Width="290" Height="98" Margin="56,403,0,0" BorderBrush="Black" BorderThickness="1,1,1,1">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding ad_text}"/>
+                    <DockPanel>
+                        <Button Content="X" Width="20" DockPanel.Dock="Right"/>
+                        <TextBlock Text="{Binding ad_text}"/>
+                    </DockPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <TextBlock HorizontalAlignment="Left" Margin="517,45,0,0" Text="Маршрут заказа" VerticalAlignment="Top"/>
 
         <ItemsControl HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding order.RouteOrders}" 
-                      Width="325" Height="396" Margin="449,78,0,0" BorderBrush="Black" BorderThickness="1,1,1,1">
+                      Width="325" Height="423" Margin="449,78,0,0" BorderBrush="Black" BorderThickness="1,1,1,1">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid >
+                    <Grid Margin="5,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="130"/>
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="30"/>
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <TextBlock Text="{Binding ro_step}" Grid.Column="0"/>
                         <TextBlock Text="{Binding User.u_name}" Grid.Column="1"/>
                         <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2"/>
                         <CheckBox IsChecked="{Binding ro_check}" Grid.Column="3"/>
+
+                        <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap" Grid.Row="1" Grid.ColumnSpan="3"/>
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+
+                        </StackPanel>
+
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <Button Content="Отправить" Command="{Binding SendCommand}" HorizontalAlignment="Left" Margin="85,517,0,0" VerticalAlignment="Top"/>
+        <Button Content="Отказать" Command="{Binding}" HorizontalAlignment="Left" Margin="185,517,0,0" VerticalAlignment="Top"/>
+        <Button Content="Закрыть" Command="{Binding}" HorizontalAlignment="Left" Margin="285,517,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

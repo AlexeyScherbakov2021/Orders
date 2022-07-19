@@ -26,21 +26,23 @@ namespace Orders.ViewModels
 
         public User CurrentUser  => App.CurrentUser;
 
+        public bool CheckCreated { get; set; }
+        public bool CheckCoordinated { get; set; }
+        public bool CheckClosed { get; set; }
+        public bool CheckAll { get; set; }
+
 
         public MainWindowViewModel()
         {
             App.CurrentUser = new User { id = 3, u_name = "Иванов" };
-
-
             repo = new RepositoryBase();
-
-
 
             //ListOrders = new ObservableCollection<Order>(repo.Orders
             //    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any() )
             //    );
-
-
+            
+            CheckCreated = true;
+            OnFilterCommandExecuted("1");
         }
 
         #region Команды
@@ -113,7 +115,25 @@ namespace Orders.ViewModels
             (orderWindow.DataContext as OrderWindowViewModel).order = SelectedOrder;
             if (orderWindow.ShowDialog() == true)
             {
+                repo.Save();
+            }
+        }
 
+        //--------------------------------------------------------------------------------
+        // Команда Создать
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _CreateCommand = null;
+        public ICommand CreateCommand => _CreateCommand ?? new LambdaCommand(OnCreateCommandExecuted, CanCreateCommand);
+        private bool CanCreateCommand(object p) => true;
+        private void OnCreateCommandExecuted(object p)
+        {
+            CreateOrderWindow orderWindow = new CreateOrderWindow();
+            if (orderWindow.ShowDialog() == true)
+            {
+                Order order = (orderWindow.DataContext as CreateOrderWindowViewModel).Order;
+
+                ListOrders.Add(order);
+                //repo.Save();
             }
         }
 

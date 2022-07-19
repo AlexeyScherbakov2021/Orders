@@ -15,7 +15,7 @@ namespace Orders.ViewModels
 {
     internal class CreateOrderWindowViewModel : ViewModel
     {
-        public Order order { get; set; }
+        //public Order order { get; set; }
         private readonly RepositoryBase repo = new RepositoryBase();
         public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
@@ -55,6 +55,7 @@ namespace Orders.ViewModels
                 //User = App.CurrentUser,
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
+                ro_check = 1
             };
             Order.RouteOrders.Add(ro);
         }
@@ -69,12 +70,14 @@ namespace Orders.ViewModels
         private bool CanCreateCommand(object p) => true;
         private void OnCreateCommandExecuted(object p)
         {
-            foreach(var step in ListRouteStep)
+            int curStep = 1;
+
+            foreach (var step in ListRouteStep)
             {
                 if (step.r_disabled == false)
                 {
                     RouteOrder ro = new RouteOrder();
-                    ro.ro_step = step.r_step;
+                    ro.ro_step = curStep++;
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
                     ro.ro_disabled = false;
@@ -86,6 +89,7 @@ namespace Orders.ViewModels
             repo.Add<Order>(Order, true);
 
             App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().DialogResult = true;
+
         }
 
         //--------------------------------------------------------------------------------

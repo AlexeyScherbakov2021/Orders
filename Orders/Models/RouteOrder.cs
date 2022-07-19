@@ -1,5 +1,6 @@
 namespace Orders.Models
 {
+    using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ namespace Orders.Models
     using System.Data.Entity.Spatial;
 
     [Table("RouteOrder")]
-    public partial class RouteOrder : IEntity
+    public partial class RouteOrder : Observable, IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RouteOrder()
