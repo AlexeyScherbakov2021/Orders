@@ -39,12 +39,12 @@ namespace Orders.ViewModels
                     return;
 
                 App.CurrentUser = SelectUser;
-                if (App.CurrentUser.u_role == 100)
+                if (App.CurrentUser.u_role == 1)
                 {
-                    // если это администратор, то запускаем настройки
-                    //EditTablesWindow win = new EditTablesWindow();
-                    //win.Show();
-                    //App.Current.MainWindow = win;
+                    //если это администратор, то запускаем настройки
+                    SettingWindow win = new SettingWindow();
+                    win.Show();
+                    App.Current.MainWindow = win;
                 }
                 else
                 {

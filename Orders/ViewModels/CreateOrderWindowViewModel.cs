@@ -2,6 +2,7 @@
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
+using Orders.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -83,6 +84,8 @@ namespace Orders.ViewModels
 
 
             repo.Add<Order>(Order, true);
+
+            App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().DialogResult = true;
         }
 
         //--------------------------------------------------------------------------------

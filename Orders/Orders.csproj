@@ -79,10 +79,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
+    <Compile Include="ViewModels\OrderWindowViewModel.cs" />
     <Compile Include="ViewModels\RouteControlViewModel.cs" />
     <Compile Include="ViewModels\SettingWindowViewModel.cs" />
     <Compile Include="ViewModels\UsersControlViewModel.cs" />
+    <Compile Include="Views\OrderWindow.xaml.cs">
+      <DependentUpon>OrderWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RouteControl.xaml.cs">
       <DependentUpon>RouteControl.xaml</DependentUpon>
     </Compile>
@@ -135,6 +140,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\OrderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RouteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

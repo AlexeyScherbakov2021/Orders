@@ -34,9 +34,9 @@
         </DockPanel>
         <GroupBox  Header="{Binding SelectedRoute.r_name}" Grid.Column="1">
             <DockPanel>
-                <UniformGrid Columns="5" DockPanel.Dock="Bottom">
-                    <Button Content="+" Command="{Binding AddStepCommand}"/>
-                    <Button Content="-" Command="{Binding DeleteStepCommand}"/>
+                <UniformGrid Columns="3" DockPanel.Dock="Bottom" Height="40">
+                    <!--<Button Content="+" Command="{Binding AddStepCommand}"/>-->
+                    <Button Content="удалить" Command="{Binding DeleteStepCommand}"/>
                     <Button Content="вверх" Command="{Binding StepUpCommand}"/>
                     <Button Content="вниз" Command="{Binding StepDownCommand}"/>
                     <TextBox Text="{Binding SelectedStep.r_step}"/>
