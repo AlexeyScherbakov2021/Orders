@@ -6,46 +6,98 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Создание заказа" Height="448" Width="676" WindowStartupLocation="CenterScreen">
+        Title="Создание заказа" Height="500" Width="700" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:CreateOrderWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="26,24,0,0" Text="Номер" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="23,51,0,0" Text="Наименование" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding Order.o_number}" HorizontalAlignment="Left" Margin="113,22,0,0" VerticalAlignment="Top" Width="218"/>
-        <TextBox Text="{Binding Order.o_name}" HorizontalAlignment="Left" Margin="113,50,0,0" VerticalAlignment="Top" Width="218"/>
-        <TextBlock Text="Текстовое дополнение" Margin="26,82,398,248" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <TextBox Text="{Binding Order.o_body}"  HorizontalAlignment="Left" Margin="26,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Height="68" AcceptsReturn="True"/>
-        <TextBlock HorizontalAlignment="Left" Margin="26,218,0,0" Text="Маршрут" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" DisplayMemberPath="r_name" SelectedItem="{Binding SelectedRoute}" SelectedIndex="0"  ItemsSource="{Binding ListRoute}" Margin="89,215,0,0" VerticalAlignment="Top" Width="242"/>
-        <ListBox ItemsSource="{Binding ListRouteStep}" Margin="23,258,345,10" >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="24"/>
-                            <ColumnDefinition Width="24"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <CheckBox IsChecked="{Binding r_disabled}" />
-                        <TextBlock Text="{Binding r_step}" Grid.Column="1"/>
-                        <TextBlock Text="{Binding User.u_name}" Grid.Column="2"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <DockPanel HorizontalAlignment="Left" Height="213" Margin="461,27,0,0" VerticalAlignment="Top" Width="171">
-            <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <UniformGrid Columns="2" DockPanel.Dock="Bottom">
-                <Button Content="+" Command="{Binding AddFileCommand}"/>
-                <Button Content="-" Command="{Binding RemoveFileCommand}"/>
-            </UniformGrid>
-            <ListBox ItemsSource="{Binding Order.RouteOrders[0].RouteAddings}" AllowDrop="True"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="38"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="383*"/>
+            <ColumnDefinition Width="293*"/>
+        </Grid.ColumnDefinitions>
+        <ToolBar>
+            <Button Margin="2" Content="Создать" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
+            <Button Margin="2" Content="Отменить" Command="{Binding CancelCommand}" Style="{DynamicResource ButtonStyleShadow}" />
+        </ToolBar>
 
-        </DockPanel>
-        <Button Content="Создать" Command="{Binding CreateCommand}" HorizontalAlignment="Left" Margin="514,265,0,0" VerticalAlignment="Top" Width="102"/>
-        <Button Content="Отменить" Command="{Binding CancelCommand}" HorizontalAlignment="Left" Margin="514,299,0,0" VerticalAlignment="Top" Width="110"/>
+        <Border Background="#FFF1F1F1" Margin="8" Grid.Row="1" Padding="6">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+            <GroupBox Header="Исходные данные" BorderBrush="#FFADADAD">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="2,2,2,2" Text="Номер" Grid.RowSpan="2" />
+                    <TextBox Text="{Binding Order.o_number}" Grid.Row="1"/>
+
+                    <TextBlock Text="Наименование" Grid.Row="2" />
+                    <TextBox Text="{Binding Order.o_name}"  Grid.Row="3" />
+
+                    <TextBlock Text="Текстовое дополнение" Grid.Row="4" />
+                    <TextBox Text="{Binding Order.o_body}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5"/>
+
+                    <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6"/>
+                    <DockPanel Grid.Row="7">
+                        <UniformGrid Columns="2" DockPanel.Dock="Bottom">
+                            <Button Content="+" Command="{Binding AddFileCommand}"/>
+                            <Button Content="-" Command="{Binding RemoveFileCommand}"/>
+                        </UniformGrid>
+                        <ListBox ItemsSource="{Binding Order.RouteOrders[0].RouteAddings}" AllowDrop="True"/>
+
+                    </DockPanel>
+
+                </Grid>
+            </GroupBox>
+        </Border>
+
+        <Border Grid.Column="1" Margin="8" Padding="6" Grid.Row="1" Background="#FFF1F1F1">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+            <GroupBox Header="Выбранный маршрут" BorderBrush="#FFADADAD">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <ComboBox DisplayMemberPath="r_name" SelectedItem="{Binding SelectedRoute}" SelectedIndex="0" 
+                              ItemsSource="{Binding ListRoute}" Grid.Row="0" Margin="4"/>
+                    <ListBox ItemsSource="{Binding ListRouteStep}" Grid.Row="1" Margin="4" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="24"/>
+                                        <ColumnDefinition Width="24"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox IsChecked="{Binding r_disabled}" />
+                                    <TextBlock Text="{Binding r_step}" Grid.Column="1"/>
+                                    <TextBlock Text="{Binding User.u_name}" Grid.Column="2"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Grid>
+            </GroupBox>
+
+        </Border>
+
+
 
     </Grid>
 </Window>

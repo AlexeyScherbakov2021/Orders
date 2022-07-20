@@ -6,52 +6,74 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders"
         mc:Ignorable="d"
-        Title="Список заказов" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Список заказов" Height="450" Width="708" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="279*"/>
-            <ColumnDefinition Width="121*"/>
+            <ColumnDefinition Width="179*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="31*"/>
+            <RowDefinition Height="19*"/>
+            <RowDefinition Height="185*"/>
             <RowDefinition Height="26.002"/>
         </Grid.RowDefinitions>
-        <ToolBarPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2">
-            <Button Margin="5" Content="Создать" Command="{Binding CreateCommand}"/>
-            <Button Margin="5" Content="Отправить" Command="{Binding }"/>
+        <ToolBarPanel Grid.Row="0" Orientation="Horizontal" >
+            <Button Margin="5" Content="Создать заказ" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
+            <!--<Button Margin="5" Content="Отправить" Command="{Binding }" Style="{DynamicResource ButtonStyleShadow}"/>-->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
-                <RadioButton Content="Созданные" IsChecked="{Binding CheckCreated}" Margin="5,0" Command="{Binding FilterCommand}" CommandParameter="1"/>
-                <RadioButton Content="Требующие действия" IsChecked="{Binding CheckCoordinated}" Margin="5,0" Command="{Binding FilterCommand}" CommandParameter="2"/>
+                <RadioButton Content="Созданные здесь" IsChecked="{Binding CheckCreated}" Margin="5,0" Command="{Binding FilterCommand}" CommandParameter="1"/>
+                <RadioButton Content="Требующие рассмотрения" IsChecked="{Binding CheckCoordinated}" Margin="5,0" Command="{Binding FilterCommand}" CommandParameter="2"/>
                 <RadioButton Content="Закрытые" Margin="5,0" IsChecked="{Binding CheckClosed}" Command="{Binding FilterCommand}" CommandParameter="3"/>
-                <RadioButton Content="Все" Margin="5,0" IsChecked="{Binding CheckAll}" Command="{Binding FilterCommand}" CommandParameter="4"/>
+                <RadioButton Content="В работе" Margin="5,0" IsChecked="{Binding CheckAll}" Command="{Binding FilterCommand}" CommandParameter="4"/>
+                <RadioButton Content="Все" Margin="5,0" IsChecked="{Binding CheckAll}" Command="{Binding FilterCommand}" CommandParameter="5"/>
             </StackPanel>
         </ToolBarPanel>
-        <ListBox Margin="10,10,10,10" Grid.Row="1" x:Name="list" ItemsSource="{Binding ListOrders}" SelectedItem="{Binding SelectedOrder}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid >
-                        <Grid.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.DblClickCommand, ElementName=list}" />
-                        </Grid.InputBindings>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="90"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding o_number}" />
-                        <TextBlock Text="{Binding o_name}" Grid.Column="1"/>
-                        <TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="2"/>
-                        <TextBlock Text="{Binding o_date_created}" Grid.Column="3"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StatusBar Grid.Row="1" Margin="0,372,0,0" Grid.RowSpan="2">
+        <Border Grid.Row="1" Margin="10" Background="#FFEDEDED">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+
+            <GroupBox Header="Список заказов" FontWeight="Bold" FontSize="14" >
+                <DataGrid ItemsSource="{Binding ListOrders}" IsReadOnly="True"  SelectedItem="{Binding SelectedOrder}" 
+                          Style="{DynamicResource DataGridStyle}" Margin="2" FontSize="12" FontWeight="Normal">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DblClickCommand}" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Номер" Binding="{Binding o_number}" Width="90"/>
+                        <DataGridTextColumn Header="Наименование" Binding="{Binding o_name}" Width="250"/>
+                        <DataGridTextColumn Header="Статус" Binding="{Binding RouteStatus.sr_name}" Width="120"/>
+                        <DataGridTextColumn Header="Время создания" Binding="{Binding o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!--<ListBox Margin="5" Grid.Row="1" x:Name="list" ItemsSource="{Binding ListOrders}" SelectedItem="{Binding SelectedOrder}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid >
+                            <Grid.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.DblClickCommand, ElementName=list}" />
+                            </Grid.InputBindings>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding o_number}" />
+                            <TextBlock Text="{Binding o_name}" Grid.Column="1"/>
+                            <TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="2"/>
+                            <TextBlock Text="{Binding o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Column="3"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>-->
+
+            </GroupBox>
+        </Border>
+        <StatusBar Grid.Row="2" Margin="0,1,0,0">
             <StatusBarItem Content="Пользователь:  "/>
             <StatusBarItem Content="{Binding CurrentUser.u_name}"/>
         </StatusBar>

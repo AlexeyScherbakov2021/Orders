@@ -6,6 +6,7 @@ using Orders.ViewModels.Base;
 using Orders.Views;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,7 +79,7 @@ namespace Orders.ViewModels
             {
                 RouteAdding ra = new RouteAdding
                 {
-                    ad_text = dlgOpen.FileName,
+                    ad_text = Path.GetFileName(dlgOpen.FileName),
                 };
 
                 CurrentStep.RouteAddings.Add(ra);
