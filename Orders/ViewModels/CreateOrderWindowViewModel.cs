@@ -1,4 +1,5 @@
-﻿using Orders.Infrastructure.Commands;
+﻿using Microsoft.Win32;
+using Orders.Infrastructure.Commands;
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
@@ -6,6 +7,7 @@ using Orders.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,8 @@ namespace Orders.ViewModels
         private readonly RepositoryBase repo = new RepositoryBase();
         public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
+        public RouteOrder CreateStep { get; set; }
+        public ObservableCollection<RouteAdding> ListFiles { get; set; } = new ObservableCollection<RouteAdding>();
 
         private Route _SelectedRoute;
         public Route SelectedRoute 
@@ -48,16 +52,16 @@ namespace Orders.ViewModels
             Order.o_stepRoute = 0;
             Order.o_statusId = 1;
 
-            RouteOrder ro = new RouteOrder
+            CreateStep = new RouteOrder
             {
                 ro_step = 0,
-                RouteAddings = new List<RouteAdding>(),
+                RouteAddings = ListFiles,
                 //User = App.CurrentUser,
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
                 ro_check = 1
             };
-            Order.RouteOrders.Add(ro);
+            Order.RouteOrders.Add(CreateStep);
         }
 
 
@@ -110,6 +114,18 @@ namespace Orders.ViewModels
         private bool CanAddFileCommand(object p) => true;
         private void OnAddFileCommandExecuted(object p)
         {
+            OpenFileDialog dlgOpen = new OpenFileDialog();
+
+            if (dlgOpen.ShowDialog() == true)
+            {
+                RouteAdding ra = new RouteAdding
+                {
+                    ad_text = Path.GetFileName(dlgOpen.FileName),
+                };
+
+                ListFiles.Add(ra);
+            }
+
         }
 
         //--------------------------------------------------------------------------------

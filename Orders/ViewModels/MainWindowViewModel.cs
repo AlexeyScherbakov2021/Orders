@@ -34,7 +34,7 @@ namespace Orders.ViewModels
 
         public MainWindowViewModel()
         {
-            App.CurrentUser = new User { id = 3, u_name = "Иванов" };
+            //App.CurrentUser = new User { id = 3, u_name = "Иванов" };
             repo = new RepositoryBase();
 
             //ListOrders = new ObservableCollection<Order>(repo.Orders

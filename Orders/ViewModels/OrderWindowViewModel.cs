@@ -6,6 +6,7 @@ using Orders.ViewModels.Base;
 using Orders.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ namespace Orders.ViewModels
                 if(Set(ref _order, value))
                 {
                     CurrentStep = value.RouteOrders.FirstOrDefault(it => it.ro_step == value.o_stepRoute);
+                    ListFiles = new ObservableCollection<RouteAdding>( CurrentStep.RouteAddings);
+                    OnPropertyChanged(nameof(ListFiles));
                 }
             } 
         }
@@ -36,6 +39,8 @@ namespace Orders.ViewModels
         public OrderWindowViewModel()
         {
         }
+
+        public ObservableCollection<RouteAdding> ListFiles { get; set; } // = new ObservableCollection<RouteAdding>();
 
 
         #region Команды
@@ -49,6 +54,7 @@ namespace Orders.ViewModels
         private void OnSendCommandExecuted(object p)
         {
 
+            CurrentStep.RouteAddings = ListFiles;
             CurrentStep.ro_check = 1;
 
             if (order.RouteOrders.All(it => it.ro_check == 1))
@@ -82,8 +88,9 @@ namespace Orders.ViewModels
                     ad_text = Path.GetFileName(dlgOpen.FileName),
                 };
 
-                CurrentStep.RouteAddings.Add(ra);
-                CurrentStep.OnPropertyChanged(nameof(CurrentStep.RouteAddings));
+                ListFiles.Add(ra);
+                //CurrentStep.RouteAddings.Add(ra);
+                //CurrentStep.OnPropertyChanged(nameof(CurrentStep.RouteAddings));
             }
         }
 

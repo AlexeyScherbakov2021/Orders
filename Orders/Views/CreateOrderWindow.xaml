@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <ToolBar>
             <Button Margin="2" Content="Создать" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
-            <Button Margin="2" Content="Отменить" Command="{Binding CancelCommand}" Style="{DynamicResource ButtonStyleShadow}" />
+            <Button Margin="2" IsCancel="True" Content="Отменить" Command="{Binding CancelCommand}" Style="{DynamicResource ButtonStyleShadow}" />
         </ToolBar>
 
         <Border Background="#FFF1F1F1" Margin="8" Grid.Row="1" Padding="6">
@@ -40,24 +40,27 @@
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Margin="2,2,2,2" Text="Номер" Grid.RowSpan="2" />
+                    <TextBlock Margin="2,2,2,2" Text="Номер" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_number}" Grid.Row="1"/>
 
-                    <TextBlock Text="Наименование" Grid.Row="2" />
+                    <TextBlock Text="Наименование" Grid.Row="2" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_name}"  Grid.Row="3" />
 
-                    <TextBlock Text="Текстовое дополнение" Grid.Row="4" />
+                    <TextBlock Text="Текстовое дополнение" Grid.Row="4" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_body}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5"/>
 
-                    <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6"/>
-                    <DockPanel Grid.Row="7">
+                    <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6" VerticalAlignment="Center"/>
+                    <Button Content="..." Command="{Binding AddFileCommand}" Grid.Row="6" Margin="112,2,0,2" Width="28" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleShadow}"/>
+
+                    <ListBox ItemsSource="{Binding ListFiles}" DisplayMemberPath="ad_text" AllowDrop="True" Grid.Row="7" />
+
+                    <!--<DockPanel Grid.Row="7">
                         <UniformGrid Columns="2" DockPanel.Dock="Bottom">
-                            <Button Content="+" Command="{Binding AddFileCommand}"/>
                             <Button Content="-" Command="{Binding RemoveFileCommand}"/>
                         </UniformGrid>
                         <ListBox ItemsSource="{Binding Order.RouteOrders[0].RouteAddings}" AllowDrop="True"/>
 
-                    </DockPanel>
+                    </DockPanel>-->
 
                 </Grid>
             </GroupBox>

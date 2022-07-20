@@ -32,8 +32,8 @@
             <GroupBox Header="Рассмотрение заказа">
                 <Grid Margin="4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125*"/>
-                        <ColumnDefinition Width="233*"/>
+                        <ColumnDefinition Width="109"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="22"/>
@@ -47,25 +47,25 @@
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="textBlock" Text="Номер" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" />
-                    <TextBlock Text="Наименование" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" />
-                    <TextBlock Text="Статус" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" />
-                    <TextBlock Text="Время создания" Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Center" />
+                    <TextBlock x:Name="textBlock" Text="Номер" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Наименование" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Статус" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Время создания" Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
 
-                    <TextBlock Text="{Binding order.o_number}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding order.o_name}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" />
-                    <TextBlock Text="{Binding order.RouteStatus.sr_name}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding order.o_number}" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
+                    <TextBlock Text="{Binding order.o_name}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
+                    <TextBlock Text="{Binding order.RouteStatus.sr_name}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
+                    <TextBlock Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
-                    <TextBlock Text="Описание заказа" Grid.Row="4" VerticalAlignment="Center" />
+                    <TextBlock Text="Описание заказа" Grid.Row="4" VerticalAlignment="Center" Height="16" />
                     <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="5"  Grid.ColumnSpan="2"/>
-                    <TextBlock Text="Добавить сообщение" Grid.Row="6" VerticalAlignment="Center" />
+                    <TextBlock Text="Добавить сообщение" Grid.Row="6" VerticalAlignment="Center" Height="16" Grid.ColumnSpan="2" />
                     <TextBox Text="{Binding CurrentStep.ro_text}" Grid.Row="7" Grid.ColumnSpan="2"/>
-                    
-                    <TextBlock Text="Прикрепить файлы" Grid.Row="8" VerticalAlignment="Center" />
-                   
-                    <Button Content="..." Command="{Binding BrowseCommand}" Grid.Row="8" Grid.Column="1" Width="26" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <ItemsControl ItemsSource="{Binding CurrentStep.RouteAddings}" BorderBrush="Black" BorderThickness="1,1,1,1" 
+
+                    <TextBlock Text="Прикрепить файлы" Grid.Row="8" VerticalAlignment="Center" Height="16" />
+
+                    <Button Content="..." Command="{Binding BrowseCommand}" Grid.Row="8" Grid.Column="1" Width="26" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
+                    <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" 
                                   Grid.Row="9" Grid.ColumnSpan="2">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -135,7 +135,7 @@
                                                 <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <TextBlock Text="{Binding ro_step}" FontWeight="Bold"  Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-4,0,0,0" />
+                                        <TextBlock Text="{Binding ro_step}" FontWeight="Bold"  Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-4,0,0,0" FontSize="14" />
                                     </Grid>
                                     <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding RouteAddings}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalContentAlignment="Center" Margin="2,0,0,0">
                                         <ItemsControl.ItemsPanel>
@@ -146,6 +146,10 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="#FFFFFDD8" CornerRadius="3" BorderThickness="1" BorderBrush="Gray" Margin="1" Padding="1" HorizontalAlignment="Left" Cursor="Hand">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect ShadowDepth="0" BlurRadius="9" Color="#FFBBBBBB"/>
+                                                    </Border.Effect>
+
                                                     <TextBlock Text="{Binding ad_text}"/>
                                                 </Border>
                                             </DataTemplate>
