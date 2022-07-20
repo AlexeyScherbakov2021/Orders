@@ -91,7 +91,7 @@
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
             <GroupBox Header="Маршрут заказа" BorderBrush="#FFADADAD">
-                <ItemsControl ItemsSource="{Binding order.RouteOrders}" Margin="4"
+                <ItemsControl ItemsSource="{Binding order.RouteOrders}" Margin="2"
                       BorderBrush="Black" BorderThickness="0" HorizontalContentAlignment="Stretch" 
                       ScrollViewer.VerticalScrollBarVisibility="Auto" >
                     <ItemsControl.Template>
@@ -111,7 +111,7 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="5,3,3,1" 
+                            <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="10,3,3,1" 
                             BorderBrush="Black" Padding="0,3,3,3" CornerRadius="3" BorderThickness="1,1,1,1"  >
                                 <Border.Effect>
                                     <DropShadowEffect ShadowDepth="0" BlurRadius="9" Color="#FFBBBBBB"/>
@@ -130,14 +130,17 @@
                                         <GradientStop Color="#FFF9FDFF" Offset="1"/>
                                     </LinearGradientBrush>
                                 </Border.Background>
-                                <DockPanel>
+                                <DockPanel Margin="0,0,0,0">
                                     <Grid Width="20" Margin="0,-3,0,-3">
-                                        <Ellipse Fill="#FF1D0AFF" Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-10,0,-6,0">
+                                        <Ellipse Fill="White"  Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                 Margin="-17,0,-6,0" Stroke="#FF1D0AFF" StrokeThickness="2">
                                             <Ellipse.Effect>
                                                 <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <TextBlock Text="{Binding ro_step}" FontWeight="Bold"  Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-4,0,0,0" FontSize="14" />
+                                        <TextBlock Text="{Binding ro_step}" FontWeight="Bold"  
+                                                   Foreground="Black" VerticalAlignment="Center" 
+                                                   HorizontalAlignment="Center" Margin="-11,0,0,0" FontSize="14" />
                                     </Grid>
                                     <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding RouteAddings}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalContentAlignment="Center" Margin="2,0,0,0">
                                         <ItemsControl.ItemsPanel>
@@ -166,7 +169,7 @@
                                             <ColumnDefinition Width="110"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding User.u_name}" Grid.Column="0"/>
+                                        <TextBlock Text="{Binding User.u_name}" Grid.Column="0" FontWeight="Bold"/>
                                         <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="1" Foreground="#FF00BB1D"/>
                                         <CheckBox IsChecked="{Binding ro_check}" Grid.Column="2"/>
                                     </Grid>
