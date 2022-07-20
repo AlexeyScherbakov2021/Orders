@@ -20,8 +20,8 @@
             <ColumnDefinition Width="293*"/>
         </Grid.ColumnDefinitions>
         <ToolBar>
-            <Button Margin="2" Content="Создать" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
-            <Button Margin="2" IsCancel="True" Content="Отменить" Command="{Binding CancelCommand}" Style="{DynamicResource ButtonStyleShadow}" />
+            <Button Margin="2" Content="Создать" Command="{Binding CreateCommand}" Style="{StaticResource ButtonStyleShadow}" />
+            <Button Margin="2" IsCancel="True" Content="Отменить" Command="{Binding CancelCommand}" Style="{StaticResource ButtonStyleShadow}" />
         </ToolBar>
 
         <Border Background="#FFF1F1F1" Margin="8" Grid.Row="1" Padding="6">

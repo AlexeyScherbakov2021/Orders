@@ -37,7 +37,7 @@
 
             <GroupBox Header="Список заказов" FontWeight="Bold" FontSize="14" >
                 <DataGrid ItemsSource="{Binding ListOrders}" IsReadOnly="True"  SelectedItem="{Binding SelectedOrder}" 
-                          Style="{DynamicResource DataGridStyle}" Margin="2" FontSize="12" FontWeight="Normal">
+                          Style="{StaticResource DataGridStyle}" Margin="2" FontSize="12" FontWeight="Normal">
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DblClickCommand}" />
                     </DataGrid.InputBindings>
