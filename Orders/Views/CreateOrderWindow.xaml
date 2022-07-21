@@ -6,7 +6,7 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Создание заказа" Height="500" Width="700" WindowStartupLocation="CenterScreen">
+        Title="Создание заказа" Height="500" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:CreateOrderWindowViewModel/>
     </Window.DataContext>
@@ -16,8 +16,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="383*"/>
-            <ColumnDefinition Width="293*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <ToolBar>
             <Button Margin="2" Content="Создать" Command="{Binding CreateCommand}" Style="{StaticResource ButtonStyleShadow}" />
@@ -47,7 +47,7 @@
                     <TextBox Text="{Binding Order.o_name}"  Grid.Row="3" />
 
                     <TextBlock Text="Текстовое дополнение" Grid.Row="4" VerticalAlignment="Center" />
-                    <TextBox Text="{Binding Order.o_body}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5"/>
+                    <TextBox Text="{Binding Order.o_body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5"/>
 
                     <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6" VerticalAlignment="Center"/>
                     <Button Content="..." Command="{Binding AddFileCommand}" Grid.Row="6" Margin="112,2,0,2" Width="28" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleShadow}"/>
@@ -85,11 +85,13 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="24"/>
                                         <ColumnDefinition Width="24"/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <CheckBox IsChecked="{Binding r_disabled}" />
                                     <TextBlock Text="{Binding r_step}" Grid.Column="1"/>
                                     <TextBlock Text="{Binding User.u_name}" Grid.Column="2"/>
+                                    <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="3"/>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

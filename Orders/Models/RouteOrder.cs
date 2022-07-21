@@ -36,12 +36,14 @@ namespace Orders.Models
 
         public int ro_check { get; set; }
 
+        public int ro_statusId { get; set; }
+
         public virtual Order Order { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteAdding> RouteAddings { get; set; }
 
-        //public virtual Route RouteStep { get; set; }
+        public virtual RouteStatus RouteStatus { get; set; }
 
         public virtual RouteType RouteType { get; set; }
 

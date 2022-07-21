@@ -170,7 +170,7 @@
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding User.u_name}" Grid.Column="0" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="1" Foreground="#FF00BB1D"/>
+                                        <TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="1" Foreground="#FF00BB1D"/>
                                         <CheckBox IsChecked="{Binding ro_check}" Grid.Column="2"/>
                                     </Grid>
                                 </DockPanel>

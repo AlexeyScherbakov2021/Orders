@@ -25,11 +25,13 @@ namespace Orders.Models
         [StringLength(50)]
         public string o_number { get; set; }
 
-        public int? o_statusId { get; set; }
+        //public int? o_statusId { get; set; }
 
         public string o_body { get; set; }
 
         public int o_stepRoute { get; set; }
+
+        public int o_statusId { get; set; }
 
         public DateTime o_date_created { get; set; }
 
@@ -37,5 +39,7 @@ namespace Orders.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteOrder> RouteOrders { get; set; }
+
+
     }
 }

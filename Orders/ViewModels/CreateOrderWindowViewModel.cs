@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
 using Orders.Models;
 using Orders.Repository;
@@ -50,7 +51,7 @@ namespace Orders.ViewModels
             Order.RouteOrders = new List<RouteOrder>();
             Order.o_date_created = DateTime.Now;
             Order.o_stepRoute = 0;
-            Order.o_statusId = 1;
+            //Order.o_statusId = 1;
 
             CreateStep = new RouteOrder
             {
@@ -59,6 +60,7 @@ namespace Orders.ViewModels
                 //User = App.CurrentUser,
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
+                ro_statusId = (int)EnumStatus.Created,
                 ro_check = 1
             };
             Order.RouteOrders.Add(CreateStep);
@@ -85,10 +87,12 @@ namespace Orders.ViewModels
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
                     ro.ro_disabled = false;
+                    ro.ro_statusId = (int)EnumStatus.Waiting;
                     Order.RouteOrders.Add(ro);
                 }
             }
 
+            Order.o_statusId = (int)EnumStatus.Created;
 
             repo.Add<Order>(Order, true);
 

@@ -56,17 +56,21 @@ namespace Orders.ViewModels
 
             CurrentStep.RouteAddings = ListFiles;
             CurrentStep.ro_check = 1;
+            RouteOrder NextStep;
 
             if (order.RouteOrders.All(it => it.ro_check == 1))
             {
                 // маршрут окончен
-                order.o_statusId = (int)EnumStatus.Approved;
+                NextStep = null;
+                //order.o_statusId = (int)EnumStatus.Approved;
             }
             else
             {
                 order.o_stepRoute++;
-                order.o_statusId = (int)EnumStatus.Coordinated;
+                NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+                //order.o_statusId = (int)EnumStatus.Coordinated;
             }
+            SetStatusStep(CurrentStep, NextStep);
 
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
         }
@@ -95,5 +99,64 @@ namespace Orders.ViewModels
         }
 
         #endregion
+
+
+
+        //--------------------------------------------------------------------------------
+        // переустановки статусов при отправке далее
+        //--------------------------------------------------------------------------------
+        private void SetStatusStep(RouteOrder step, RouteOrder nextStep)
+        {
+           
+            switch((EnumTypesStep)step.ro_typeId)
+            {
+                case EnumTypesStep.Coordinate:
+                    step.ro_statusId = (int)EnumStatus.Coordinated;
+                    break;
+                
+                case EnumTypesStep.Approve:
+                    step.ro_statusId = (int)EnumStatus.Approved;
+                    break;
+
+                case EnumTypesStep.Review:
+                    step.ro_statusId = (int)EnumStatus.Coordinated;
+                    break;
+
+                case EnumTypesStep.Notify:
+                    step.ro_statusId = (int)EnumStatus.Coordinated;
+                    break;
+
+            }
+
+            order.o_statusId = step.ro_statusId;
+
+            if (nextStep != null)
+            {
+                switch ((EnumTypesStep)nextStep.ro_typeId)
+                {
+                    case EnumTypesStep.Coordinate:
+                        nextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                        break;
+
+                    case EnumTypesStep.Approve:
+                        nextStep.ro_statusId = (int)EnumStatus.ApprovWork;
+                        break;
+
+                    case EnumTypesStep.Review:
+                        nextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                        break;
+
+                    case EnumTypesStep.Notify:
+                        nextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                        break;
+                }
+
+                order.o_statusId = nextStep.ro_statusId;
+            }
+
+
+            //order.o_statusId = nextStep.ro_statusId;
+
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace Orders.ViewModels
         public bool CheckAll { get; set; }
 
 
+
         public MainWindowViewModel()
         {
             //App.CurrentUser = new User { id = 3, u_name = "Иванов" };
@@ -71,17 +72,17 @@ namespace Orders.ViewModels
                         );
                     break;
 
-                case 3:
-                    ListOrders = new ObservableCollection<Order>(repo.Orders
-                        .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
-                    );
-                    break;
+                //case 3:
+                //    ListOrders = new ObservableCollection<Order>(repo.Orders
+                //        .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                //    );
+                //    break;
 
-                case 4:
-                    ListOrders = new ObservableCollection<Order>(repo.Orders
-                        .Where(it => it.o_statusId < (int)EnumStatus.Approved && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
-                    );
-                    break;
+                //case 4:
+                //    ListOrders = new ObservableCollection<Order>(repo.Orders
+                //        .Where(it => it.o_statusId < (int)EnumStatus.Approved && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                //    );
+                //    break;
 
             }
 

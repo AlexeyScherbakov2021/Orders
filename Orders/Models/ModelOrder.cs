@@ -67,15 +67,20 @@ namespace Orders.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<RouteStatus>()
+                .HasMany(e => e.RouteOrders)
+                .WithRequired(e => e.RouteStatus)
+                .HasForeignKey(e => e.ro_statusId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RouteStatus>()
                 .HasMany(e => e.Orders)
-                .WithOptional(e => e.RouteStatus)
+                .WithRequired(e => e.RouteStatus)
                 .HasForeignKey(e => e.o_statusId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RouteStep>()
                 .Property(e => e.r_email)
                 .IsUnicode(false);
-
 
             modelBuilder.Entity<RouteType>()
                 .Property(e => e.rt_name)
