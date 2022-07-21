@@ -3,14 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:comm="clr-namespace:Orders.Infrastructure.Commands"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
+        xmlns:conv="clr-namespace:Orders.Infrastructure.Converters"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Заказ" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Заказ" Height="800" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:OrderWindowViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <conv:StatusToImageConverter x:Key="StatusToImageConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="201*"/>
@@ -22,16 +27,16 @@
         </Grid.RowDefinitions>
         <ToolBar Grid.ColumnSpan="2">
             <Button Margin="2" Content="Отправить" Command="{Binding SendCommand}" Style="{StaticResource ButtonStyleShadow}" />
-            <Button Margin="2" Content="Отказать" Command="{Binding}" Style="{StaticResource ButtonStyleShadow}" />
+            <Button Margin="2" Content="Отказать" Command="{Binding RefuseCommand}" Style="{StaticResource ButtonStyleShadow}" />
             <Button Margin="2" Content="Вернуть" Command="{Binding}" Style="{StaticResource ButtonStyleShadow}" />
-            <Button Margin="2" Content="Закрыть" Command="{Binding }" Style="{StaticResource ButtonStyleShadow}" />
+            <Button Margin="2" Content="Закрыть" Command="{Binding CloseOrderCommand}" Style="{StaticResource ButtonStyleShadow}" />
         </ToolBar>
 
-        <Border Grid.Column="0" Grid.Row="1" Margin="10" Background="#FFF1F1F1" Padding="6">
+        <Border Grid.Column="0" Grid.Row="1" Margin="10" Background="#FFF1F1F1" Padding="6" CornerRadius="5">
             <Border.Effect>
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
-            <GroupBox Header="Рассмотрение заказа">
+            <GroupBox Header="Рассмотрение заказа"  BorderBrush="#FFADADAD">
                 <Grid Margin="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="109"/>
@@ -62,7 +67,7 @@
                     <TextBlock Text="Описание заказа" Grid.Row="4" VerticalAlignment="Center" Height="16" />
                     <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="5"  Grid.ColumnSpan="2"/>
                     <TextBlock Text="Добавить сообщение" Grid.Row="6" VerticalAlignment="Center" Height="16" Grid.ColumnSpan="2" />
-                    <TextBox Text="{Binding CurrentStep.ro_text}" Grid.Row="7" Grid.ColumnSpan="2"/>
+                    <TextBox Text="{Binding CurrentStep.ro_text}" Grid.Row="7" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
 
                     <TextBlock Text="Прикрепить файлы" Grid.Row="8" VerticalAlignment="Center" Height="16" />
 
@@ -84,14 +89,12 @@
             </GroupBox>
         </Border>
 
-
-
-        <Border Grid.Column="1" Grid.Row="1" Margin="10" Background="#FFF1F1F1" Padding="6">
+        <Border Grid.Column="1" Grid.Row="1" Margin="10" Background="#FFF1F1F1" Padding="6"  CornerRadius="5">
             <Border.Effect>
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
             <GroupBox Header="Маршрут заказа" BorderBrush="#FFADADAD">
-                <ItemsControl ItemsSource="{Binding order.RouteOrders}" Margin="2"
+                <ItemsControl x:Name="listRoutes" ItemsSource="{Binding order.RouteOrders}" Margin="2"
                       BorderBrush="Black" BorderThickness="0" HorizontalContentAlignment="Stretch" 
                       ScrollViewer.VerticalScrollBarVisibility="Auto" >
                     <ItemsControl.Template>
@@ -126,8 +129,8 @@
                                                 <TranslateTransform/>
                                             </TransformGroup>
                                         </LinearGradientBrush.RelativeTransform>
-                                        <GradientStop Color="#FFD5EFFF"/>
-                                        <GradientStop Color="#FFF9FDFF" Offset="1"/>
+                                        <GradientStop Color="#FFE8E8E0"/>
+                                        <GradientStop Color="#FFFFFFFF" Offset="1"/>
                                     </LinearGradientBrush>
                                 </Border.Background>
                                 <DockPanel Margin="0,0,0,0">
@@ -150,10 +153,22 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Background="#FFFFFDD8" CornerRadius="3" BorderThickness="1" BorderBrush="Gray" Margin="1" Padding="1" HorizontalAlignment="Left" Cursor="Hand">
+                                                <Border Background="#FFFFFDD8" CornerRadius="3" BorderThickness="1" BorderBrush="Gray" 
+                                                        Margin="1" Padding="1" HorizontalAlignment="Left" Cursor="Hand">
                                                     <Border.Effect>
                                                         <DropShadowEffect ShadowDepth="0" BlurRadius="9" Color="#FFBBBBBB"/>
                                                     </Border.Effect>
+                                                    <Border.InputBindings>
+                                                        <MouseBinding Gesture="LeftDoubleClick" 
+                                                                      Command="{Binding DataContext.OpenFileCommand, ElementName=listRoutes}" 
+                                                                      CommandParameter="{Binding }"/>
+                                                    </Border.InputBindings>
+                                                    
+                                                    <!--<i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                            <i:InvokeCommandAction Command="{Binding DataContext.OpenFileCommand , ElementName=listRoutes}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>-->
 
                                                     <TextBlock Text="{Binding ad_text}"/>
                                                 </Border>
@@ -161,17 +176,22 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     <Border DockPanel.Dock="Bottom" BorderBrush="#FFCCCCCC" BorderThickness="0,1,0,0" Margin="2,0,0,0">
-                                        <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap" />
                                     </Border>
                                     <Grid Margin="2,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
-                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="90"/>
+                                            <!--<ColumnDefinition Width="95"/>-->
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding User.u_name}" Grid.Column="0" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="1" Foreground="#FF00BB1D"/>
-                                        <CheckBox IsChecked="{Binding ro_check}" Grid.Column="2"/>
+                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="1" />
+                                        <!--<TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="2" Foreground="#FF00BB1D"/>-->
+                                        <fa:ImageAwesome Icon="{Binding RouteStatus.id, Converter={StaticResource StatusToImageConverter}}"
+                                                Width="18" Height="18" Grid.Column="3"/>
+                                        <!--<Image Source="{Binding RouteStatus.id}" Height="16"/>-->
+                                        <!--<CheckBox IsChecked="{Binding ro_check}" Grid.Column="3"/>-->
                                     </Grid>
                                 </DockPanel>
                             </Border>

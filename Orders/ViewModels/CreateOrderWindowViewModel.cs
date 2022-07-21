@@ -122,12 +122,18 @@ namespace Orders.ViewModels
 
             if (dlgOpen.ShowDialog() == true)
             {
-                RouteAdding ra = new RouteAdding
-                {
-                    ad_text = Path.GetFileName(dlgOpen.FileName),
-                };
+
+                RouteAdding ra = new RouteAdding();
+                ra.ad_text = Path.GetFileName(dlgOpen.FileName);
+
+                FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
+
+                ra.ad_file = new byte[fs.Length];
+                fs.Read(ra.ad_file, 0, (int)fs.Length);
+                fs.Close();
 
                 ListFiles.Add(ra);
+            
             }
 
         }

@@ -11,14 +11,18 @@
         <vm:UsersControlViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <DockPanel Margin="10,10,10,10">
+        <DockPanel Background="#FFF1F1F1">
+            <DockPanel.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </DockPanel.Effect>
+
             <StackPanel DockPanel.Dock="Right" Width="50">
-                <Button Content="+" Height="40" Margin="3" Command="{Binding AddCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
-                <Button Content="-" Height="40" Margin="3" Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                <Button Content="+" Height="40" Margin="3" Command="{Binding AddCommand}" Style="{StaticResource ButtonStyleShadow}"/>
+                <Button Content="-" Height="40" Margin="3" Command="{Binding DeleteCommand}" Style="{StaticResource ButtonStyleShadow}"/>
             </StackPanel>
             <Grid >
-                <DataGrid x:Name="dataGrid" ItemsSource="{Binding ListUserView}" AutoGenerateColumns="False" SelectedItem="{Binding SelectedUser}"
-                    Style="{StaticResource DataGridStyle}" Margin="0,0,0,0" >
+                <DataGrid x:Name="dataGrid" ItemsSource="{Binding ListUserView}" SelectedItem="{Binding SelectedUser}"
+                    Style="{StaticResource DataGridStyle}" Margin="3" >
                     <!--<i:Interaction.Triggers>
                         <i:EventTrigger EventName="CellEditEnding">
                             <i:InvokeCommandAction Command="{Binding EndEditCommand}"/>

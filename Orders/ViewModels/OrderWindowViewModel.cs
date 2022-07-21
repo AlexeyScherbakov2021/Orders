@@ -7,6 +7,7 @@ using Orders.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -87,16 +88,70 @@ namespace Orders.ViewModels
 
             if (dlgOpen.ShowDialog() == true)
             {
-                RouteAdding ra = new RouteAdding
-                {
-                    ad_text = Path.GetFileName(dlgOpen.FileName),
-                };
+                RouteAdding ra = new RouteAdding();
+                ra.ad_text = Path.GetFileName(dlgOpen.FileName);
+
+                FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
+
+                ra.ad_file = new byte[fs.Length];
+                fs.Read(ra.ad_file, 0, (int)fs.Length);
+                fs.Close();
 
                 ListFiles.Add(ra);
                 //CurrentStep.RouteAddings.Add(ra);
                 //CurrentStep.OnPropertyChanged(nameof(CurrentStep.RouteAddings));
             }
         }
+
+        //--------------------------------------------------------------------------------
+        // Команда Закрыть заказ
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _CloseOrderCommand = null;
+        public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
+        private bool CanCloseOrderCommand(object p) => true;
+        private void OnCloseOrderCommandExecuted(object p)
+        {
+            order.o_statusId = (int)EnumStatus.Closed;
+            App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+        }
+
+        //--------------------------------------------------------------------------------
+        // Команда Отказать
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _RefuseCommand = null;
+        public ICommand RefuseCommand => _RefuseCommand ?? new LambdaCommand(OnRefuseCommandExecuted, CanRefuseCommand);
+        private bool CanRefuseCommand(object p) => true;
+        private void OnRefuseCommandExecuted(object p)
+        {
+            order.o_statusId = (int)EnumStatus.Refused;
+            CurrentStep.ro_statusId = (int)EnumStatus.Refused;
+            App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+        }
+
+        //--------------------------------------------------------------------------------
+        // Команда Открыть файл
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _OpenFileCommand = null;
+        public ICommand OpenFileCommand => _OpenFileCommand ?? new LambdaCommand(OnOpenFileCommandExecuted, CanOpenFileCommand);
+        private bool CanOpenFileCommand(object p) => true;
+        private void OnOpenFileCommandExecuted(object p)
+        {
+            if( p is RouteAdding ra)
+            {
+                string TempFileName = Path.GetTempPath() + ra.ad_text;
+
+                FileStream fs = new FileStream(TempFileName, FileMode.Create);
+
+                fs.Write(ra.ad_file, 0, (int)ra.ad_file.Length);
+
+                fs.Close();
+
+                Process.Start(TempFileName);
+
+
+            }
+        }
+
 
         #endregion
 

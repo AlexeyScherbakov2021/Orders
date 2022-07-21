@@ -15,65 +15,80 @@
             <ColumnDefinition Width="67*"/>
             <ColumnDefinition Width="133*"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Margin="0,0,40,0">
-            <UniformGrid Columns="2" DockPanel.Dock="Bottom">
-                <Button Content="+" Command="{Binding AddCommand}"/>
-                <Button Content="-" Command="{Binding DeleteCommand}"/>
-            </UniformGrid>
-            <!--<ListBox ItemsSource="{Binding ListRoute}" SelectedItem="{Binding SelectedRoute}" DisplayMemberPath="r_name" />-->
-            <DataGrid ItemsSource="{Binding ListRouteView}" SelectedItem="{Binding SelectedRoute, Mode=TwoWay}" 
-                      CanUserAddRows="False" CanUserDeleteRows="False"
-                      Style="{StaticResource DataGridStyle}">
-                <DataGrid.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Наименование" Binding="{Binding r_name}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </DockPanel>
-        <GroupBox  Header="{Binding SelectedRoute.r_name}" Grid.Column="1">
+        <Border Margin="0,0,10,0" Background="#FFF1F1F1" CornerRadius="5">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+            <GroupBox Header="Названия маршрутов"  BorderBrush="#FFADADAD" Margin="3" Padding="3">
             <DockPanel>
-                <UniformGrid Columns="3" DockPanel.Dock="Bottom" Height="40">
-                    <!--<Button Content="+" Command="{Binding AddStepCommand}"/>-->
-                    <Button Content="удалить" Command="{Binding DeleteStepCommand}"/>
-                    <Button Content="вверх" Command="{Binding StepUpCommand}"/>
-                    <Button Content="вниз" Command="{Binding StepDownCommand}"/>
-                    <TextBox Text="{Binding SelectedStep.r_step}"/>
+                <UniformGrid Columns="2" DockPanel.Dock="Bottom">
+                    <Button Content="+" Command="{Binding AddCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                    <Button Content="-" Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
                 </UniformGrid>
-                <Expander DockPanel.Dock="Bottom" ExpandDirection="Up" Header="Добавить этап">
-                    <StackPanel Orientation="Horizontal" >
-                        <ListBox x:Name="listBox" ItemsSource="{Binding ListRouteType}" Margin="4" >
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton Content="{Binding rt_name}" IsChecked="{Binding IsCheck, Mode=TwoWay}" GroupName="gruppa"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <!--<ListBox.ItemTemplate>
+                <!--<ListBox ItemsSource="{Binding ListRoute}" SelectedItem="{Binding SelectedRoute}" DisplayMemberPath="r_name" />-->
+                <DataGrid ItemsSource="{Binding ListRouteView}" SelectedItem="{Binding SelectedRoute, Mode=TwoWay}" 
+                    CanUserAddRows="False" CanUserDeleteRows="False"
+                      >
+                    <DataGrid.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
+                    </DataGrid.Resources>
+                    <DataGrid.Style>
+                        <StaticResource ResourceKey="DataGridStyle"/>
+                    </DataGrid.Style>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Наименование" Binding="{Binding r_name}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+            </GroupBox>
+        </Border>
+        <Border Grid.Column="1" Background="#FFF1F1F1" CornerRadius="5">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+
+            <GroupBox  Header="{Binding SelectedRoute.r_name}"  BorderBrush="#FFADADAD" Margin="3" Padding="3">
+                <DockPanel>
+                    <UniformGrid Columns="3" DockPanel.Dock="Bottom" Height="26">
+                        <!--<Button Content="+" Command="{Binding AddStepCommand}"/>-->
+                        <Button Content="удалить" Command="{Binding DeleteStepCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                        <Button Content="вверх" Command="{Binding StepUpCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                        <Button Content="вниз" Command="{Binding StepDownCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                        <!--<TextBox Text="{Binding SelectedStep.r_step}"/>-->
+                    </UniformGrid>
+                    <Expander DockPanel.Dock="Bottom" ExpandDirection="Up" Header="Добавить этап">
+                        <StackPanel Orientation="Horizontal" >
+                            <ListBox x:Name="listBox" ItemsSource="{Binding ListRouteType}" Margin="4" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <RadioButton Content="{Binding rt_name}" IsChecked="{Binding IsCheck, Mode=TwoWay}" GroupName="gruppa"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <!--<ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <RadioButton Content="{Binding rt_name}" GroupName="gruppa"/>
                                 </DataTemplate>
                             </ListBoxItem.ItemTemplate>-->
-                        </ListBox>
-                        <ListBox x:Name="listBox1" ItemsSource="{Binding ListUser}" DisplayMemberPath="u_name"
-                                 SelectedItem="{Binding SelectAddUser}"
-                                 Margin="4" Width="150"/>
-                        <Button Content="Добавить" Margin="4" Command="{Binding AddStepCommand}" 
+                            </ListBox>
+                            <ListBox x:Name="listBox1" ItemsSource="{Binding ListUser}" DisplayMemberPath="u_name"
+                                SelectedItem="{Binding SelectAddUser}"
+                                Margin="4" Width="150"/>
+                            <Button Content="Добавить" Margin="4" Command="{Binding AddStepCommand}" 
                                 CommandParameter="{Binding SelectedItem, ElementName=listBox1}"
-                                VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Expander>
-                <DataGrid x:Name="dGrid" ItemsSource="{Binding _ListRouteStepView.View}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}" 
-                          AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Style="{DynamicResource DataGridStyle}" SelectionMode="Single">
-                    <DataGrid.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
-                    </DataGrid.Resources>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="№" Binding="{Binding r_step}" IsReadOnly="True"/>
-                        <DataGridCheckBoxColumn Header="Откл" Binding="{Binding r_disabled}" CanUserSort="False" />
-                        <DataGridTextColumn Header="Цель" Binding="{Binding RouteType.rt_name}" IsReadOnly="True" Width="150" CanUserSort="False"/>
-                        <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_name}" IsReadOnly="True" Width="180" CanUserSort="False"/>
-                        <!--<DataGridTemplateColumn>
+                                VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
+                        </StackPanel>
+                    </Expander>
+                    <DataGrid x:Name="dGrid" ItemsSource="{Binding _ListRouteStepView.View}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}" 
+                        AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Style="{DynamicResource DataGridStyle}" SelectionMode="Single">
+                        <DataGrid.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№" Binding="{Binding r_step}" IsReadOnly="True"/>
+                            <DataGridCheckBoxColumn Header="Откл" Binding="{Binding r_disabled}" CanUserSort="False" />
+                            <DataGridTextColumn Header="Цель" Binding="{Binding RouteType.rt_name}" IsReadOnly="True" Width="150" CanUserSort="False"/>
+                            <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_name}" IsReadOnly="True" Width="180" CanUserSort="False"/>
+                            <!--<DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding RouteType.rt_name}"/>
@@ -90,7 +105,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>-->
-                        <!--<DataGridComboBoxColumn Header="Цель отправки" 
+                            <!--<DataGridComboBoxColumn Header="Цель отправки" 
                               DisplayMemberPath="rt_name"
                               SelectedValuePath="id"
                               SelectedValueBinding="{Binding r_type}" >
@@ -102,17 +117,19 @@
                             
                         </DataGridComboBoxColumn>-->
 
-                        <!--<DataGridTemplateColumn Header="Пользователи" Width="180">
+                            <!--<DataGridTemplateColumn Header="Пользователи" Width="180">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding User.u_name}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>-->
-                    </DataGrid.Columns>
-                </DataGrid>
-            </DockPanel>
-        </GroupBox>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+
+        </Border>
 
     </Grid>
 </UserControl>

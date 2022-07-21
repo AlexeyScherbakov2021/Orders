@@ -1,12 +1,13 @@
 namespace Orders.Models
 {
+    using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class RouteStatus : IEntity
+    public partial class RouteStatus :  IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RouteStatus()

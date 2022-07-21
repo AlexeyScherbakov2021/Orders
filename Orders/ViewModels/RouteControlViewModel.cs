@@ -55,7 +55,7 @@ namespace Orders.ViewModels
             get => _SelectedRoute; 
             set 
             { 
-                if(Set(ref _SelectedRoute, value))
+                if(Set(ref _SelectedRoute, value) && value != null)
                 {
                     _ListRouteStepView.Source = value.RouteSteps;
                     _ListRouteStepView.View.SortDescriptions.Add(new SortDescription { PropertyName = "r_step", Direction = ListSortDirection.Ascending });

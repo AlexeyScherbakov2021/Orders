@@ -29,13 +29,13 @@ namespace Orders.ViewModels
         public bool CheckCreated { get; set; }
         public bool CheckCoordinated { get; set; }
         public bool CheckClosed { get; set; }
+        public bool CheckWork { get; set; }
         public bool CheckAll { get; set; }
-
 
 
         public MainWindowViewModel()
         {
-            //App.CurrentUser = new User { id = 3, u_name = "Иванов" };
+            App.CurrentUser = new User { id = 11, u_name = "Создатель заказов" };
             repo = new RepositoryBase();
 
             //ListOrders = new ObservableCollection<Order>(repo.Orders
@@ -56,41 +56,84 @@ namespace Orders.ViewModels
         private bool CanFilterCommand(object p) => true;
         private void OnFilterCommandExecuted(object p)
         {
-            int select = int.Parse(p.ToString());
+            //int select = int.Parse(p.ToString());
 
-            switch(select)
+            if(CheckCreated)
             {
-                case 1:
-                    ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.RouteOrders.Where(i => i.ro_step == 0 && i.ro_userId == App.CurrentUser.id).Any())
-                    );
-                    break;
-
-                case 2:
-                    ListOrders = new ObservableCollection<Order>(repo.Orders
-                        .Where(it => it.RouteOrders.Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id).Any())
-                        );
-                    break;
-
-                //case 3:
-                //    ListOrders = new ObservableCollection<Order>(repo.Orders
-                //        .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
-                //    );
-                //    break;
-
-                //case 4:
-                //    ListOrders = new ObservableCollection<Order>(repo.Orders
-                //        .Where(it => it.o_statusId < (int)EnumStatus.Approved && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
-                //    );
-                //    break;
+                ListOrders = new ObservableCollection<Order>(repo.Orders
+                .Where(it => it.RouteOrders.Where(i => i.ro_step == 0 && i.ro_userId == App.CurrentUser.id).Any())
+                );
 
             }
+            else if(CheckCoordinated)
+            {
+                ListOrders = new ObservableCollection<Order>(repo.Orders
+                    .Where(it => it.RouteOrders.Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id).Any())
+                   );
+            }
+            else if(CheckClosed)
+            {
+                ListOrders = new ObservableCollection<Order>(repo.Orders
+                    .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                );
+            }
+            else if(CheckWork)
+            {
+                ListOrders = new ObservableCollection<Order>(repo.Orders
+                    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                );
+
+            }
+            else
+            {
+                ListOrders = new ObservableCollection<Order>(repo.Orders
+                    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                );
+            }
+
+
+            //switch (select)
+            //{
+            //    // Созданные
+            //    case 1:
+            //        ListOrders = new ObservableCollection<Order>(repo.Orders
+            //        .Where(it => it.RouteOrders.Where(i => i.ro_step == 0 && i.ro_userId == App.CurrentUser.id).Any())
+            //        );
+            //        break;
+
+            //        // Требующие рассмотрения
+            //    case 2:
+            //        ListOrders = new ObservableCollection<Order>(repo.Orders
+            //            .Where(it => it.RouteOrders.Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id).Any())
+            //            );
+            //        break;
+
+            //        // Закрытые
+            //    case 3:
+            //        ListOrders = new ObservableCollection<Order>(repo.Orders
+            //            .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+            //        );
+            //        break;
+
+            //        // В работе
+            //    case 4:
+            //        ListOrders = new ObservableCollection<Order>(repo.Orders
+            //            .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+            //        );
+            //        break;
+
+            //        // Все
+            //    case 5:
+            //        ListOrders = new ObservableCollection<Order>(repo.Orders
+            //            .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+            //        );
+            //        break;
+
+            //}
 
             OnPropertyChanged(nameof(ListOrders));
 
         }
-        //ListOrdersClosed = new ObservableCollection<Order>( ListOrders.Where(it => it.o_statusId == (int)EnumStatus.Closed) );
-        //ListOrdersWorks = new ObservableCollection<Order>( ListOrders.Where(it => it.o_statusId < (int)EnumStatus.Approved) );
 
 
         //--------------------------------------------------------------------------------
@@ -117,6 +160,10 @@ namespace Orders.ViewModels
             if (orderWindow.ShowDialog() == true)
             {
                 repo.Save();
+
+                //SelectedOrder.RouteStatus.OnPropertyChanged(nameof(SelectedOrder.RouteStatus.sr_name));
+
+                //OnFilterCommandExecuted(null);
             }
         }
 

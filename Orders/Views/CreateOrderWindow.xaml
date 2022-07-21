@@ -6,7 +6,7 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Создание заказа" Height="500" Width="900" WindowStartupLocation="CenterScreen">
+        Title="Создание заказа" Height="600" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:CreateOrderWindowViewModel/>
     </Window.DataContext>

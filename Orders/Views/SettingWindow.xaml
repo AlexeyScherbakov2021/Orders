@@ -6,14 +6,14 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Настройки" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Настройки" Height="650" Width="900" WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl>
             <TabItem Header="Пользователи">
-                <local:UsersControl/>
+                <local:UsersControl Margin="8"/>
             </TabItem>
             <TabItem Header="Маршруты">
-                <local:RouteControl/>
+                <local:RouteControl Margin="8"/>
             </TabItem>
         </TabControl>
     </Grid>
