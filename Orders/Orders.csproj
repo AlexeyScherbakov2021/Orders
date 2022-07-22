@@ -92,10 +92,14 @@
     <Compile Include="Infrastructure\Converters\StatusToImageConverter.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
+    <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
     <Compile Include="ViewModels\OrderWindowViewModel.cs" />
     <Compile Include="ViewModels\RouteControlViewModel.cs" />
     <Compile Include="ViewModels\SettingWindowViewModel.cs" />
     <Compile Include="ViewModels\UsersControlViewModel.cs" />
+    <Compile Include="Views\AddRouteWindow.xaml.cs">
+      <DependentUpon>AddRouteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OrderWindow.xaml.cs">
       <DependentUpon>OrderWindow.xaml</DependentUpon>
     </Compile>
@@ -115,6 +119,10 @@
     <Page Include="Styles\DataGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AddRouteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CreateOrderWindow.xaml">
       <SubType>Designer</SubType>

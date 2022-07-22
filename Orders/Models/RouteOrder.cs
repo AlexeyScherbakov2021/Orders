@@ -38,6 +38,8 @@ namespace Orders.Models
 
         public int ro_statusId { get; set; }
 
+        public DateTime? ro_date_check { get; set; }
+
         public virtual Order Order { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

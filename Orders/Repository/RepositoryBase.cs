@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Orders.Repository
 {
@@ -28,7 +29,9 @@ namespace Orders.Repository
             {
                 db.SaveChanges();
             }
-            catch { }
+            catch(Exception e) {
+                ShowMessage(e.Message);
+            }
         }
 
         //-----------------------------------------------------------------------------------------
@@ -46,8 +49,9 @@ namespace Orders.Repository
                     db.SaveChanges();
                 return true;
             }
-            catch
+            catch(Exception e)
             {
+                ShowMessage(e.Message);
                 return false;
             }
         }
@@ -70,8 +74,9 @@ namespace Orders.Repository
 
                 return true;
             }
-            catch
+            catch(Exception e)
             {
+                ShowMessage(e.Message);
                 return false;
             }
         }
@@ -91,8 +96,9 @@ namespace Orders.Repository
                     db.SaveChanges();
                 return true;
             }
-            catch
+            catch(Exception e)
             {
+                ShowMessage(e.Message);
                 return false;
             }
         }
@@ -115,15 +121,19 @@ namespace Orders.Repository
 
                 return true;
             }
-            catch
+            catch(Exception e)
             {
+                ShowMessage(e.Message);
                 return false;
             }
         }
 
 
 
-
+        void ShowMessage(string text)
+        {
+            MessageBox.Show(text, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
     }
 }

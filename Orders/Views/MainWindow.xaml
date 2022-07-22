@@ -22,17 +22,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="19*"/>
             <RowDefinition Height="185*"/>
-            <RowDefinition Height="26.002"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <ToolBarPanel Grid.Row="0" Orientation="Horizontal" >
             <Button Margin="5" Content="Создать заказ" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
             <!--<Button Margin="5" Content="Отправить" Command="{Binding }" Style="{DynamicResource ButtonStyleShadow}"/>-->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
-                <RadioButton Content="Созданные здесь" IsChecked="{Binding CheckCreated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" CommandParameter="1"/>
-                <RadioButton Content="Требующие рассмотрения" IsChecked="{Binding CheckCoordinated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" CommandParameter="2"/>
-                <RadioButton Content="Закрытые" Margin="5,0" IsChecked="{Binding CheckClosed, Mode=TwoWay}" Command="{Binding FilterCommand}" CommandParameter="3"/>
-                <RadioButton Content="В работе" Margin="5,0" IsChecked="{Binding CheckWork, Mode=TwoWay}" Command="{Binding FilterCommand}" CommandParameter="4"/>
-                <RadioButton Content="Все" Margin="5,0" IsChecked="{Binding CheckAll, Mode=TwoWay}" Command="{Binding FilterCommand}" CommandParameter="5"/>
+                <RadioButton Content="Созданные здесь" IsChecked="{Binding CheckCreated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" />
+                <RadioButton Content="Требующие рассмотрения" IsChecked="{Binding CheckCoordinated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" />
+                <RadioButton Content="Закрытые" Margin="5,0" IsChecked="{Binding CheckClosed, Mode=TwoWay}" Command="{Binding FilterCommand}" />
+                <RadioButton Content="В работе" Margin="5,0" IsChecked="{Binding CheckWork, Mode=TwoWay}" Command="{Binding FilterCommand}" />
+                <RadioButton Content="Все" Margin="5,0" IsChecked="{Binding CheckAll, Mode=TwoWay}" Command="{Binding FilterCommand}" />
             </StackPanel>
         </ToolBarPanel>
         <Border Grid.Row="1" Margin="10" Background="#FFEDEDED">
@@ -50,13 +50,13 @@
                         <DataGridTextColumn Header="Номер" Binding="{Binding o_number}" Width="90"/>
                         <DataGridTextColumn Header="Наименование" Binding="{Binding o_name}" Width="250"/>
                         <!--<DataGridTextColumn Header="Статус" Binding="{Binding RouteStatus.sr_name}" Width="120"/>-->
-                        <DataGridTemplateColumn Width="128" Header="Статус" >
+                        <DataGridTemplateColumn Width="160" Header="Статус" >
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Margin="4, 0" Height="18" Width="18" Source="{Binding RouteStatus.id, Converter={StaticResource StatusToIconConverter}}">
+                                        <Image Margin="6, 0" Height="18" Width="18" Source="{Binding RouteStatus.id, Converter={StaticResource StatusToIconConverter}}">
                                             <Image.Effect>
-                                                <DropShadowEffect ShadowDepth="1" BlurRadius="2" Color="#FF555555"/>
+                                                <DropShadowEffect ShadowDepth="0" BlurRadius="2" Color="#FF999999"/>
                                             </Image.Effect>
                                         </Image>
                                         <TextBlock Text="{Binding RouteStatus.sr_name}"/>
@@ -92,8 +92,8 @@
 
             </GroupBox>
         </Border>
-        <StatusBar Grid.Row="2" Margin="0,1,0,0">
-            <StatusBarItem Content="Пользователь:  "/>
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="3" Background="#FFE8E8E8" BorderBrush="#FF777777" BorderThickness="1,1,1,1">
+            <StatusBarItem Margin="10,0" Content="Пользователь:  "/>
             <StatusBarItem Content="{Binding CurrentUser.u_name}"/>
         </StatusBar>
     </Grid>

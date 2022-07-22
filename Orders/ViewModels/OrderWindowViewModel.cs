@@ -18,6 +18,8 @@ namespace Orders.ViewModels
 {
     internal class OrderWindowViewModel : ViewModel
     {
+        public User CurrentUser => App.CurrentUser;
+
         private Order _order;
         public Order order 
         { 
@@ -47,6 +49,23 @@ namespace Orders.ViewModels
         #region Команды
 
         //--------------------------------------------------------------------------------
+        // Команда Добавить этап
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _AddRouteCommand = null;
+        public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
+        private bool CanAddRouteCommand(object p) => true;
+        private void OnAddRouteCommandExecuted(object p)
+        {
+            AddRouteWindow winAddRoute = new AddRouteWindow();
+            AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
+            winAddRoute.DataContext = view;
+            if (winAddRoute.ShowDialog() == true)
+            {
+
+            }
+        }
+
+        //--------------------------------------------------------------------------------
         // Команда Отправить
         //--------------------------------------------------------------------------------
         private readonly ICommand _SendCommand = null;
@@ -57,6 +76,7 @@ namespace Orders.ViewModels
 
             CurrentStep.RouteAddings = ListFiles;
             CurrentStep.ro_check = 1;
+            CurrentStep.ro_date_check = DateTime.Now;
             RouteOrder NextStep;
 
             if (order.RouteOrders.All(it => it.ro_check == 1))

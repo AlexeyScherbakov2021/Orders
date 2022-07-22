@@ -33,6 +33,9 @@ namespace Orders.Models
         [StringLength(150)]
         public string u_email { get; set; }
 
+        [StringLength(150)]
+        public string u_otdel { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteOrder> RouteOrders { get; set; }
 

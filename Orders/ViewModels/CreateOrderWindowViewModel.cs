@@ -51,13 +51,11 @@ namespace Orders.ViewModels
             Order.RouteOrders = new List<RouteOrder>();
             Order.o_date_created = DateTime.Now;
             Order.o_stepRoute = 0;
-            //Order.o_statusId = 1;
 
             CreateStep = new RouteOrder
             {
                 ro_step = 0,
                 RouteAddings = ListFiles,
-                //User = App.CurrentUser,
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
                 ro_statusId = (int)EnumStatus.Created,

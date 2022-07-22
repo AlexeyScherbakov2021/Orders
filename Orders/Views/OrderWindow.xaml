@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Заказ" Height="800" Width="900" WindowStartupLocation="CenterScreen">
+        Title="Заказ" Height="800" Width="1100" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:OrderWindowViewModel/>
     </Window.DataContext>
@@ -19,19 +19,27 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="201*"/>
-            <ColumnDefinition Width="199*"/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="41"/>
             <RowDefinition/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <ToolBar Grid.ColumnSpan="2">
             <Button Margin="2" Content="Отправить" Command="{Binding SendCommand}" Style="{StaticResource ButtonStyleShadow}" />
+            <Button Margin="2" Content="Добавить этап" Command="{Binding AddRouteCommand}" Style="{StaticResource ButtonStyleShadow}" />
             <Button Margin="2" Content="Отказать" Command="{Binding RefuseCommand}" Style="{StaticResource ButtonStyleShadow}" />
             <Button Margin="2" Content="Вернуть" Command="{Binding}" Style="{StaticResource ButtonStyleShadow}" />
-            <Button Margin="2" Content="Закрыть" Command="{Binding CloseOrderCommand}" Style="{StaticResource ButtonStyleShadow}" />
+            <Button Margin="2" Content="В архив" Command="{Binding CloseOrderCommand}" Style="{StaticResource ButtonStyleShadow}" />
         </ToolBar>
+
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="2" Margin="3" Background="#FFE8E8E8" BorderBrush="#FF777777" BorderThickness="1,1,1,1">
+            <StatusBarItem Margin="10,0" Content="Пользователь:  "/>
+            <StatusBarItem Content="{Binding CurrentUser.u_name}"/>
+        </StatusBar>
+
 
         <Border Grid.Column="0" Grid.Row="1" Margin="10" Background="#FFF1F1F1" Padding="6" CornerRadius="5">
             <Border.Effect>
@@ -118,7 +126,7 @@
                             <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="10,3,3,1" 
                             BorderBrush="Black" Padding="0,3,3,3" CornerRadius="3" BorderThickness="1,1,1,1"  >
                                 <Border.Effect>
-                                    <DropShadowEffect ShadowDepth="0" BlurRadius="9" Color="#FFBBBBBB"/>
+                                    <DropShadowEffect ShadowDepth="0" BlurRadius="6" Color="#FFBBBBBB"/>
                                 </Border.Effect>
                                 <Border.Background>
                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -164,7 +172,7 @@
                                                                       Command="{Binding DataContext.OpenFileCommand, ElementName=listRoutes}" 
                                                                       CommandParameter="{Binding }"/>
                                                     </Border.InputBindings>
-                                                    
+
                                                     <!--<i:Interaction.Triggers>
                                                         <i:EventTrigger EventName="MouseLeftButtonUp">
                                                             <i:InvokeCommandAction Command="{Binding DataContext.OpenFileCommand , ElementName=listRoutes}"/>
@@ -178,14 +186,16 @@
                                     </ItemsControl>
                                     <Border DockPanel.Dock="Bottom" BorderBrush="#FFCCCCCC" BorderThickness="0,1,0,0" Margin="2,0,0,0">
                                         <ScrollViewer MaxHeight="140" VerticalScrollBarVisibility="Auto">
-                                            <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap" ToolTip="Добавленный текст"/>
                                         </ScrollViewer>
                                     </Border>
+                                    <!--<TextBlock Margin="3, -4, 0, 0" Text="{Binding ro_date_check, StringFormat=dd.MM.yyyy HH:mm:ss}"
+                                               DockPanel.Dock="Bottom" ToolTip="Время рассмотрения"/>-->
                                     <Grid Margin="2,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="90"/>
-                                            <!--<ColumnDefinition Width="95"/>-->
+                                            <ColumnDefinition Width="120"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding User.u_name}" Grid.Column="0" FontWeight="Bold"/>
@@ -197,6 +207,7 @@
                                                 <DropShadowEffect ShadowDepth="2" BlurRadius="5" Color="#FF888888"/>
                                             </fa:ImageAwesome.Effect>
                                         </fa:ImageAwesome>-->
+                                        <TextBlock Margin="0,0,0,0" Grid.Column="2" Text="{Binding ro_date_check, StringFormat=dd.MM.yyyy HH:mm:ss}" ToolTip="Время рассмотрения"/>
                                         <Image Source="{Binding RouteStatus.id, Converter={StaticResource StatusToIconConverter}}" 
                                                Height="20" Width="20" Grid.Column="3" ToolTip="{Binding RouteStatus.sr_name}">
                                             <Image.Effect>
