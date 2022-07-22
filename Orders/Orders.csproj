@@ -88,6 +88,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Infrastructure\Converters\StatusToIconConverter.cs" />
     <Compile Include="Infrastructure\Converters\StatusToImageConverter.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
@@ -216,7 +217,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resource\" />
+    <Resource Include="Resource\вернут.png" />
+    <Resource Include="Resource\закрыт.png" />
+    <Resource Include="Resource\ожидание.png" />
+    <Resource Include="Resource\отказано.png" />
+    <Resource Include="Resource\рассмотрен.png" />
+    <Resource Include="Resource\рассмотр.png" />
+    <Resource Include="Resource\создан.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

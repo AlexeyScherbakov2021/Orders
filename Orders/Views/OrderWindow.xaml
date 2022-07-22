@@ -15,6 +15,7 @@
     </Window.DataContext>
     <Window.Resources>
         <conv:StatusToImageConverter x:Key="StatusToImageConverter"/>
+        <conv:StatusToIconConverter x:Key="StatusToIconConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -176,7 +177,9 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     <Border DockPanel.Dock="Bottom" BorderBrush="#FFCCCCCC" BorderThickness="0,1,0,0" Margin="2,0,0,0">
-                                        <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap" />
+                                        <ScrollViewer MaxHeight="140" VerticalScrollBarVisibility="Auto">
+                                            <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap" />
+                                        </ScrollViewer>
                                     </Border>
                                     <Grid Margin="2,0,0,0">
                                         <Grid.ColumnDefinitions>
@@ -188,10 +191,19 @@
                                         <TextBlock Text="{Binding User.u_name}" Grid.Column="0" FontWeight="Bold"/>
                                         <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="1" />
                                         <!--<TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="2" Foreground="#FF00BB1D"/>-->
-                                        <fa:ImageAwesome Icon="{Binding RouteStatus.id, Converter={StaticResource StatusToImageConverter}}"
-                                                Width="18" Height="18" Grid.Column="3"/>
-                                        <!--<Image Source="{Binding RouteStatus.id}" Height="16"/>-->
-                                        <!--<CheckBox IsChecked="{Binding ro_check}" Grid.Column="3"/>-->
+                                        <!--<fa:ImageAwesome Icon="{Binding RouteStatus.id, Converter={StaticResource StatusToImageConverter}}" Foreground="OrangeRed"
+                                                Width="18" Height="18" Grid.Column="3" ToolTip="{Binding RouteStatus.sr_name}">
+                                            <fa:ImageAwesome.Effect>
+                                                <DropShadowEffect ShadowDepth="2" BlurRadius="5" Color="#FF888888"/>
+                                            </fa:ImageAwesome.Effect>
+                                        </fa:ImageAwesome>-->
+                                        <Image Source="{Binding RouteStatus.id, Converter={StaticResource StatusToIconConverter}}" 
+                                               Height="20" Width="20" Grid.Column="3" ToolTip="{Binding RouteStatus.sr_name}">
+                                            <Image.Effect>
+                                                <DropShadowEffect ShadowDepth="1" BlurRadius="4" Color="#FF555555"/>
+                                            </Image.Effect>
+                                        </Image>
+                                        <!--<CheckBox IsChecked="{Binding ro_check}" Grid.Column="1"/>-->
                                     </Grid>
                                 </DockPanel>
                             </Border>
