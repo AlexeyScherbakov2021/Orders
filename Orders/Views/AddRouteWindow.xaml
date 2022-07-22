@@ -10,50 +10,90 @@
     <Window.DataContext>
         <vm:AddRouteWindowViewModel/>
     </Window.DataContext>
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30.949"/>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ToolBar>
-            <Button Margin="3" Content="Добавить" Command="{Binding AddRouteCommand}"/>
-            <Button Margin="3" Content="Отменить"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+        <ToolBar Height="40" Grid.ColumnSpan="2">
+            <Button Margin="3"  Content="Добавить" Command="{Binding AddRouteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+            <Button Margin="3" Content="Отменить" Style="{DynamicResource ButtonStyleShadow}"/>
         </ToolBar>
-        <DockPanel Grid.Row="1">
-            <Border DockPanel.Dock="Right" Width="250">
-                <GroupBox Header="Параметры">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="134"/>
-                        </Grid.RowDefinitions>
 
-                        <GroupBox Header="Цель этапа" Margin="5">
-                        <ListBox Grid.RowSpan="2" ItemsSource="{Binding ListRouteType}" SelectedItem="{Binding SelectedType}">
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="ListBoxItem">
-                                                <RadioButton Content="{Binding rt_name}"
-                                                    IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
+        <Border DockPanel.Dock="Right" Grid.Column="1" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+
+            <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25*"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="50*"/>
+                    </Grid.RowDefinitions>
+                <GroupBox Header="Параметры" BorderBrush="#FFADADAD">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="7*"/>
+                                <RowDefinition Height="5*"/>
+                            </Grid.RowDefinitions>
+
+                        <GroupBox Header="Цель этапа" Margin="3" Grid.RowSpan="2" FontWeight="Bold" BorderBrush="#FFADADAD">
+                                <ListBox Grid.RowSpan="2" ItemsSource="{Binding ListRouteType}" SelectedItem="{Binding SelectedType}" FontWeight="Normal" Padding="4">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListBoxItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                        <RadioButton Content="{Binding rt_name}" Height="18"
+                                                            IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                </ListBox>
+                            </GroupBox>
+                        </Grid>
+                    </GroupBox>
+
+                    <CheckBox Margin="10,3" Content="Вернуть назад" Grid.Row="1" IsChecked="{Binding IsReturn}" />
+
+                <GroupBox Header="Добавить перед..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD">
+                        <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="{Binding ro_step}"/>
+                                        <TextBlock Text="{Binding User.u_name}" Grid.Column="1"/>
+                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
-                        </GroupBox>
-                        <CheckBox Margin="8" Content="Вернуть назад" Grid.Row="1" IsChecked="{Binding IsReturn}" />
-                    </Grid>
-                </GroupBox>
+                    </GroupBox>
+
+                </Grid>
             </Border>
-            
-            
-            <Border>
-                <GroupBox Header="Кого добавить" Padding="5">
-                    <ListBox ItemsSource="{Binding ListUser}" SelectedItem="{Binding SelectedUser}">
+
+
+        <Border  Grid.Column="0" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
+            </Border.Effect>
+            <GroupBox Header="Кого добавить" Padding="5" FontWeight="Bold" BorderBrush="#FFADADAD" Margin="5">
+                    <ListBox ItemsSource="{Binding ListUser}" SelectedItem="{Binding SelectedUser}" FontWeight="Normal">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -68,8 +108,10 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </GroupBox>
-            </Border>
-        </DockPanel>
+        </Border>
+
+
+
 
     </Grid>
 </Window>

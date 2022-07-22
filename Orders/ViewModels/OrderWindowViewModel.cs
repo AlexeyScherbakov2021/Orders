@@ -2,6 +2,7 @@
 using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
 using Orders.Models;
+using Orders.Repository;
 using Orders.ViewModels.Base;
 using Orders.Views;
 using System;
@@ -61,7 +62,9 @@ namespace Orders.ViewModels
             winAddRoute.DataContext = view;
             if (winAddRoute.ShowDialog() == true)
             {
-
+                OnPropertyChanged(nameof(order));
+                //RepositoryBase repo = new RepositoryBase();
+                //repo.Save();
             }
         }
 

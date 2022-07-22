@@ -19,6 +19,7 @@ namespace Orders.Repository
         public IQueryable<RouteType> RouteTypes => db.RouteTypes;
         public IQueryable<RouteOrder> RouteOrders => db.RouteOrders;
         public IQueryable<Order> Orders => db.Orders;
+        public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
 
         //-----------------------------------------------------------------------------------------
         // сохранение базы

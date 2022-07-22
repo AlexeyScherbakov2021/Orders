@@ -61,6 +61,8 @@ namespace Orders.ViewModels
                 ro_statusId = (int)EnumStatus.Created,
                 ro_check = 1
             };
+
+            //repo.Add<RouteOrder>(CreateStep);
             Order.RouteOrders.Add(CreateStep);
         }
 

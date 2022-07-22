@@ -17,7 +17,7 @@ namespace Orders.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {
-        private readonly RepositoryBase repo;
+        public static readonly RepositoryBase repo = new RepositoryBase();
         //private readonly IRepository<RouteOrder> repoRouteOrder;
         public ObservableCollection<Order> ListOrders { get; set; }
 
@@ -36,7 +36,7 @@ namespace Orders.ViewModels
         public MainWindowViewModel()
         {
             App.CurrentUser = new User { id = 11, u_name = "Создатель заказов" };
-            repo = new RepositoryBase();
+            //repo = new RepositoryBase();
 
             //ListOrders = new ObservableCollection<Order>(repo.Orders
             //    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any() )
