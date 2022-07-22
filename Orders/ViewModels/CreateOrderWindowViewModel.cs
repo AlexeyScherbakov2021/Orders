@@ -19,7 +19,7 @@ namespace Orders.ViewModels
     internal class CreateOrderWindowViewModel : ViewModel
     {
         //public Order order { get; set; }
-        private readonly RepositoryBase repo = new RepositoryBase();
+        private readonly RepositoryBase repo = MainWindowViewModel.repo;
         public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
         public RouteOrder CreateStep { get; set; }
