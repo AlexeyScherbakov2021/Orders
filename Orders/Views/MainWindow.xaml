@@ -20,13 +20,13 @@
             <ColumnDefinition Width="179*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="19*"/>
-            <RowDefinition Height="185*"/>
+            <RowDefinition Height="46.945"/>
+            <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <ToolBarPanel Grid.Row="0" Orientation="Horizontal" >
             <Button Margin="5" Content="Создать заказ" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
-            <!--<Button Margin="5" Content="Отправить" Command="{Binding }" Style="{DynamicResource ButtonStyleShadow}"/>-->
+            <Button Margin="5" Content="Удалить" Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                 <RadioButton Content="Созданные здесь" IsChecked="{Binding CheckCreated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" />
                 <RadioButton Content="Требующие рассмотрения" IsChecked="{Binding CheckCoordinated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" />

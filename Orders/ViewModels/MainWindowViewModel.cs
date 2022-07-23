@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Orders.ViewModels
@@ -35,7 +36,7 @@ namespace Orders.ViewModels
 
         public MainWindowViewModel()
         {
-            App.CurrentUser = new User { id = 11, u_name = "Создатель заказов", u_role = 0 };
+            //App.CurrentUser = new User { id = 11, u_name = "Создатель заказов", u_role = 0 };
             //repo = new RepositoryBase();
 
             //ListOrders = new ObservableCollection<Order>(repo.Orders
@@ -58,7 +59,20 @@ namespace Orders.ViewModels
         {
             //int select = int.Parse(p.ToString());
 
-            if(CheckCreated)
+            repo.Refresh<Order>(ListOrders);
+            if (ListOrders != null)
+            {
+                foreach (var ro in ListOrders)
+                {
+                    repo.Refresh<RouteOrder>(ro.RouteOrders);
+                    foreach (var item2 in ro.RouteOrders)
+                    {
+                        repo.Refresh<RouteAdding>(item2.RouteAddings);
+                    }
+                }
+            }
+
+            if (CheckCreated)
             {
                 // созданные мной заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
@@ -70,11 +84,12 @@ namespace Orders.ViewModels
             {
                 // Требующие рассмотрения
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.RouteOrders
+                    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders
                             .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id)
                             .Any())
                    );
             }
+
             else if(CheckClosed)
             {
                 // Закрытые заказы
@@ -84,10 +99,17 @@ namespace Orders.ViewModels
             }
             else if(CheckWork)
             {
+
                 // В работе
+                //ListOrders = new ObservableCollection<Order>(from s in repo.Orders where s.o_statusId < (int)EnumStatus.Closed select s);
+                //repo.GetAll();
+                ListOrders.Clear();
+
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                    .Include(it => it.RouteOrders)
                 );
+
 
             }
             else
@@ -98,9 +120,11 @@ namespace Orders.ViewModels
                 );
             }
 
-
             foreach (var item in ListOrders)
+            {
                 item.RouteOrders = SortStepRoute(item.RouteOrders);
+            }
+
 
             OnPropertyChanged(nameof(ListOrders));
 
@@ -118,6 +142,21 @@ namespace Orders.ViewModels
         {
 
         }
+
+        //--------------------------------------------------------------------------------
+        // Команда Удалить заказ
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _DeleteCommand = null;
+        public ICommand DeleteCommand => _DeleteCommand ?? new LambdaCommand(OnDeleteCommandExecuted, CanDeleteCommand);
+        private bool CanDeleteCommand(object p) => SelectedOrder != null;
+        private void OnDeleteCommandExecuted(object p)
+        {
+            if(MessageBox.Show($"Удалить заказ {SelectedOrder.o_name}","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+
+            repo.Delete(SelectedOrder, true);
+            ListOrders.Remove(SelectedOrder);
+        }
+
 
         //--------------------------------------------------------------------------------
         // Команда Двойной щелчок
