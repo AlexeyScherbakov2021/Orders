@@ -88,8 +88,9 @@ namespace Orders.ViewModels
 
             CurrentOrder.RouteOrders = TempList;
 
-            MainWindowViewModel.repo.Update<Order>(CurrentOrder);
-            MainWindowViewModel.repo.Save();
+            //MainWindowViewModel.repo.Update<Order>(CurrentOrder);
+            MainWindowViewModel.repo.Update(CurrentOrder, true);
+            //MainWindowViewModel.repo.Save();
 
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 

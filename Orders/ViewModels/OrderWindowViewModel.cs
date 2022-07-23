@@ -21,27 +21,33 @@ namespace Orders.ViewModels
     {
         public User CurrentUser => App.CurrentUser;
 
-        private Order _order;
-        public Order order 
-        { 
-            get => _order; 
-            set 
-            { 
-                if(Set(ref _order, value))
-                {
-                    CurrentStep = value.RouteOrders.FirstOrDefault(it => it.ro_step == value.o_stepRoute);
-                    ListFiles = new ObservableCollection<RouteAdding>( CurrentStep.RouteAddings);
-                    OnPropertyChanged(nameof(ListFiles));
-                }
-            } 
-        }
+        //private Order _order;
+        public Order order { get; set; }
+        //{ 
+        //    get => _order; 
+        //    set 
+        //    { 
+        //        if(Set(ref _order, value))
+        //        {
+        //            CurrentStep = value.RouteOrders.FirstOrDefault(it => it.ro_step == value.o_stepRoute);
+        //            ListFiles = new ObservableCollection<RouteAdding>( CurrentStep.RouteAddings);
+        //            OnPropertyChanged(nameof(ListFiles));
+        //        }
+        //    } 
+        //}
         
         private RouteOrder _CurrentStep;
         public RouteOrder CurrentStep { get => _CurrentStep; set { Set(ref _CurrentStep, value); } }
 
 
-        public OrderWindowViewModel()
+        public OrderWindowViewModel() { }
+
+        public OrderWindowViewModel(Order ord)
         {
+            order = ord;
+            CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+            ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
+
         }
 
         public ObservableCollection<RouteAdding> ListFiles { get; set; } // = new ObservableCollection<RouteAdding>();
@@ -185,51 +191,68 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private void SetStatusStep(RouteOrder step, RouteOrder nextStep)
         {
-           
+            int selectStatus = 0;
+
             switch((EnumTypesStep)step.ro_typeId)
             {
                 case EnumTypesStep.Coordinate:
-                    step.ro_statusId = (int)EnumStatus.Coordinated;
+                    //step.ro_statusId = (int)EnumStatus.Coordinated;
+                    selectStatus = (int)EnumStatus.Coordinated;
                     break;
                 
                 case EnumTypesStep.Approve:
-                    step.ro_statusId = (int)EnumStatus.Approved;
+                    selectStatus = (int)EnumStatus.Approved;
                     break;
 
                 case EnumTypesStep.Review:
-                    step.ro_statusId = (int)EnumStatus.Coordinated;
+                    selectStatus = (int)EnumStatus.Coordinated;
                     break;
 
                 case EnumTypesStep.Notify:
-                    step.ro_statusId = (int)EnumStatus.Coordinated;
+                    selectStatus = (int)EnumStatus.Coordinated;
+                    break;
+
+                case EnumTypesStep.Created:
+                    selectStatus = (int)EnumStatus.Created;
                     break;
 
             }
 
-            order.o_statusId = step.ro_statusId;
+            step.ro_statusId = selectStatus;
+            order.o_statusId = selectStatus;
+            //step.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
+            //order.RouteStatus = step.RouteStatus;
 
             if (nextStep != null)
             {
                 switch ((EnumTypesStep)nextStep.ro_typeId)
                 {
                     case EnumTypesStep.Coordinate:
-                        nextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                        selectStatus = (int)EnumStatus.CoordinateWork;
                         break;
 
                     case EnumTypesStep.Approve:
-                        nextStep.ro_statusId = (int)EnumStatus.ApprovWork;
+                        selectStatus = (int)EnumStatus.ApprovWork;
                         break;
 
                     case EnumTypesStep.Review:
-                        nextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                        selectStatus = (int)EnumStatus.CoordinateWork;
                         break;
 
                     case EnumTypesStep.Notify:
-                        nextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                        selectStatus = (int)EnumStatus.CoordinateWork;
                         break;
+
+                    case EnumTypesStep.Created:
+                        selectStatus = (int)EnumStatus.Created;
+                        break;
+
                 }
 
-                order.o_statusId = nextStep.ro_statusId;
+                nextStep.ro_statusId = selectStatus;
+                order.o_statusId = selectStatus;
+                //nextStep.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
+                //order.RouteStatus = nextStep.RouteStatus;
             }
 
 

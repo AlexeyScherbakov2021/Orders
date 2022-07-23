@@ -10,7 +10,7 @@
     <Window.DataContext>
         <vm:LoginWindowViewModel/>
     </Window.DataContext>
-    <Grid Background="#FFEAEAEA">
+    <Grid Background="#FFEAEAEA" FocusManager.FocusedElement="{Binding ElementName=listUser}">
         <Label Content="Пользователь" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top"/>
         <Label Content="Пароль" HorizontalAlignment="Left" Margin="45,72,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.02,-0.115"/>
         <PasswordBox Name="pwd" HorizontalAlignment="Left" Height="23" Margin="101,75,0,0" VerticalAlignment="Top" Width="211" TabIndex="1"/>
@@ -24,7 +24,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ComboBox Grid.Column="1" DisplayMemberPath="u_login" 
+            <ComboBox x:Name="listUser" Grid.Column="1" DisplayMemberPath="u_login" 
                       HorizontalAlignment="Left" Height="Auto" 
                       ItemsSource="{Binding ListUser}" 
                       SelectedItem="{Binding SelectUser}"

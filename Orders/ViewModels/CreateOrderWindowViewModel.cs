@@ -62,7 +62,6 @@ namespace Orders.ViewModels
                 ro_check = 1
             };
 
-            //repo.Add<RouteOrder>(CreateStep);
             Order.RouteOrders.Add(CreateStep);
         }
 
@@ -94,7 +93,7 @@ namespace Orders.ViewModels
 
             Order.o_statusId = (int)EnumStatus.Created;
 
-            repo.Add<Order>(Order, true);
+            repo.Add(Order, true);
 
             App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().DialogResult = true;
 

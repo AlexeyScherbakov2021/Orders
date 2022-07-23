@@ -35,7 +35,7 @@ namespace Orders.ViewModels
 
         public MainWindowViewModel()
         {
-            App.CurrentUser = new User { id = 11, u_name = "Создатель заказов" };
+            App.CurrentUser = new User { id = 11, u_name = "Создатель заказов", u_role = 0 };
             //repo = new RepositoryBase();
 
             //ListOrders = new ObservableCollection<Order>(repo.Orders
@@ -60,6 +60,7 @@ namespace Orders.ViewModels
 
             if(CheckCreated)
             {
+                // созданные мной заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                 .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(i => i.ro_step == 0 && i.ro_userId == App.CurrentUser.id).Any())
                 );
@@ -67,18 +68,23 @@ namespace Orders.ViewModels
             }
             else if(CheckCoordinated)
             {
+                // Требующие рассмотрения
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.RouteOrders.Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id).Any())
+                    .Where(it => it.RouteOrders
+                            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id)
+                            .Any())
                    );
             }
             else if(CheckClosed)
             {
+                // Закрытые заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
                 );
             }
             else if(CheckWork)
             {
+                // В работе
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
                 );
@@ -86,14 +92,20 @@ namespace Orders.ViewModels
             }
             else
             {
+                // все заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
                 );
             }
 
+
+            foreach (var item in ListOrders)
+                item.RouteOrders = SortStepRoute(item.RouteOrders);
+
             OnPropertyChanged(nameof(ListOrders));
 
         }
+
 
 
         //--------------------------------------------------------------------------------
@@ -116,7 +128,9 @@ namespace Orders.ViewModels
         private void OnDblClickCommandExecuted(object p)
         {
             OrderWindow orderWindow = new OrderWindow();
-            (orderWindow.DataContext as OrderWindowViewModel).order = SelectedOrder;
+            OrderWindowViewModel vm = new OrderWindowViewModel(SelectedOrder);
+            orderWindow.DataContext = vm;
+            //(orderWindow.DataContext as OrderWindowViewModel).order = SelectedOrder;
             if (orderWindow.ShowDialog() == true)
             {
                 repo.Save();
@@ -140,7 +154,8 @@ namespace Orders.ViewModels
             {
                 Order order = (orderWindow.DataContext as CreateOrderWindowViewModel).Order;
 
-                ListOrders.Add(order);
+                //ListOrders.Add(order);
+                //repo.Add(order, true);
                 //repo.Save();
 
                 OnFilterCommandExecuted(null);
@@ -150,6 +165,17 @@ namespace Orders.ViewModels
 
 
         #endregion
+
+        //--------------------------------------------------------------------------------
+        // Сортировка маршрута по номерам
+        //--------------------------------------------------------------------------------
+        private ICollection<RouteOrder> SortStepRoute(ICollection<RouteOrder> ListRO)
+        {
+            return ListRO.OrderBy(o => o.ro_step).ToList();
+            //return list;
+            //List<RouteOrder> list = ListRO.OrderBy(o => o.ro_step).ToList();
+            //return list;
+        }
 
 
 

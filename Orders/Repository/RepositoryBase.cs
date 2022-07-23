@@ -18,8 +18,22 @@ namespace Orders.Repository
         public IQueryable<User> Users => db.Users;
         public IQueryable<RouteType> RouteTypes => db.RouteTypes;
         public IQueryable<RouteOrder> RouteOrders => db.RouteOrders;
-        public IQueryable<Order> Orders => db.Orders.Include(i => i.RouteOrders);
+        public IQueryable<Order> Orders => db.Orders;
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
+
+
+        //public IQueryable<Order> GetAll()
+        //{
+        //    db.Orders.Load();
+        //    return db.Orders;
+        //}
+
+        public RepositoryBase()
+        {
+            RouteTypes.Load();
+            Users.Load();
+            RouteStatus.Load();
+        }
 
         //-----------------------------------------------------------------------------------------
         // сохранение базы

@@ -68,18 +68,20 @@
                         <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
+                                <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="26"/>
                                             <ColumnDefinition Width="110"/>
                                             <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
-
-                                        <TextBlock Text="{Binding ro_step}"/>
-                                        <TextBlock Text="{Binding User.u_name}" Grid.Column="1"/>
-                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2"/>
+                                    <Ellipse Width="22" Height="22" StrokeThickness="1" Stroke="Blue" Margin="2,2,2,2"/>
+                                    <TextBlock Text="{Binding ro_step}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding User.u_name}" Grid.Column="1" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2" VerticalAlignment="Center"/>
                                     </Grid>
-                                </DataTemplate>
+                                </Border>
+                            </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </GroupBox>
