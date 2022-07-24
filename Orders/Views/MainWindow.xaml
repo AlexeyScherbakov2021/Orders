@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Orders.ViewModels"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:conv="clr-namespace:Orders.Infrastructure.Converters"
         xmlns:local="clr-namespace:Orders"
         mc:Ignorable="d"
@@ -20,13 +21,33 @@
             <ColumnDefinition Width="179*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="46.945"/>
+            <RowDefinition Height="47"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <ToolBarPanel Grid.Row="0" Orientation="Horizontal" >
-            <Button Margin="5" Content="Создать заказ" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}" />
-            <Button Margin="5" Content="Удалить" Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+            <Button Margin="5" Command="{Binding CreateCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_FileContract" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Создать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+            </Button>
+            <Button Margin="5" Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_Trash" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+            </Button>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                 <RadioButton Content="Созданные здесь" IsChecked="{Binding CheckCreated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" />
                 <RadioButton Content="Требующие рассмотрения" IsChecked="{Binding CheckCoordinated, Mode=TwoWay}" Margin="5,0" Command="{Binding FilterCommand}" />
@@ -35,7 +56,7 @@
                 <RadioButton Content="Все" Margin="5,0" IsChecked="{Binding CheckAll, Mode=TwoWay}" Command="{Binding FilterCommand}" />
             </StackPanel>
         </ToolBarPanel>
-        <Border Grid.Row="1" Margin="10" Background="#FFEDEDED">
+        <Border Grid.Row="1" Margin="10,10,10,10" Background="#FFEDEDED">
             <Border.Effect>
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
@@ -92,7 +113,7 @@
 
             </GroupBox>
         </Border>
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="3" Background="#FFE8E8E8" BorderBrush="#FF777777" BorderThickness="1,1,1,1">
+        <StatusBar Grid.Row="2" Margin="3,3,3,3" Background="#FFE8E8E8" BorderBrush="#FF777777" BorderThickness="1,1,1,1">
             <StatusBarItem Margin="10,0" Content="Пользователь:  "/>
             <StatusBarItem Content="{Binding CurrentUser.u_name}"/>
         </StatusBar>

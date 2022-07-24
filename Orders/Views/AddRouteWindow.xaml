@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
@@ -13,16 +14,38 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="42"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <ToolBar Height="40" Grid.ColumnSpan="2">
-            <Button Margin="3"  Content="Добавить" Command="{Binding AddRouteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
-            <Button Margin="3" Content="Отменить" Style="{DynamicResource ButtonStyleShadow}"/>
+        <ToolBar Grid.ColumnSpan="2">
+            <Button Margin="3" Command="{Binding AddRouteCommand}" Style="{DynamicResource ButtonStyleShadow}" VerticalAlignment="Stretch">
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_UserPlus" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Добавить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
+            <Button Margin="3" Command="{Binding CancelCommand}" Style="{DynamicResource ButtonStyleShadow}" VerticalAlignment="Stretch">
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_WindowClose" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Отменить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
         </ToolBar>
 
         <Border DockPanel.Dock="Right" Grid.Column="1" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
@@ -62,7 +85,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <CheckBox Margin="10,3" Content="Вернуть назад" Grid.Row="1" IsChecked="{Binding IsReturn}" />
+                    <CheckBox Margin="10,3" Content="Вернуть назад после рассмотрения" Grid.Row="1" IsChecked="{Binding IsReturn}" />
 
                 <GroupBox Header="Добавить перед..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD">
                         <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}">

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Orders.ViewModels"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
         Title="Создание заказа" Height="600" Width="900" WindowStartupLocation="CenterScreen">
@@ -12,16 +13,50 @@
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="38"/>
+            <RowDefinition Height="43"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <ToolBar>
-            <Button Margin="2" Content="Создать" Command="{Binding CreateCommand}" Style="{StaticResource ButtonStyleShadow}" />
-            <Button Margin="2" IsCancel="True" Content="Отменить" Command="{Binding CancelCommand}" Style="{StaticResource ButtonStyleShadow}" />
+        <ToolBar Grid.ColumnSpan="2">
+            <Button Margin="2" Command="{Binding CreateCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_FileContract" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Создать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+            </Button>
+            <Button Margin="2" Command="{Binding SendCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_FileExport" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Отправить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
+            <Button Margin="2" IsCancel="True" Command="{Binding CancelCommand}" 
+                    Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_WindowClose" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Отменить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
         </ToolBar>
 
         <Border Background="#FFF1F1F1" Margin="8" Grid.Row="1" Padding="6">
@@ -37,7 +72,7 @@
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="100"/>
-                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="28"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Margin="2,2,2,2" Text="Номер" VerticalAlignment="Center" />
@@ -50,7 +85,15 @@
                     <TextBox Text="{Binding Order.o_body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5"/>
 
                     <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6" VerticalAlignment="Center"/>
-                    <Button Content="..." Command="{Binding AddFileCommand}" Grid.Row="6" Margin="112,2,0,2" Width="28" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleShadow}"/>
+                    <!--<Button Content="..." Command="{Binding AddFileCommand}" Grid.Row="6" Margin="112,2,0,2" Width="28" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleShadow}"/>-->
+                    <Button Command="{Binding AddFileCommand}" Grid.Row="6" Grid.Column="1" Width="55" Height="23" 
+                            HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                            Style="{DynamicResource ButtonStyleShadow}" Margin="112,2,0,2" Padding="0,-3,0,-3">
+                        <fa:ImageAwesome Icon="Solid_Paperclip" Foreground="Blue" Stretch="Uniform" Width="18" 
+                                     Height="20" >
+                        </fa:ImageAwesome>
+                    </Button>
+
 
                     <ListBox ItemsSource="{Binding ListFiles}" DisplayMemberPath="ad_text" AllowDrop="True" Grid.Row="7" />
 

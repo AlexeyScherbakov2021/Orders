@@ -39,7 +39,7 @@ namespace Orders.ViewModels
             ListRouteOrder = order.RouteOrders.Where(it => it.ro_step > order.o_stepRoute).ToList();
 
             ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).ToList();
-            ListRouteType = MainWindowViewModel.repo.RouteTypes.ToList();
+            ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created).ToList();
 
         }
 
@@ -50,7 +50,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => true;
+        private bool CanAddRouteCommand(object p) => SelectedUser != null && SelectedType != null && SelectedRouteOrder != null;
         private void OnAddRouteCommandExecuted(object p)
         {
 
@@ -95,6 +95,19 @@ namespace Orders.ViewModels
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 
         }
+
+        //--------------------------------------------------------------------------------
+        // Команда Отменить
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _CancelCommand = null;
+        public ICommand CancelCommand => _CancelCommand ?? new LambdaCommand(OnCancelCommandExecuted, CanCancelCommand);
+        private bool CanCancelCommand(object p) => true;
+        private void OnCancelCommandExecuted(object p)
+        {
+            App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().Close();
+        }
+
+
         #endregion
 
     }

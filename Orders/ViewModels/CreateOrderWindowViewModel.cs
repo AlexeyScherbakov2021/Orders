@@ -100,6 +100,44 @@ namespace Orders.ViewModels
         }
 
         //--------------------------------------------------------------------------------
+        // Команда Отправить
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _SendCommand = null;
+        public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
+        private bool CanSendCommand(object p) => true;
+        private void OnSendCommandExecuted(object p)
+        {
+            int curStep = 1;
+
+            foreach (var step in ListRouteStep)
+            {
+                if (step.r_disabled == false)
+                {
+                    RouteOrder ro = new RouteOrder();
+                    ro.ro_step = curStep++;
+                    ro.ro_userId = step.r_userId;
+                    ro.ro_typeId = step.r_type;
+                    ro.ro_disabled = false;
+                    ro.ro_statusId = (int)EnumStatus.Waiting;
+                    Order.RouteOrders.Add(ro);
+                }
+            }
+
+
+            Order.o_stepRoute++;
+            RouteOrder NextStep = Order.RouteOrders.FirstOrDefault(it => it.ro_step == Order.o_stepRoute);
+            OrderWindowViewModel.SetStatusStep(CreateStep, NextStep, Order);
+
+            CreateStep.ro_check = 1;
+            CreateStep.ro_date_check = DateTime.Now;
+
+            repo.Add(Order, true);
+
+            App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().DialogResult = true;
+
+        }
+
+        //--------------------------------------------------------------------------------
         // Команда Отменить
         //--------------------------------------------------------------------------------
         private readonly ICommand _CancelCommand = null;
@@ -107,6 +145,7 @@ namespace Orders.ViewModels
         private bool CanCancelCommand(object p) => true;
         private void OnCancelCommandExecuted(object p)
         {
+            App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().Close();
         }
 
         //--------------------------------------------------------------------------------

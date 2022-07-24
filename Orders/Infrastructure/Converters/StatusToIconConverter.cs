@@ -39,9 +39,9 @@ namespace Orders.Infrastructure.Converters
                         Source = new BitmapImage(new Uri("/Orders;component/Resource/вернут.png", UriKind.Relative));
                         break;
 
-                    case EnumStatus.Waiting:
-                        Source = new BitmapImage(new Uri("/Orders;component/Resource/ожидание.png", UriKind.Relative));
-                        break;
+                    //case EnumStatus.Waiting:
+                    //    Source = new BitmapImage(new Uri("/Orders;component/Resource/ожидание.png", UriKind.Relative));
+                    //    break;
 
                     case EnumStatus.Refused:
                         Source = new BitmapImage(new Uri("/Orders;component/Resource/отказано.png", UriKind.Relative));

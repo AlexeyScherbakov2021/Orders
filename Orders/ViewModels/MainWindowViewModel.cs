@@ -135,20 +135,20 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         // Команда Отправить заказ
         //--------------------------------------------------------------------------------
-        private readonly ICommand _SendCommand = null;
-        public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
-        private bool CanSendCommand(object p) => true;
-        private void OnSendCommandExecuted(object p)
-        {
+        //private readonly ICommand _SendCommand = null;
+        //public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
+        //private bool CanSendCommand(object p) => true;
+        //private void OnSendCommandExecuted(object p)
+        //{
 
-        }
+        //}
 
         //--------------------------------------------------------------------------------
         // Команда Удалить заказ
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteCommand = null;
         public ICommand DeleteCommand => _DeleteCommand ?? new LambdaCommand(OnDeleteCommandExecuted, CanDeleteCommand);
-        private bool CanDeleteCommand(object p) => SelectedOrder != null;
+        private bool CanDeleteCommand(object p) => SelectedOrder != null && SelectedOrder.o_statusId == (int)EnumStatus.Closed;
         private void OnDeleteCommandExecuted(object p)
         {
             if(MessageBox.Show($"Удалить заказ {SelectedOrder.o_name}","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -166,8 +166,8 @@ namespace Orders.ViewModels
         private bool CanDblClickCommand(object p) => SelectedOrder != null;
         private void OnDblClickCommandExecuted(object p)
         {
-            OrderWindow orderWindow = new OrderWindow();
             OrderWindowViewModel vm = new OrderWindowViewModel(SelectedOrder);
+            OrderWindow orderWindow = new OrderWindow();
             orderWindow.DataContext = vm;
             //(orderWindow.DataContext as OrderWindowViewModel).order = SelectedOrder;
             if (orderWindow.ShowDialog() == true)

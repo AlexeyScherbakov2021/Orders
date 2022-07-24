@@ -21,6 +21,11 @@ namespace Orders.ViewModels
     {
         public User CurrentUser => App.CurrentUser;
 
+        private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == 1) ?? false;
+        private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
+        private bool IsCreateUser => order?.RouteOrders.Count > 0
+                                                && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
+
         //private Order _order;
         public Order order { get; set; }
         //{ 
@@ -60,11 +65,11 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => true;
+        private bool CanAddRouteCommand(object p) => IsWorkUser && !IsAllSteps;
         private void OnAddRouteCommandExecuted(object p)
         {
-            AddRouteWindow winAddRoute = new AddRouteWindow();
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
+            AddRouteWindow winAddRoute = new AddRouteWindow();
             winAddRoute.DataContext = view;
             if (winAddRoute.ShowDialog() == true)
             {
@@ -79,7 +84,9 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _SendCommand = null;
         public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
-        private bool CanSendCommand(object p) => true;
+        private bool CanSendCommand(object p) => IsWorkUser
+                                        //&& order.o_stepRoute < order.RouteOrders.Count
+                                        && !IsAllSteps;
         private void OnSendCommandExecuted(object p)
         {
 
@@ -92,6 +99,7 @@ namespace Orders.ViewModels
             {
                 // маршрут окончен
                 NextStep = null;
+                //order.o_stepRoute = order.RouteOrders.Count;
                 //order.o_statusId = (int)EnumStatus.Approved;
             }
             else
@@ -100,7 +108,7 @@ namespace Orders.ViewModels
                 NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
                 //order.o_statusId = (int)EnumStatus.Coordinated;
             }
-            SetStatusStep(CurrentStep, NextStep);
+            SetStatusStep(CurrentStep, NextStep, order);
 
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
         }
@@ -110,7 +118,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _BrowseCommand = null;
         public ICommand BrowseCommand => _BrowseCommand ?? new LambdaCommand(OnBrowseCommandExecuted, CanBrowseCommand);
-        private bool CanBrowseCommand(object p) => true;
+        private bool CanBrowseCommand(object p) => IsWorkUser && !IsAllSteps;
         private void OnBrowseCommandExecuted(object p)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog();
@@ -137,7 +145,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
-        private bool CanCloseOrderCommand(object p) => true;
+        private bool CanCloseOrderCommand(object p) => IsAllSteps && IsCreateUser;
         private void OnCloseOrderCommandExecuted(object p)
         {
             order.o_statusId = (int)EnumStatus.Closed;
@@ -149,7 +157,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _RefuseCommand = null;
         public ICommand RefuseCommand => _RefuseCommand ?? new LambdaCommand(OnRefuseCommandExecuted, CanRefuseCommand);
-        private bool CanRefuseCommand(object p) => true;
+        private bool CanRefuseCommand(object p) => IsWorkUser && !IsAllSteps;
         private void OnRefuseCommandExecuted(object p)
         {
             order.o_statusId = (int)EnumStatus.Refused;
@@ -181,6 +189,18 @@ namespace Orders.ViewModels
             }
         }
 
+        //--------------------------------------------------------------------------------
+        // Команда Выйти
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _CancelCommand = null;
+        public ICommand CancelCommand => _CancelCommand ?? new LambdaCommand(OnCancelCommandExecuted, CanCancelCommand);
+        private bool CanCancelCommand(object p) => true;
+        private void OnCancelCommandExecuted(object p)
+        {
+            App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().Close();
+        }
+
+
 
         #endregion
 
@@ -189,7 +209,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         // переустановки статусов при отправке далее
         //--------------------------------------------------------------------------------
-        private void SetStatusStep(RouteOrder step, RouteOrder nextStep)
+        public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
         {
             int selectStatus = 0;
 
