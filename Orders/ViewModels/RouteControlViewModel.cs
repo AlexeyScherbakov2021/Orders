@@ -22,9 +22,9 @@ namespace Orders.ViewModels
         //IRepository<RouteType> repoRouteType = new RepositoryMain<RouteType>();
         //IRepository<RouteStep> repoRouteStep = new RepositoryMain<RouteStep>();
 
-        RepositoryBase repo = new RepositoryBase();
+        RepositoryBase repo; // = new RepositoryBase();
 
-        public List<User> ListUser { get; set; }
+        public ObservableCollection<User> ListUser { get; set; }
         public ObservableCollection<RouteType> ListRouteType { get; set; }
 
         private ObservableCollection<Route> _ListRoute;
@@ -76,7 +76,8 @@ namespace Orders.ViewModels
 
         public RouteControlViewModel()
         {
-            ListUser = repo.Users.Where(it => it.u_role < 1).ToList();
+            repo = SettingWindowViewModel.repo;
+            ListUser = new ObservableCollection<User>( repo.Users.Where(it => it.u_role < 1));
             ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes);
             ListRoute = new ObservableCollection<Route>(repo.Routes);
 
@@ -153,9 +154,22 @@ namespace Orders.ViewModels
         private bool CanDeleteStepCommand(object p) => SelectedStep != null;
         private void OnDeleteStepCommandExecuted(object p)
         {
+
             repo.DeleteRouteStep(SelectedStep);
             Renumerate();
             repo.Save();
+        }
+
+        //--------------------------------------------------------------------------------
+        // Команда Обновить
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _RefreshCommand = null;
+        public ICommand RefreshCommand => _RefreshCommand ?? new LambdaCommand(OnRefreshCommandExecuted, CanRefreshCommand);
+        private bool CanRefreshCommand(object p) => SelectedStep != null;
+        private void OnRefreshCommandExecuted(object p)
+        {
+            ListUser = new ObservableCollection<User>(repo.Users.Where(it => it.u_role < 1));
+            OnPropertyChanged(nameof(ListUser));
         }
 
         //--------------------------------------------------------------------------------

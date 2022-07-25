@@ -76,6 +76,8 @@
                             <Button Content="Добавить" Margin="4" Command="{Binding AddStepCommand}" 
                                 CommandParameter="{Binding SelectedItem, ElementName=listBox1}"
                                 VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
+                            <Button Content="Обновить" Margin="4" Command="{Binding RefreshCommand}" 
+                                VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
                         </StackPanel>
                     </Expander>
                     <DataGrid x:Name="dGrid" ItemsSource="{Binding _ListRouteStepView.View}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}" 

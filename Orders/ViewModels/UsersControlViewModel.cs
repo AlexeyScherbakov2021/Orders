@@ -91,7 +91,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         public UsersControlViewModel()
         {
-            repo = new RepositoryBase();
+            repo = SettingWindowViewModel.repo;
             ListUser = new ObservableCollection<User>(repo.Users);
         }
 

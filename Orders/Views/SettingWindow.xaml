@@ -5,14 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Настройки" Height="650" Width="900" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:RouteControlViewModel/>
+    </Window.DataContext>
     <Grid>
-        <TabControl>
+        <TabControl x:Name="tab" >
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
             <TabItem Header="Пользователи">
                 <local:UsersControl Margin="8"/>
             </TabItem>
-            <TabItem Header="Маршруты">
+            <TabItem Header="Маршруты" >
                 <local:RouteControl Margin="8"/>
             </TabItem>
         </TabControl>
