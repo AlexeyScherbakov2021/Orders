@@ -61,6 +61,43 @@ namespace Orders.ViewModels
         #region Команды
 
         //--------------------------------------------------------------------------------
+        // Команда Вернуть
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _ReturnCommand = null;
+        public ICommand ReturnCommand => _ReturnCommand ?? new LambdaCommand(OnReturnCommandExecuted, CanReturnCommand);
+        private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps;
+        private void OnReturnCommandExecuted(object p)
+        {
+            ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
+            ReturnOrderWindow winReturnRoute = new ReturnOrderWindow();
+            winReturnRoute.DataContext = view;
+            if (winReturnRoute.ShowDialog() == true)
+            {
+                foreach(var item in order.RouteOrders)
+                {
+                    if (item.ro_step >= view.SelectedRouteOrder.ro_step && item.ro_step < order.o_stepRoute)
+                    {
+                        item.ro_check = 0;
+                        item.ro_statusId = (int)EnumStatus.Waiting;
+                        item.ro_date_check = null;
+                    }
+                }
+
+                view.SelectedRouteOrder.ro_statusId = (int)EnumStatus.CoordinateWork;
+                CurrentStep.ro_statusId = (int)EnumStatus.Return;
+                order.o_stepRoute = view.SelectedRouteOrder.ro_step;
+                order.o_statusId = (int)EnumStatus.Return;
+
+                //MainWindowViewModel.repo.Refresh<RouteOrder>(order.RouteOrders);
+
+                //MainWindowViewModel.repo.Save();
+                //OnPropertyChanged(nameof(order));
+                App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+            }
+        }
+
+
+        //--------------------------------------------------------------------------------
         // Команда Добавить этап
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
@@ -159,7 +196,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
-        private bool CanCloseOrderCommand(object p) => IsAllSteps && IsCreateUser;
+        private bool CanCloseOrderCommand(object p) =>  IsCreateUser && (IsAllSteps || order.o_statusId == (int)EnumStatus.Refused);
         private void OnCloseOrderCommandExecuted(object p)
         {
             order.o_statusId = (int)EnumStatus.Closed;

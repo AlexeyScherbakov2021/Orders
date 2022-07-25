@@ -94,6 +94,7 @@
     <Compile Include="Repository\RepositoryBase.cs" />
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
     <Compile Include="ViewModels\OrderWindowViewModel.cs" />
+    <Compile Include="ViewModels\ReturnOrderWindowViewModel.cs" />
     <Compile Include="ViewModels\RouteControlViewModel.cs" />
     <Compile Include="ViewModels\SettingWindowViewModel.cs" />
     <Compile Include="ViewModels\UsersControlViewModel.cs" />
@@ -102,6 +103,9 @@
     </Compile>
     <Compile Include="Views\OrderWindow.xaml.cs">
       <DependentUpon>OrderWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReturnOrderWindow.xaml.cs">
+      <DependentUpon>ReturnOrderWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RouteControl.xaml.cs">
       <DependentUpon>RouteControl.xaml</DependentUpon>
@@ -160,6 +164,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\OrderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReturnOrderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

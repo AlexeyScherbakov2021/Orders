@@ -28,8 +28,6 @@ namespace Orders.Repository
             if (item is null || item.Count == 0)
                 return;
 
-            //db.Entry(item).State = EntityState.Detached;
-
             try
             {
 
@@ -40,11 +38,11 @@ namespace Orders.Repository
         }
 
 
-        public void GetAll()
-        {
-            List<Order> list = db.Orders.Where(it => it.o_stepRoute < 20).Include(ink => ink.RouteOrders).ToList();
-            db.Entry(list[1]).Reload();
-        }
+        //public void GetAll()
+        //{
+        //    List<Order> list = db.Orders.Where(it => it.o_stepRoute < 20).Include(ink => ink.RouteOrders).ToList();
+        //    db.Entry(list[1]).Reload();
+        //}
 
 
         public RepositoryBase()

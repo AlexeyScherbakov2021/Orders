@@ -1,0 +1,77 @@
+﻿<Window x:Class="Orders.Views.ReturnOrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
+        xmlns:cmd="clr-namespace:Orders.Infrastructure.Commands"
+        xmlns:local="clr-namespace:Orders.Views"
+        mc:Ignorable="d"
+        Title="Возврат заказа на этап" Height="300" Width="400" WindowStartupLocation="CenterScreen">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="257*"/>
+        </Grid.RowDefinitions>
+
+        <ToolBar Grid.ColumnSpan="2">
+            <Button Margin="3" Style="{DynamicResource ButtonStyleShadow}" VerticalAlignment="Stretch"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:ReturnOrderWindow}}">
+                <Button.Command>
+                    <cmd:CloseDialogCommand DialogResult="True"/>
+                </Button.Command>
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_Backward" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Вернуть" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
+            <Button Margin="3" Style="{DynamicResource ButtonStyleShadow}" VerticalAlignment="Stretch"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:ReturnOrderWindow}}">
+                <Button.Command>
+                    <cmd:CloseDialogCommand DialogResult="False"/>
+                </Button.Command>
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Regular_WindowClose" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Отменить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
+        </ToolBar>
+
+        <GroupBox Header="Вернуть на этап ..." FontWeight="Bold" Margin="3,3,3,3" BorderBrush="#FFADADAD" Grid.Row="1">
+            <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="26"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="22" Height="22" StrokeThickness="1" Stroke="Blue" Margin="2,2,2,2"/>
+                                <TextBlock Text="{Binding ro_step}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding User.u_name}" Grid.Column="1" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+
+
+    </Grid>
+</Window>

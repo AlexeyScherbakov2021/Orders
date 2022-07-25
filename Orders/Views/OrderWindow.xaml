@@ -61,7 +61,7 @@
                     <TextBlock Text="Отказать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
             </Button>
-            <Button Margin="2" Command="{Binding}" Style="{StaticResource ButtonStyleShadow}" Visibility="Collapsed" VerticalAlignment="Stretch">
+            <Button Margin="2" Command="{Binding ReturnCommand}" Style="{StaticResource ButtonStyleShadow}"  VerticalAlignment="Stretch">
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Backward" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >

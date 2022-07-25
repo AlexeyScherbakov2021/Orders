@@ -70,6 +70,7 @@ namespace Orders.ViewModels
         private void OnFilterCommandExecuted(object p)
         {
             //int select = int.Parse(p.ToString());
+            timer.Stop();
 
             repo.Refresh<Order>(ListOrders);
             if (ListOrders != null)
@@ -140,20 +141,9 @@ namespace Orders.ViewModels
 
             OnPropertyChanged(nameof(ListOrders));
 
+            timer.Start();
         }
 
-
-
-        //--------------------------------------------------------------------------------
-        // Команда Отправить заказ
-        //--------------------------------------------------------------------------------
-        //private readonly ICommand _SendCommand = null;
-        //public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
-        //private bool CanSendCommand(object p) => true;
-        //private void OnSendCommandExecuted(object p)
-        //{
-
-        //}
 
         //--------------------------------------------------------------------------------
         // Команда Удалить заказ
@@ -163,10 +153,11 @@ namespace Orders.ViewModels
         private bool CanDeleteCommand(object p) => SelectedOrder != null && SelectedOrder.o_statusId == (int)EnumStatus.Closed;
         private void OnDeleteCommandExecuted(object p)
         {
-            if(MessageBox.Show($"Удалить заказ {SelectedOrder.o_name}","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-
-            repo.Delete(SelectedOrder, true);
-            ListOrders.Remove(SelectedOrder);
+            if (MessageBox.Show($"Удалить заказ {SelectedOrder.o_name}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                repo.Delete(SelectedOrder, true);
+                ListOrders.Remove(SelectedOrder);
+            }
         }
 
 
@@ -203,6 +194,8 @@ namespace Orders.ViewModels
         private bool CanCreateCommand(object p) => true;
         private void OnCreateCommandExecuted(object p)
         {
+            timer.Stop();
+
             CreateOrderWindow orderWindow = new CreateOrderWindow();
             if (orderWindow.ShowDialog() == true)
             {
@@ -215,6 +208,7 @@ namespace Orders.ViewModels
                 OnFilterCommandExecuted(null);
 
             }
+            timer.Start();
         }
 
 
