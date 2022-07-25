@@ -72,7 +72,7 @@
                             </ListBox>
                             <ListBox x:Name="listBox1" ItemsSource="{Binding ListUser}" DisplayMemberPath="u_name"
                                 SelectedItem="{Binding SelectAddUser}"
-                                Margin="4" Width="150"/>
+                                Margin="4" Width="250"/>
                             <Button Content="Добавить" Margin="4" Command="{Binding AddStepCommand}" 
                                 CommandParameter="{Binding SelectedItem, ElementName=listBox1}"
                                 VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
@@ -87,7 +87,7 @@
                             <DataGridTextColumn Header="№" Binding="{Binding r_step}" IsReadOnly="True"/>
                             <DataGridCheckBoxColumn Header="Откл" Binding="{Binding r_disabled}" CanUserSort="False" />
                             <DataGridTextColumn Header="Цель" Binding="{Binding RouteType.rt_name}" IsReadOnly="True" Width="150" CanUserSort="False"/>
-                            <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_name}" IsReadOnly="True" Width="180" CanUserSort="False"/>
+                            <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_name}" IsReadOnly="True" Width="250" CanUserSort="False"/>
                             <!--<DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

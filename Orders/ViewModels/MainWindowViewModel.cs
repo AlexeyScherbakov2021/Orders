@@ -13,11 +13,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Orders.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {
+        private readonly DispatcherTimer timer = new DispatcherTimer();
+
         public static readonly RepositoryBase repo = new RepositoryBase();
         //private readonly IRepository<RouteOrder> repoRouteOrder;
         public ObservableCollection<Order> ListOrders { get; set; }
@@ -42,9 +45,18 @@ namespace Orders.ViewModels
             //ListOrders = new ObservableCollection<Order>(repo.Orders
             //    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any() )
             //    );
-            
+
+            timer.Interval = new TimeSpan(0, 0, 5);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+
             //CheckCreated = true;
             OnFilterCommandExecuted("");
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            OnFilterCommandExecuted(null);
         }
 
         #region Команды
@@ -84,7 +96,7 @@ namespace Orders.ViewModels
             {
                 // Требующие рассмотрения
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders
+                    .Where(it => it.o_statusId != (int)EnumStatus.Approved && it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders 
                             .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id)
                             .Any())
                    );
@@ -166,6 +178,8 @@ namespace Orders.ViewModels
         private bool CanDblClickCommand(object p) => SelectedOrder != null;
         private void OnDblClickCommandExecuted(object p)
         {
+            timer.Stop();
+
             OrderWindowViewModel vm = new OrderWindowViewModel(SelectedOrder);
             OrderWindow orderWindow = new OrderWindow();
             orderWindow.DataContext = vm;
@@ -178,6 +192,7 @@ namespace Orders.ViewModels
 
                 OnFilterCommandExecuted(null);
             }
+            timer.Start();
         }
 
         //--------------------------------------------------------------------------------
@@ -215,8 +230,6 @@ namespace Orders.ViewModels
             //List<RouteOrder> list = ListRO.OrderBy(o => o.ro_step).ToList();
             //return list;
         }
-
-
 
     }
 }
