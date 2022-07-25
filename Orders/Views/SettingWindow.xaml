@@ -12,7 +12,7 @@
         <vm:RouteControlViewModel/>
     </Window.DataContext>
     <Grid>
-        <TabControl x:Name="tab" >
+        <TabControl x:Name="tab" SelectionChanged="tab_SelectionChanged" >
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">

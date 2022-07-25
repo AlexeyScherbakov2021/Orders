@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orders.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +25,9 @@ namespace Orders.Views
             InitializeComponent();
         }
 
+        private void tab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            (DataContext as RouteControlViewModel).RefreshCommand.Execute(this);
+        }
     }
 }
