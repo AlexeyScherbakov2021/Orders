@@ -11,7 +11,7 @@
     <Window.DataContext>
         <vm:CreateOrderWindowViewModel/>
     </Window.DataContext>
-    <Grid>
+    <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="43"/>
             <RowDefinition/>
@@ -95,7 +95,23 @@
                     </Button>
 
 
-                    <ListBox ItemsSource="{Binding ListFiles}" DisplayMemberPath="ad_text" AllowDrop="True" Grid.Row="7" />
+                    <!--<ListBox ItemsSource="{Binding ListFiles}" DisplayMemberPath="ad_text" AllowDrop="True" Grid.Row="7" />-->
+                    <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" 
+                                  Grid.Row="7" Grid.ColumnSpan="2">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <Button Width="24" DockPanel.Dock="Right" Margin="0,2,2,2" Style="{StaticResource ButtonStyleShadow}" ToolTip="Удалить файл"
+                                            Command="{Binding DataContext.DeleteFileCommand, ElementName=mainGrid }" CommandParameter="{Binding}">
+                                        <fa:ImageAwesome Icon="Regular_WindowClose" Width="16" Height="16" Foreground="DarkRed"/>
+                                    </Button>
+                                    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="3" Margin="2" Background="White">
+                                        <TextBlock Text="{Binding ad_text}" Margin="4, 0" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                    </Border>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
                     <!--<DockPanel Grid.Row="7">
                         <UniformGrid Columns="2" DockPanel.Dock="Bottom">

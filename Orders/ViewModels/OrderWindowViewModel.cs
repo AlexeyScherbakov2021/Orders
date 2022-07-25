@@ -141,6 +141,20 @@ namespace Orders.ViewModels
         }
 
         //--------------------------------------------------------------------------------
+        // Команда Удалить файл
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _DeleteFileCommand = null;
+        public ICommand DeleteFileCommand => _DeleteFileCommand ?? new LambdaCommand(OnDeleteFileCommandExecuted, CanDeleteFileCommand);
+        private bool CanDeleteFileCommand(object p) => true;
+        private void OnDeleteFileCommandExecuted(object p)
+        {
+            RouteAdding FileName = p as RouteAdding ;
+
+            ListFiles.Remove(FileName);
+
+        }
+
+        //--------------------------------------------------------------------------------
         // Команда Закрыть заказ
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
