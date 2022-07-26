@@ -65,7 +65,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _ReturnCommand = null;
         public ICommand ReturnCommand => _ReturnCommand ?? new LambdaCommand(OnReturnCommandExecuted, CanReturnCommand);
-        private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps;
+        private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnReturnCommandExecuted(object p)
         {
             ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
@@ -102,7 +102,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => IsWorkUser && !IsAllSteps;
+        private bool CanAddRouteCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnAddRouteCommandExecuted(object p)
         {
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
@@ -122,7 +122,7 @@ namespace Orders.ViewModels
         private readonly ICommand _SendCommand = null;
         public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
         private bool CanSendCommand(object p) => IsWorkUser
-                                        //&& order.o_stepRoute < order.RouteOrders.Count
+                                        && order.o_statusId != (int)EnumStatus.Refused
                                         && !IsAllSteps;
         private void OnSendCommandExecuted(object p)
         {
@@ -136,13 +136,35 @@ namespace Orders.ViewModels
             {
                 // маршрут окончен
                 NextStep = null;
-                //order.o_stepRoute = order.RouteOrders.Count;
-                //order.o_statusId = (int)EnumStatus.Approved;
             }
             else
             {
-                order.o_stepRoute++;
-                NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+                //order.o_stepRoute++;
+                NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute + 1);
+
+                if(NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
+                {
+                    // следующий этап подчиненный после главного
+                    if(NextStep.ro_check == 1)
+                    {
+                        // он уже был рассмотрен,  делаем прыжок
+                        NextStep = order.RouteOrders
+                            .FirstOrDefault(it => it.ro_step > NextStep.ro_step && it.ro_return_step is null);
+
+                    }
+                    else
+                        CurrentStep.ro_check = 0;
+
+                }
+                else if(NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
+                {
+                    // следующий этап после подчиненного уже основной
+                    // вохвращаемся на главный
+                    NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
+                    //order.o_stepRoute = NextStep.ro_step;
+                }
+
+
                 //order.o_statusId = (int)EnumStatus.Coordinated;
             }
             SetStatusStep(CurrentStep, NextStep, order);
@@ -155,7 +177,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _BrowseCommand = null;
         public ICommand BrowseCommand => _BrowseCommand ?? new LambdaCommand(OnBrowseCommandExecuted, CanBrowseCommand);
-        private bool CanBrowseCommand(object p) => IsWorkUser && !IsAllSteps;
+        private bool CanBrowseCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnBrowseCommandExecuted(object p)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog();
@@ -182,7 +204,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteFileCommand = null;
         public ICommand DeleteFileCommand => _DeleteFileCommand ?? new LambdaCommand(OnDeleteFileCommandExecuted, CanDeleteFileCommand);
-        private bool CanDeleteFileCommand(object p) => true;
+        private bool CanDeleteFileCommand(object p) => order.o_statusId != (int)EnumStatus.Refused;
         private void OnDeleteFileCommandExecuted(object p)
         {
             RouteAdding FileName = p as RouteAdding ;
@@ -208,7 +230,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _RefuseCommand = null;
         public ICommand RefuseCommand => _RefuseCommand ?? new LambdaCommand(OnRefuseCommandExecuted, CanRefuseCommand);
-        private bool CanRefuseCommand(object p) => IsWorkUser && !IsAllSteps;
+        private bool CanRefuseCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnRefuseCommandExecuted(object p)
         {
             order.o_statusId = (int)EnumStatus.Refused;
@@ -264,33 +286,41 @@ namespace Orders.ViewModels
         {
             int selectStatus = 0;
 
-            switch((EnumTypesStep)step.ro_typeId)
+            if (step.ro_check > 0)
             {
-                case EnumTypesStep.Coordinate:
-                    //step.ro_statusId = (int)EnumStatus.Coordinated;
-                    selectStatus = (int)EnumStatus.Coordinated;
-                    break;
-                
-                case EnumTypesStep.Approve:
-                    selectStatus = (int)EnumStatus.Approved;
-                    break;
+                switch ((EnumTypesStep)step.ro_typeId)
+                {
+                    case EnumTypesStep.Coordinate:
+                        //step.ro_statusId = (int)EnumStatus.Coordinated;
+                        selectStatus = (int)EnumStatus.Coordinated;
+                        break;
 
-                case EnumTypesStep.Review:
-                    selectStatus = (int)EnumStatus.Coordinated;
-                    break;
+                    case EnumTypesStep.Approve:
+                        selectStatus = (int)EnumStatus.Approved;
+                        break;
 
-                case EnumTypesStep.Notify:
-                    selectStatus = (int)EnumStatus.Coordinated;
-                    break;
+                    case EnumTypesStep.Review:
+                        selectStatus = (int)EnumStatus.Coordinated;
+                        break;
 
-                case EnumTypesStep.Created:
-                    selectStatus = (int)EnumStatus.Created;
-                    break;
+                    case EnumTypesStep.Notify:
+                        selectStatus = (int)EnumStatus.Coordinated;
+                        break;
 
+                    case EnumTypesStep.Created:
+                        selectStatus = (int)EnumStatus.Created;
+                        break;
+
+                }
+
+                step.ro_statusId = selectStatus;
+                order.o_statusId = selectStatus;
             }
+            else
+                step.ro_statusId = (int)EnumStatus.Waiting;
 
-            step.ro_statusId = selectStatus;
-            order.o_statusId = selectStatus;
+            order.o_stepRoute = step.ro_step;
+
             //step.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
             //order.RouteStatus = step.RouteStatus;
 
@@ -322,10 +352,10 @@ namespace Orders.ViewModels
 
                 nextStep.ro_statusId = selectStatus;
                 order.o_statusId = selectStatus;
+                order.o_stepRoute = nextStep.ro_step;
                 //nextStep.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
                 //order.RouteStatus = nextStep.RouteStatus;
             }
-
 
             //order.o_statusId = nextStep.ro_statusId;
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -26,7 +27,10 @@ namespace Orders.ViewModels
         public List<RouteType> ListRouteType { get; }
         public RouteType SelectedType { get; set; }
 
-        public bool IsReturn { get; set; } = false;
+        public bool _IsReturn  = false;
+        public bool IsReturn { get => _IsReturn; set { Set(ref _IsReturn, value); OnPropertyChanged(nameof(IsVisible)); } }
+        public Visibility IsVisible => IsReturn? Visibility.Collapsed : Visibility.Visible;
+    
 
         //RepositoryBase repo = new RepositoryBase();
 
@@ -50,7 +54,8 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => SelectedUser != null && SelectedType != null && SelectedRouteOrder != null;
+        private bool CanAddRouteCommand(object p) => SelectedUser != null && SelectedType != null 
+                        && (SelectedRouteOrder != null || IsReturn);
         private void OnAddRouteCommandExecuted(object p)
         {
 
@@ -60,37 +65,52 @@ namespace Orders.ViewModels
             ro.ro_statusId = (int)EnumStatus.Waiting;
             ro.ro_orderId = CurrentOrder.id;
 
-            //ro.RouteType = SelectedType;
-            //ro.User = SelectedUser;
-            ro.ro_step = SelectedRouteOrder.ro_step;
-            //ro.RouteStatus = repo.RouteStatus.FirstOrDefault(it => it.id == (int)EnumStatus.Waiting);
-            //ro.Order = CurrentOrder;
+            int insertToStep;
 
+            // если это был этап с возвратом
+            if (IsReturn)
+            {
+                // вставить этап сразу после текущего
+                // или, если уже была вставка с возвратом, то после вставленного
+                RouteOrder itemChild = ListRouteOrder.FirstOrDefault(it => it.ro_return_step == CurrentOrder.o_stepRoute);
+                if(itemChild != null)
+                {
+                    //itemChild.ro_return_step = null;
+                    insertToStep = itemChild.ro_step + 1;
+                }
+                else
+                    insertToStep = CurrentOrder.o_stepRoute + 1;
+
+                ro.ro_return_step = CurrentOrder.o_stepRoute;
+                ro.ro_child = 1;
+            }
+            else
+                insertToStep = ro.ro_step = SelectedRouteOrder.ro_step;
+
+
+            ro.ro_step = insertToStep;
+
+            // перенумерауия этапов
             List<RouteOrder> TempList = new List<RouteOrder>();                
                
             foreach(var item in CurrentOrder.RouteOrders)
             {
                 if (item.ro_step == ro.ro_step)
-                {
                     TempList.Add(ro);
-                }
 
                 if(item.ro_step >= ro.ro_step)
-                {
                     item.ro_step++;
-                }
 
                 TempList.Add(item);
 
             }
 
+
             MainWindowViewModel.repo.Add<RouteOrder>(ro);
 
             CurrentOrder.RouteOrders = TempList;
 
-            //MainWindowViewModel.repo.Update<Order>(CurrentOrder);
-            MainWindowViewModel.repo.Update(CurrentOrder, true);
-            //MainWindowViewModel.repo.Save();
+            //MainWindowViewModel.repo.Update(CurrentOrder, true);
 
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 

@@ -113,6 +113,7 @@ namespace Orders.Repository
                 }
                 catch (Exception e)
                 {
+                    db.Entry(item).State = EntityState.Unchanged;
                     ShowMessage(e.Message);
                     return false;
                 }

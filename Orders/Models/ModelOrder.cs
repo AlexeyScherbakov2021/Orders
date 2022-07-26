@@ -7,10 +7,19 @@ namespace Orders.Models
 {
     public partial class ModelOrder : DbContext
     {
+
+#if DEBUG
+        public ModelOrder()
+        : base("name=ModelLocal")
+        {
+        }
+#else
         public ModelOrder()
             : base("name=ModelOrder")
         {
         }
+#endif
+
 
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<RouteAdding> RouteAddings { get; set; }

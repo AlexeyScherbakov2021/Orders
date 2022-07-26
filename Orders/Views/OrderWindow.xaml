@@ -183,11 +183,11 @@
                     <ItemsControl.Template>
                         <ControlTemplate>
                             <Border
-                    BorderThickness="{TemplateBinding Border.BorderThickness}"
-                    Padding="{TemplateBinding Control.Padding}"
-                    BorderBrush="{TemplateBinding Border.BorderBrush}"
-                    Background="{TemplateBinding Panel.Background}"
-                    SnapsToDevicePixels="True">
+                                BorderThickness="{TemplateBinding Border.BorderThickness}"
+                                Padding="{TemplateBinding Control.Padding}"
+                                BorderBrush="{TemplateBinding Border.BorderBrush}"
+                                Background="{TemplateBinding Panel.Background}"
+                                SnapsToDevicePixels="True">
                                 <ScrollViewer>
                                     <ItemsPresenter/>
                                 </ScrollViewer>
@@ -197,8 +197,18 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="10,3,3,1" 
+                            <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  
                             BorderBrush="Black" Padding="0,3,3,3" CornerRadius="3" BorderThickness="1,1,1,1"  >
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Margin" Value="25,3,3,1"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ro_return_step}" Value="{x:Null}">
+                                                <Setter Property="Margin" Value="9,3,3,1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
                                 <Border.Effect>
                                     <DropShadowEffect ShadowDepth="0" BlurRadius="6" Color="#FFBBBBBB"/>
                                 </Border.Effect>
@@ -219,7 +229,7 @@
                                 <DockPanel Margin="0,0,0,0">
                                     <Grid Width="20" Margin="0,-3,0,-3">
                                         <Ellipse Fill="White"  Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                 Margin="-17,0,-6,0" Stroke="#FF1D0AFF" StrokeThickness="2">
+                                                 Margin="-17,0,-6,0" StrokeThickness="2" Stroke="Blue">
                                             <Ellipse.Effect>
                                                 <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
                                             </Ellipse.Effect>

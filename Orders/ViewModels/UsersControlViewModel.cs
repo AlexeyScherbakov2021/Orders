@@ -67,8 +67,8 @@ namespace Orders.ViewModels
         {
             if (MessageBox.Show($"Удалить {SelectedUser.u_login}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                repo.Delete(SelectedUser, true);
-                ListUser.Remove(SelectedUser);
+                if(repo.Delete(SelectedUser, true))
+                    ListUser.Remove(SelectedUser);
             }
         }
 

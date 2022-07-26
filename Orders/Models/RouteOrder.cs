@@ -40,6 +40,10 @@ namespace Orders.Models
 
         public DateTime? ro_date_check { get; set; }
 
+        public int? ro_return_step { get; set; }
+        [NotMapped]
+        public int? ro_child { get;set; }
+
         public virtual Order Order { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

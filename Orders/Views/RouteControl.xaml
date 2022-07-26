@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:vm="clr-namespace:Orders.ViewModels"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Orders.Views"
@@ -29,8 +30,29 @@
             <GroupBox Header="Названия маршрутов"  BorderBrush="#FFADADAD" Margin="3" Padding="3">
             <DockPanel>
                 <UniformGrid Columns="2" DockPanel.Dock="Bottom">
-                    <Button Content="+" Command="{Binding AddCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
-                    <Button Content="-" Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                        <Button Command="{Binding AddCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                            <DockPanel Margin="4,0">
+                                <fa:ImageAwesome Icon="Solid_Plus" Foreground="Blue" Stretch="Uniform" Width="22" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Создать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                            </DockPanel>
+                        </Button>
+                        <Button Command="{Binding DeleteCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                            <DockPanel Margin="4,0">
+                                <fa:ImageAwesome Icon="Solid_Minus" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="24" DockPanel.Dock="Left" >
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                            </DockPanel>
+
+                        </Button>
                 </UniformGrid>
                 <!--<ListBox ItemsSource="{Binding ListRoute}" SelectedItem="{Binding SelectedRoute}" DisplayMemberPath="r_name" />-->
                 <DataGrid ItemsSource="{Binding ListRouteView}" SelectedItem="{Binding SelectedRoute, Mode=TwoWay}" 
@@ -56,16 +78,48 @@
 
             <GroupBox  Header="{Binding SelectedRoute.r_name}"  BorderBrush="#FFADADAD" Margin="3" Padding="3">
                 <DockPanel>
-                    <UniformGrid Columns="3" DockPanel.Dock="Bottom" Height="26">
+                    <UniformGrid Columns="3" DockPanel.Dock="Bottom" Height="29">
                         <!--<Button Content="+" Command="{Binding AddStepCommand}"/>-->
-                        <Button Content="удалить" Command="{Binding DeleteStepCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
-                        <Button Content="вверх" Command="{Binding StepUpCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
-                        <Button Content="вниз" Command="{Binding StepDownCommand}" Style="{DynamicResource ButtonStyleShadow}"/>
+                        <Button Command="{Binding DeleteStepCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                            <DockPanel Margin="4,0">
+                                <fa:ImageAwesome Icon="Solid_Minus" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="24" DockPanel.Dock="Left" >
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                            </DockPanel>
+                        </Button>
+                        <Button Command="{Binding StepUpCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                            <DockPanel Margin="4,0">
+                                <fa:ImageAwesome Icon="Solid_ArrowAltCircleUp" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Вверх" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                            </DockPanel>
+
+                        </Button>
+                        <Button Command="{Binding StepDownCommand}" Style="{DynamicResource ButtonStyleShadow}">
+                            <DockPanel Margin="4,0">
+                                <fa:ImageAwesome Icon="Solid_ArrowAltCircleDown" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
+                                    <fa:ImageAwesome.Effect>
+                                        <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                                    </fa:ImageAwesome.Effect>
+                                </fa:ImageAwesome>
+                                <TextBlock Text="Вниз" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                            </DockPanel>
+
+                        </Button>
                         <!--<TextBox Text="{Binding SelectedStep.r_step}"/>-->
                     </UniformGrid>
-                    <Expander DockPanel.Dock="Bottom" ExpandDirection="Up" Header="Добавить этап">
+                    <Expander DockPanel.Dock="Bottom" ExpandDirection="Up" Header="Добавить этап" Margin="4" FontSize="14">
                         <StackPanel Orientation="Horizontal" >
-                            <ListBox x:Name="listBox" ItemsSource="{Binding ListRouteType}" Margin="4" >
+                            <ListBox x:Name="listBox" ItemsSource="{Binding ListRouteType}" Margin="4" FontSize="12" >
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <RadioButton Content="{Binding rt_name}" IsChecked="{Binding IsCheck, Mode=TwoWay}" GroupName="gruppa"/>
@@ -79,12 +133,25 @@
                             </ListBox>
                             <ListBox x:Name="listBox1" ItemsSource="{Binding ListUser}" DisplayMemberPath="u_name"
                                 SelectedItem="{Binding SelectAddUser}"
-                                Margin="4" Width="250"/>
-                            <Button Content="Добавить" Margin="4" Command="{Binding AddStepCommand}" 
+                                Margin="4" Width="250" FontSize="12">
+                                <!--<ListBox.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
+                                </ListBox.Resources>-->
+                            </ListBox>
+                            <Button Margin="4" Command="{Binding AddStepCommand}" 
                                 CommandParameter="{Binding SelectedItem, ElementName=listBox1}"
-                                VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
-                            <Button Content="Обновить" Margin="4" Command="{Binding RefreshCommand}" 
-                                VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}"/>
+                                VerticalAlignment="Center" Style="{DynamicResource ButtonStyleShadow}">
+                                <DockPanel Margin="4,0">
+                                    <fa:ImageAwesome Icon="Solid_Plus" Foreground="Blue" Stretch="Uniform" Width="22" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
+                                        <fa:ImageAwesome.Effect>
+                                            <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
+                                        </fa:ImageAwesome.Effect>
+                                    </fa:ImageAwesome>
+                                    <TextBlock Text="Добавить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                                </DockPanel>
+
+                            </Button>
                         </StackPanel>
                     </Expander>
                     <DataGrid x:Name="dGrid" ItemsSource="{Binding _ListRouteStepView.View}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}" 

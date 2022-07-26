@@ -1,4 +1,5 @@
-﻿using Orders.Infrastructure.Commands;
+﻿using Orders.Infrastructure;
+using Orders.Infrastructure.Commands;
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
@@ -73,7 +74,8 @@ namespace Orders.ViewModels
         {
             repo = repoBase;
             ListUser = new ObservableCollection<User>( repo.Users.Where(it => it.u_role < 1));
-            ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes);
+            ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created));
+            ListRouteType[0].IsCheck = true;
             ListRoute = new ObservableCollection<Route>(repo.Routes);
 
         }
@@ -120,7 +122,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddStepCommand = null;
         public ICommand AddStepCommand => _AddStepCommand ?? new LambdaCommand(OnAddStepCommandExecuted, CanAddStepCommand);
-        private bool CanAddStepCommand(object p) => SelectedRoute != null;
+        private bool CanAddStepCommand(object p) => SelectedRoute != null && SelectAddUser != null;
         private void OnAddStepCommandExecuted(object p)
         {
             int LastStep = SelectedRoute.RouteSteps.Count > 0 

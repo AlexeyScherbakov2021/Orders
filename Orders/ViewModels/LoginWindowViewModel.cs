@@ -18,7 +18,6 @@ namespace Orders.ViewModels
         private readonly RepositoryBase repo;
         private readonly LoginWindow winLogin;
 
-
         public User SelectUser { get; set; }
         public IEnumerable<User> ListUser { get; set; }
 
@@ -69,7 +68,12 @@ namespace Orders.ViewModels
             //winLogin.Closing += Win_Closing;
 
             repo = new RepositoryBase();
-            ListUser = repo.Users.ToArray();
+            ListUser = repo.Users.OrderBy(o => o.u_login).ToArray();
+
+            if( ListUser is null ||  ListUser.Count() == 0 || !ListUser.Any(it => it.u_role == 1))
+            {
+                ListUser = new List<User> { new User { u_name = "Admin", u_pass = "adm", u_role = 1, u_login="Admin" } };
+            }
         }
     }
 
