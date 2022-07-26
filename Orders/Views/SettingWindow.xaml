@@ -9,22 +9,22 @@
         mc:Ignorable="d"
         Title="Настройки" Height="650" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
-        <vm:RouteControlViewModel/>
+        <vm:SettingWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <TabControl x:Name="tab" SelectionChanged="tab_SelectionChanged" >
+        <TabControl x:Name="tab" >
 
-            <i:Interaction.Triggers>
+            <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
                 </i:EventTrigger>
-            </i:Interaction.Triggers>
+            </i:Interaction.Triggers>-->
 
             <TabItem Header="Пользователи">
-                <local:UsersControl Margin="8"/>
+                <local:UsersControl DataContext="{Binding UserViewModel}" Margin="8" />
             </TabItem>
             <TabItem Header="Маршруты" >
-                <local:RouteControl Margin="8"/>
+                <local:RouteControl DataContext="{Binding RouteViewModel}" Margin="8"/>
             </TabItem>
         </TabControl>
     </Grid>

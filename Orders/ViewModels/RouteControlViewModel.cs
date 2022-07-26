@@ -17,10 +17,6 @@ namespace Orders.ViewModels
 {
     internal class RouteControlViewModel : ViewModel
     {
-        //IRepository<Route> repoRoute = new RepositoryMain<Route>();
-        //IRepository<User> repoUser = new RepositoryMain<User>();
-        //IRepository<RouteType> repoRouteType = new RepositoryMain<RouteType>();
-        //IRepository<RouteStep> repoRouteStep = new RepositoryMain<RouteStep>();
 
         RepositoryBase repo; // = new RepositoryBase();
 
@@ -67,22 +63,20 @@ namespace Orders.ViewModels
         public User SelectAddUser { get; set; }
 
 
-
         private void ListRouteView_CurrentChanged(object sender, EventArgs e)
         {
             repo.Save();
         }
 
 
-        public RouteControlViewModel()
+        public RouteControlViewModel(RepositoryBase repoBase)
         {
-            repo = SettingWindowViewModel.repo;
+            repo = repoBase;
             ListUser = new ObservableCollection<User>( repo.Users.Where(it => it.u_role < 1));
             ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes);
             ListRoute = new ObservableCollection<Route>(repo.Routes);
 
         }
-
 
 
         #region Команды
@@ -164,8 +158,8 @@ namespace Orders.ViewModels
         // Команда Обновить
         //--------------------------------------------------------------------------------
         private readonly ICommand _RefreshCommand = null;
-        public ICommand RefreshCommand => _RefreshCommand ?? new LambdaCommand(OnRefreshCommandExecuted, CanRefreshCommand);
-        private bool CanRefreshCommand(object p) => SelectedStep != null;
+        public ICommand RefreshCommand => _RefreshCommand ?? new LambdaCommand(OnRefreshCommandExecuted/*, CanRefreshCommand*/);
+        //private bool CanRefreshCommand(object p) => SelectedStep != null;
         private void OnRefreshCommandExecuted(object p)
         {
             ListUser = new ObservableCollection<User>(repo.Users.Where(it => it.u_role < 1));
@@ -229,7 +223,6 @@ namespace Orders.ViewModels
                 item.OnPropertyChanged(nameof(item.r_step));
             }
         }
-
 
 
     }

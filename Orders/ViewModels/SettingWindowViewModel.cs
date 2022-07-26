@@ -12,10 +12,14 @@ namespace Orders.ViewModels
     {
         public static RepositoryBase repo = new RepositoryBase();
 
+        public UsersControlViewModel UserViewModel { get; set; }
+        public RouteControlViewModel RouteViewModel { get; set; }
+
 
         public SettingWindowViewModel()
         {
-
+            UserViewModel = new UsersControlViewModel(repo);
+            RouteViewModel = new RouteControlViewModel(repo);
         }
     }
 }

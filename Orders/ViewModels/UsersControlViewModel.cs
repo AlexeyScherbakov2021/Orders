@@ -37,7 +37,6 @@ namespace Orders.ViewModels
 
         private void ListUserView_CurrentChanged(object sender, EventArgs e)
         {
-            //IsOpenPopup = false;
             repo.Save();
         }
 
@@ -89,9 +88,9 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         // Конструктор 
         //--------------------------------------------------------------------------------
-        public UsersControlViewModel()
+        public UsersControlViewModel(RepositoryBase repoBase)
         {
-            repo = SettingWindowViewModel.repo;
+            repo = repoBase;
             ListUser = new ObservableCollection<User>(repo.Users);
         }
 

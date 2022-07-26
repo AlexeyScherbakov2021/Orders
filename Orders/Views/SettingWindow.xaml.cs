@@ -25,9 +25,5 @@ namespace Orders.Views
             InitializeComponent();
         }
 
-        private void tab_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            (DataContext as RouteControlViewModel).RefreshCommand.Execute(this);
-        }
     }
 }

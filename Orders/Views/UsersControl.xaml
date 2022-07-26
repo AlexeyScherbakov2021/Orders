@@ -6,10 +6,10 @@
             xmlns:vm="clr-namespace:Orders.ViewModels"
              xmlns:local="clr-namespace:Orders.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
+             d:DesignHeight="450" d:DesignWidth="800" >
+    <!--<UserControl.DataContext>
         <vm:UsersControlViewModel/>
-    </UserControl.DataContext>
+    </UserControl.DataContext>-->
     <Grid>
         <DockPanel Background="#FFF1F1F1">
             <DockPanel.Effect>
