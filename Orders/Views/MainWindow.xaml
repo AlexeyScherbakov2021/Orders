@@ -30,9 +30,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_FileContract" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Создать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
@@ -41,9 +41,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Trash" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>

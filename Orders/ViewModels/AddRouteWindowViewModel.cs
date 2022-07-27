@@ -41,10 +41,11 @@ namespace Orders.ViewModels
         {
             CurrentOrder = order;
             ListRouteOrder = order.RouteOrders.Where(it => it.ro_step > order.o_stepRoute).ToList();
+            SelectedRouteOrder = ListRouteOrder.FirstOrDefault();
 
             ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).ToList();
             ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created).ToList();
-
+            SelectedType = ListRouteType[0];
         }
 
         #region Команды
@@ -82,11 +83,9 @@ namespace Orders.ViewModels
                     insertToStep = CurrentOrder.o_stepRoute + 1;
 
                 ro.ro_return_step = CurrentOrder.o_stepRoute;
-                //ro.ro_child = 1;
             }
             else
                 insertToStep = ro.ro_step = SelectedRouteOrder.ro_step;
-
 
             ro.ro_step = insertToStep;
 
@@ -105,13 +104,9 @@ namespace Orders.ViewModels
 
             }
 
-
             MainWindowViewModel.repo.Add<RouteOrder>(ro);
-
             CurrentOrder.RouteOrders = TempList;
-
             MainWindowViewModel.repo.Update(CurrentOrder, true);
-
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 
         }

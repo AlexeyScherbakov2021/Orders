@@ -21,10 +21,10 @@
                 <Button Height="40" Margin="3" Command="{Binding AddCommand}" Style="{StaticResource ButtonStyleShadow}">
                     <DockPanel Margin="4,0">
                         <fa:ImageAwesome Icon="Solid_UserPlus" Foreground="Blue" Stretch="Uniform" Width="38" Margin="0,0,10,0" 
-                                     HorizontalAlignment="Left" Height="28" DockPanel.Dock="Left" >
-                            <fa:ImageAwesome.Effect>
+                                     HorizontalAlignment="Left" Height="24" DockPanel.Dock="Left" >
+                            <!--<fa:ImageAwesome.Effect>
                                 <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                            </fa:ImageAwesome.Effect>
+                            </fa:ImageAwesome.Effect>-->
                         </fa:ImageAwesome>
                         <TextBlock Text="Создать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                     </DockPanel>
@@ -32,10 +32,10 @@
                 <Button Height="40" Margin="3" Command="{Binding DeleteCommand}" Style="{StaticResource ButtonStyleShadow}">
                     <DockPanel Margin="4,0">
                         <fa:ImageAwesome Icon="Solid_UserSlash" Foreground="Blue" Stretch="Uniform" Width="38" Margin="0,0,10,0" 
-                                     HorizontalAlignment="Left" Height="27.7" DockPanel.Dock="Left" >
-                            <fa:ImageAwesome.Effect>
+                                     HorizontalAlignment="Left" Height="24" DockPanel.Dock="Left" >
+                            <!--<fa:ImageAwesome.Effect>
                                 <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                            </fa:ImageAwesome.Effect>
+                            </fa:ImageAwesome.Effect>-->
                         </fa:ImageAwesome>
                         <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                     </DockPanel>

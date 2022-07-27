@@ -34,9 +34,9 @@
                             <DockPanel Margin="4,0">
                                 <fa:ImageAwesome Icon="Solid_Plus" Foreground="Blue" Stretch="Uniform" Width="22" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
-                                    <fa:ImageAwesome.Effect>
+                                    <!--<fa:ImageAwesome.Effect>
                                         <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                                    </fa:ImageAwesome.Effect>
+                                    </fa:ImageAwesome.Effect>-->
                                 </fa:ImageAwesome>
                                 <TextBlock Text="Создать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                             </DockPanel>
@@ -45,9 +45,9 @@
                             <DockPanel Margin="4,0">
                                 <fa:ImageAwesome Icon="Solid_Minus" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="24" DockPanel.Dock="Left" >
-                                    <fa:ImageAwesome.Effect>
+                                    <!--<fa:ImageAwesome.Effect>
                                         <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                                    </fa:ImageAwesome.Effect>
+                                    </fa:ImageAwesome.Effect>-->
                                 </fa:ImageAwesome>
                                 <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                             </DockPanel>
@@ -56,7 +56,7 @@
                 </UniformGrid>
                 <!--<ListBox ItemsSource="{Binding ListRoute}" SelectedItem="{Binding SelectedRoute}" DisplayMemberPath="r_name" />-->
                 <DataGrid ItemsSource="{Binding ListRouteView}" SelectedItem="{Binding SelectedRoute, Mode=TwoWay}" 
-                    CanUserAddRows="False" CanUserDeleteRows="False"
+                    CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="None" Margin="0,5"
                       >
                     <DataGrid.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
@@ -84,9 +84,9 @@
                             <DockPanel Margin="4,0">
                                 <fa:ImageAwesome Icon="Solid_Minus" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="24" DockPanel.Dock="Left" >
-                                    <fa:ImageAwesome.Effect>
+                                    <!--<fa:ImageAwesome.Effect>
                                         <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                                    </fa:ImageAwesome.Effect>
+                                    </fa:ImageAwesome.Effect>-->
                                 </fa:ImageAwesome>
                                 <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                             </DockPanel>
@@ -95,9 +95,9 @@
                             <DockPanel Margin="4,0">
                                 <fa:ImageAwesome Icon="Solid_ArrowAltCircleUp" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
-                                    <fa:ImageAwesome.Effect>
+                                    <!--<fa:ImageAwesome.Effect>
                                         <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                                    </fa:ImageAwesome.Effect>
+                                    </fa:ImageAwesome.Effect>-->
                                 </fa:ImageAwesome>
                                 <TextBlock Text="Вверх" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                             </DockPanel>
@@ -107,9 +107,9 @@
                             <DockPanel Margin="4,0">
                                 <fa:ImageAwesome Icon="Solid_ArrowAltCircleDown" Foreground="Blue" Stretch="Uniform" Width="21" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
-                                    <fa:ImageAwesome.Effect>
+                                    <!--<fa:ImageAwesome.Effect>
                                         <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                                    </fa:ImageAwesome.Effect>
+                                    </fa:ImageAwesome.Effect>-->
                                 </fa:ImageAwesome>
                                 <TextBlock Text="Вниз" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                             </DockPanel>
@@ -144,9 +144,9 @@
                                 <DockPanel Margin="4,0">
                                     <fa:ImageAwesome Icon="Solid_Plus" Foreground="Blue" Stretch="Uniform" Width="22" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="21" DockPanel.Dock="Left" >
-                                        <fa:ImageAwesome.Effect>
+                                        <!--<fa:ImageAwesome.Effect>
                                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                                        </fa:ImageAwesome.Effect>
+                                        </fa:ImageAwesome.Effect>-->
                                     </fa:ImageAwesome>
                                     <TextBlock Text="Добавить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                                 </DockPanel>

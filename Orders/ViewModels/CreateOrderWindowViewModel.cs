@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Orders.ViewModels
@@ -160,17 +161,38 @@ namespace Orders.ViewModels
 
             if (dlgOpen.ShowDialog() == true)
             {
+                foreach (var file in dlgOpen.FileNames)
+                {
+                    FileInfo info = new FileInfo(file);
 
-                RouteAdding ra = new RouteAdding();
-                ra.ad_text = Path.GetFileName(dlgOpen.FileName);
+                    if (info.Length > 8000000)
+                    {
+                        MessageBox.Show($"Файл \"{info.Name}\" имеет размер более 8 МБ.\r\n\r\nОн не будет добавлен.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        continue;
+                    }
 
-                FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
+                    RouteAdding ra = new RouteAdding();
+                    ra.ad_text = info.Name;
 
-                ra.ad_file = new byte[fs.Length];
-                fs.Read(ra.ad_file, 0, (int)fs.Length);
-                fs.Close();
+                    FileStream fs = new FileStream(file, FileMode.Open);
+                    ra.ad_file = new byte[fs.Length];
+                    fs.Read(ra.ad_file, 0, (int)fs.Length);
+                    fs.Close();
 
-                ListFiles.Add(ra);
+                    ListFiles.Add(ra);
+
+                }
+
+                //RouteAdding ra = new RouteAdding();
+                //ra.ad_text = Path.GetFileName(dlgOpen.FileName);
+
+                //FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
+
+                //ra.ad_file = new byte[fs.Length];
+                //fs.Read(ra.ad_file, 0, (int)fs.Length);
+                //fs.Close();
+
+                //ListFiles.Add(ra);
             
             }
 

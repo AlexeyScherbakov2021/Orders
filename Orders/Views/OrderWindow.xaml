@@ -32,9 +32,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_FileExport" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Отправить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
@@ -43,9 +43,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_UserPlus" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Добавить этап" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
@@ -54,9 +54,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Ban" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Отказать" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
@@ -65,9 +65,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Backward" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Вернуть" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
@@ -76,9 +76,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Archive" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="В архив" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
@@ -87,9 +87,9 @@
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_DoorOpen" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                        <fa:ImageAwesome.Effect>
+                        <!--<fa:ImageAwesome.Effect>
                             <DropShadowEffect Color="#FFAFAFAF" ShadowDepth="1" BlurRadius="4"/>
-                        </fa:ImageAwesome.Effect>
+                        </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Выйти" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
