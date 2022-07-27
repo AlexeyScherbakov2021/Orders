@@ -16,7 +16,7 @@ namespace Orders.ViewModels
     internal class LoginWindowViewModel : ViewModel
     {
         private readonly RepositoryBase repo;
-        private readonly LoginWindow winLogin;
+        //private readonly LoginWindow winLogin;
 
         public User SelectUser { get; set; }
         public IEnumerable<User> ListUser { get; set; }
@@ -56,7 +56,7 @@ namespace Orders.ViewModels
 
             }
 
-            winLogin.Close();
+            App.Current.Windows.OfType<LoginWindow>().First().Close();
         }
 
         #endregion
@@ -64,8 +64,9 @@ namespace Orders.ViewModels
 
         public LoginWindowViewModel()
         {
-            winLogin = App.Current.Windows.OfType<LoginWindow>().First();
-            //winLogin.Closing += Win_Closing;
+            App.Log.WriteLineLog("LoginWindowViewModel()");
+
+            //winLogin = App.Current.Windows.OfType<LoginWindow>().First();
 
             repo = new RepositoryBase();
             ListUser = repo.Users.OrderBy(o => o.u_login).ToArray();

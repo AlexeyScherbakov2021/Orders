@@ -86,7 +86,7 @@ namespace Orders.ViewModels
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
                     ro.ro_disabled = false;
-                    ro.ro_statusId = (int)EnumStatus.Waiting;
+                    ro.ro_statusId = (int)EnumStatus.None;
                     Order.RouteOrders.Add(ro);
                 }
             }
@@ -118,7 +118,7 @@ namespace Orders.ViewModels
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
                     ro.ro_disabled = false;
-                    ro.ro_statusId = (int)EnumStatus.Waiting;
+                    ro.ro_statusId = (int)EnumStatus.None;
                     Order.RouteOrders.Add(ro);
                 }
             }

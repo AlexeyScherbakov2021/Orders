@@ -39,9 +39,9 @@ namespace Orders.Infrastructure.Converters
                         Source = new BitmapImage(new Uri("/Orders;component/Resource/вернут.png", UriKind.Relative));
                         break;
 
-                    //case EnumStatus.Waiting:
-                    //    Source = new BitmapImage(new Uri("/Orders;component/Resource/ожидание.png", UriKind.Relative));
-                    //    break;
+                    case EnumStatus.Waiting:
+                        Source = new BitmapImage(new Uri("/Orders;component/Resource/ожидание.png", UriKind.Relative));
+                        break;
 
                     case EnumStatus.Refused:
                         Source = new BitmapImage(new Uri("/Orders;component/Resource/отказано.png", UriKind.Relative));
@@ -49,6 +49,10 @@ namespace Orders.Infrastructure.Converters
 
                     case EnumStatus.Closed:
                         Source = new BitmapImage(new Uri("/Orders;component/Resource/закрыт.png", UriKind.Relative));
+                        break;
+
+                    case EnumStatus.None:
+                        Source = null;
                         break;
                 }
 

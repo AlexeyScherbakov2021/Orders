@@ -15,5 +15,12 @@ namespace Orders
     public partial class App : Application
     {
         public static User CurrentUser;
+        public static LogFile Log = new LogFile(0);
+
+        public App()
+        {
+            Log.WriteLineLog("Start");
+        }
+
     }
 }

@@ -62,7 +62,7 @@ namespace Orders.ViewModels
             RouteOrder ro = new RouteOrder();
             ro.ro_typeId = SelectedType.id;
             ro.ro_userId = SelectedUser.id;
-            ro.ro_statusId = (int)EnumStatus.Waiting;
+            ro.ro_statusId = (int)EnumStatus.None;
             ro.ro_orderId = CurrentOrder.id;
 
             int insertToStep;
@@ -110,7 +110,7 @@ namespace Orders.ViewModels
 
             CurrentOrder.RouteOrders = TempList;
 
-            //MainWindowViewModel.repo.Update(CurrentOrder, true);
+            MainWindowViewModel.repo.Update(CurrentOrder, true);
 
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 

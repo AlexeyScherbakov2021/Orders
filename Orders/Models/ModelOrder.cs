@@ -12,11 +12,13 @@ namespace Orders.Models
         public ModelOrder()
         : base("name=ModelLocal")
         {
+            App.Log.WriteLineLog("ModelOrder() Debug");
         }
 #else
         public ModelOrder()
             : base("name=ModelOrder")
         {
+            App.Log.WriteLineLog("ModelOrder() Release");
         }
 #endif
 
