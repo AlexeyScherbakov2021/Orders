@@ -106,6 +106,7 @@
     <Compile Include="Infrastructure\Converters\StatusToImageConverter.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\LogFile.cs" />
+    <Compile Include="Infrastructure\Mail.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
     <Compile Include="ViewModels\OrderWindowViewModel.cs" />

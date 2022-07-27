@@ -76,10 +76,11 @@ namespace Orders.ViewModels
             {
                 foreach(var item in order.RouteOrders)
                 {
+                    // у промежуточных этапов удаляем статус
                     if (item.ro_step >= view.SelectedRouteOrder.ro_step && item.ro_step < order.o_stepRoute)
                     {
                         item.ro_check = 0;
-                        item.ro_statusId = (int)EnumStatus.Waiting;
+                        item.ro_statusId = (int)EnumStatus.None;
                         item.ro_date_check = null;
                     }
                 }
@@ -171,6 +172,10 @@ namespace Orders.ViewModels
             SetStatusStep(CurrentStep, NextStep, order);
 
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+
+            Mail mail = new Mail();
+            mail.SendMail(NextStep.User.u_email, @"Вам необходимо рассмотреть заказ. Ссылка на программу - s:\Производство\01_Мавричев\ПО Движение заказов");
+
         }
 
         //--------------------------------------------------------------------------------

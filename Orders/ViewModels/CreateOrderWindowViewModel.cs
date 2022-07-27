@@ -19,7 +19,7 @@ namespace Orders.ViewModels
 {
     internal class CreateOrderWindowViewModel : ViewModel
     {
-        //public Order order { get; set; }
+
         private readonly RepositoryBase repo = MainWindowViewModel.repo;
         public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
@@ -62,6 +62,10 @@ namespace Orders.ViewModels
                 ro_statusId = (int)EnumStatus.Created,
                 ro_check = 1
             };
+
+            Order.o_name = "Калькуляция КЗ ";
+            //Order.o_number = "001";
+
 
             Order.RouteOrders.Add(CreateStep);
         }
@@ -123,7 +127,6 @@ namespace Orders.ViewModels
                     Order.RouteOrders.Add(ro);
                 }
             }
-
 
             Order.o_stepRoute++;
             RouteOrder NextStep = Order.RouteOrders.FirstOrDefault(it => it.ro_step == Order.o_stepRoute);

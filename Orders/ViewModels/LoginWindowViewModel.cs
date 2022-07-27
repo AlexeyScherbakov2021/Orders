@@ -1,4 +1,5 @@
-﻿using Orders.Infrastructure.Commands;
+﻿using Orders.Infrastructure;
+using Orders.Infrastructure.Commands;
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
@@ -64,6 +65,7 @@ namespace Orders.ViewModels
 
         public LoginWindowViewModel()
         {
+
             App.Log.WriteLineLog("LoginWindowViewModel()");
 
             //winLogin = App.Current.Windows.OfType<LoginWindow>().First();

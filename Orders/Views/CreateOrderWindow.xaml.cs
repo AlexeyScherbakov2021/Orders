@@ -23,5 +23,15 @@ namespace Orders.Views
         {
             InitializeComponent();
         }
+
+        private void ItemsControl_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                
+            }
+
+        }
     }
 }

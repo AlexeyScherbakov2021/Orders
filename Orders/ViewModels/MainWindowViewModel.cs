@@ -46,6 +46,7 @@ namespace Orders.ViewModels
             //    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any() )
             //    );
 
+
             timer.Interval = new TimeSpan(0, 0, 5);
             timer.Tick += Timer_Tick;
             timer.Start();
