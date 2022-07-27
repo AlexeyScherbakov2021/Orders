@@ -41,8 +41,8 @@ namespace Orders.Models
         public DateTime? ro_date_check { get; set; }
 
         public int? ro_return_step { get; set; }
-        [NotMapped]
-        public int? ro_child { get;set; }
+        //[NotMapped]
+        //public int? ro_child { get;set; }
 
         public virtual Order Order { get; set; }
 

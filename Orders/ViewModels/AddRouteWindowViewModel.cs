@@ -82,7 +82,7 @@ namespace Orders.ViewModels
                     insertToStep = CurrentOrder.o_stepRoute + 1;
 
                 ro.ro_return_step = CurrentOrder.o_stepRoute;
-                ro.ro_child = 1;
+                //ro.ro_child = 1;
             }
             else
                 insertToStep = ro.ro_step = SelectedRouteOrder.ro_step;

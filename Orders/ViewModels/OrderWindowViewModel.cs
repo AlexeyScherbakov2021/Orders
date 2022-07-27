@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Orders.ViewModels
@@ -181,19 +182,53 @@ namespace Orders.ViewModels
         private void OnBrowseCommandExecuted(object p)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog();
+            dlgOpen.Multiselect = true;
 
             if (dlgOpen.ShowDialog() == true)
             {
-                RouteAdding ra = new RouteAdding();
-                ra.ad_text = Path.GetFileName(dlgOpen.FileName);
 
-                FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
+                foreach(var file in dlgOpen.FileNames)
+                {
+                    FileInfo info = new FileInfo(file);
 
-                ra.ad_file = new byte[fs.Length];
-                fs.Read(ra.ad_file, 0, (int)fs.Length);
-                fs.Close();
+                    if(info.Length > 8000000)
+                    {
+                        MessageBox.Show($"Файл \"{info.Name}\" имеет размер более 8 МБ.\r\n\r\nОн не будет добавлен.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        continue;
+                    }
 
-                ListFiles.Add(ra);
+                    RouteAdding ra = new RouteAdding();
+                    ra.ad_text = info.Name;
+
+                    FileStream fs = new FileStream(file, FileMode.Open);
+                    ra.ad_file = new byte[fs.Length];
+                    fs.Read(ra.ad_file, 0, (int)fs.Length);
+                    fs.Close();
+
+                    ListFiles.Add(ra);
+
+                }
+
+
+
+                //foreach (var fs in dlgOpen.OpenFiles())
+                //{
+                //    RouteAdding ra = new RouteAdding();
+                //    ra.ad_text = Path.GetFileName(dlgOpen.FileName);
+
+                //    ra.ad_file = new byte[fs.Length];
+                //    fs.Read(ra.ad_file, 0, (int)fs.Length);
+                //    fs.Close();
+
+                //    ListFiles.Add(ra);
+
+                //}
+
+
+
+                //FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
+
+
                 //CurrentStep.RouteAddings.Add(ra);
                 //CurrentStep.OnPropertyChanged(nameof(CurrentStep.RouteAddings));
             }
