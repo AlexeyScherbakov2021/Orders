@@ -93,6 +93,9 @@ namespace Orders.ViewModels
 
                 //MainWindowViewModel.repo.Refresh<RouteOrder>(order.RouteOrders);
 
+                ShareFunction.SendMail(view.SelectedRouteOrder?.User.u_email, order.o_number);
+
+
                 //MainWindowViewModel.repo.Save();
                 //OnPropertyChanged(nameof(order));
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
@@ -288,87 +291,5 @@ namespace Orders.ViewModels
         #endregion
 
 
-
-        ////--------------------------------------------------------------------------------
-        //// переустановки статусов при отправке далее
-        ////--------------------------------------------------------------------------------
-        //public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
-        //{
-        //    int selectStatus = 0;
-
-        //    if (step.ro_check > 0)
-        //    {
-        //        switch ((EnumTypesStep)step.ro_typeId)
-        //        {
-        //            case EnumTypesStep.Coordinate:
-        //                //step.ro_statusId = (int)EnumStatus.Coordinated;
-        //                selectStatus = (int)EnumStatus.Coordinated;
-        //                break;
-
-        //            case EnumTypesStep.Approve:
-        //                selectStatus = (int)EnumStatus.Approved;
-        //                break;
-
-        //            case EnumTypesStep.Review:
-        //                selectStatus = (int)EnumStatus.Coordinated;
-        //                break;
-
-        //            case EnumTypesStep.Notify:
-        //                selectStatus = (int)EnumStatus.Coordinated;
-        //                break;
-
-        //            case EnumTypesStep.Created:
-        //                selectStatus = (int)EnumStatus.Created;
-        //                break;
-
-        //        }
-
-        //        step.ro_statusId = selectStatus;
-        //        order.o_statusId = selectStatus;
-        //    }
-        //    else
-        //        step.ro_statusId = (int)EnumStatus.Waiting;
-
-        //    order.o_stepRoute = step.ro_step;
-
-        //    //step.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
-        //    //order.RouteStatus = step.RouteStatus;
-
-        //    if (nextStep != null)
-        //    {
-        //        switch ((EnumTypesStep)nextStep.ro_typeId)
-        //        {
-        //            case EnumTypesStep.Coordinate:
-        //                selectStatus = (int)EnumStatus.CoordinateWork;
-        //                break;
-
-        //            case EnumTypesStep.Approve:
-        //                selectStatus = (int)EnumStatus.ApprovWork;
-        //                break;
-
-        //            case EnumTypesStep.Review:
-        //                selectStatus = (int)EnumStatus.CoordinateWork;
-        //                break;
-
-        //            case EnumTypesStep.Notify:
-        //                selectStatus = (int)EnumStatus.CoordinateWork;
-        //                break;
-
-        //            case EnumTypesStep.Created:
-        //                selectStatus = (int)EnumStatus.Created;
-        //                break;
-
-        //        }
-
-        //        nextStep.ro_statusId = selectStatus;
-        //        order.o_statusId = selectStatus;
-        //        order.o_stepRoute = nextStep.ro_step;
-        //        //nextStep.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
-        //        //order.RouteStatus = nextStep.RouteStatus;
-        //    }
-
-        //    //order.o_statusId = nextStep.ro_statusId;
-
-        //}
     }
 }

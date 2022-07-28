@@ -51,14 +51,14 @@
         </ToolBar>
 
         <GroupBox Header="Вернуть на этап ..." FontWeight="Bold" Margin="3,3,3,3" BorderBrush="#FFADADAD" Grid.Row="1">
-            <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}">
+            <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="26"/>
-                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
                                 <Ellipse Width="22" Height="22" StrokeThickness="1" Stroke="Blue" Margin="2,2,2,2"/>
