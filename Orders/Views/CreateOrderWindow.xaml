@@ -99,8 +99,13 @@
 
                     <!--<ListBox ItemsSource="{Binding ListFiles}" DisplayMemberPath="ad_text" AllowDrop="True" Grid.Row="7" />-->
 
-                        <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" Background="White" AllowDrop="True" Drop="ItemsControl_Drop"
-                                  Grid.Row="7" Grid.ColumnSpan="2">
+                        <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" Background="White" 
+                                      AllowDrop="True" Grid.Row="7" Grid.ColumnSpan="2" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Drop">
+                                <i:CallMethodAction MethodName="ItemsControl_Drop" TargetObject="{Binding}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel>
@@ -139,7 +144,7 @@
                     </Grid.RowDefinitions>
                     <ComboBox DisplayMemberPath="r_name" SelectedItem="{Binding SelectedRoute}" SelectedIndex="0" 
                               ItemsSource="{Binding ListRoute}" Grid.Row="0" Margin="4"/>
-                    <ListBox ItemsSource="{Binding ListRouteStep}" Grid.Row="1" Margin="4" AllowDrop="True">
+                    <ListBox ItemsSource="{Binding ListRouteStep}" Grid.Row="1" Margin="4">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -149,7 +154,7 @@
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox IsChecked="{Binding r_disabled}" />
+                                    <CheckBox IsChecked="{Binding r_enabled}" />
                                     <TextBlock Text="{Binding r_step}" Grid.Column="1"/>
                                     <TextBlock Text="{Binding User.u_name}" Grid.Column="2"/>
                                     <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="3"/>

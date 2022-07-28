@@ -151,7 +151,12 @@
                         </fa:ImageAwesome>
                     </Button>
                     <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" 
-                                  Grid.Row="9" Grid.ColumnSpan="2">
+                                  Grid.Row="9" Grid.ColumnSpan="2" AllowDrop="True" Background="White">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Drop">
+                                <i:CallMethodAction MethodName="ItemsControl_Drop" TargetObject="{Binding}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel>

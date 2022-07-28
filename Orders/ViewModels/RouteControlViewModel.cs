@@ -132,7 +132,7 @@ namespace Orders.ViewModels
             RouteStep step = new RouteStep
             {
                 r_step = LastStep,
-                r_disabled = false,
+                r_enabled = true,
                 r_userId = SelectAddUser.id,
                 r_type = ListRouteType.Single(it => it.IsCheck == true).id
             };

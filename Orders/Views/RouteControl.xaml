@@ -161,7 +161,7 @@
                         </DataGrid.Resources>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="№" Binding="{Binding r_step}" IsReadOnly="True"/>
-                            <DataGridCheckBoxColumn Header="Откл" Binding="{Binding r_disabled}" CanUserSort="False" />
+                            <DataGridCheckBoxColumn Header="Вкл" Binding="{Binding r_enabled}" CanUserSort="False" />
                             <DataGridTextColumn Header="Цель" Binding="{Binding RouteType.rt_name}" IsReadOnly="True" Width="150" CanUserSort="False"/>
                             <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_name}" IsReadOnly="True" Width="250" CanUserSort="False"/>
                             <!--<DataGridTemplateColumn>

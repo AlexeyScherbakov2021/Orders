@@ -30,7 +30,7 @@ namespace Orders.Models
 
         public int ro_step { get; set; }
 
-        public bool ro_disabled { get; set; }
+        public bool ro_enabled { get; set; }
 
         public string ro_text { get; set; }
 

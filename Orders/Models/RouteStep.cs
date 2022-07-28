@@ -28,7 +28,7 @@ namespace Orders.Models
 
         public int r_type { get; set; }
 
-        public bool r_disabled { get; set; }
+        public bool r_enabled { get; set; }
 
         [StringLength(100)]
         public string r_email { get; set; }

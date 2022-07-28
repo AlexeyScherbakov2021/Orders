@@ -204,7 +204,7 @@ namespace Orders.ViewModels
 
                 //ListOrders.Add(order);
                 //repo.Add(order, true);
-                //repo.Save();
+                repo.Save();
 
                 OnFilterCommandExecuted(null);
 

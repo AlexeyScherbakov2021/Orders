@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
+using Orders.Infrastructure.Common;
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
@@ -129,54 +130,71 @@ namespace Orders.ViewModels
         private void OnSendCommandExecuted(object p)
         {
 
-            CurrentStep.RouteAddings = ListFiles;
-            CurrentStep.ro_check = 1;
-            CurrentStep.ro_date_check = DateTime.Now;
-            RouteOrder NextStep;
+            //CurrentStep.RouteAddings = ListFiles;
+            //CurrentStep.ro_check = 1;
+            //CurrentStep.ro_date_check = DateTime.Now;
+            //RouteOrder NextStep;
 
-            if (order.RouteOrders.All(it => it.ro_check == 1))
-            {
-                // маршрут окончен
-                NextStep = null;
-            }
-            else
-            {
-                //order.o_stepRoute++;
-                NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute + 1);
+            //if (order.RouteOrders.All(it => it.ro_check == 1))
+            //{
+            //    // маршрут окончен
+            //    NextStep = null;
+            //}
+            //else
+            //{
+            //    //order.o_stepRoute++;
+            //    NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute + 1);
 
-                if(NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
-                {
-                    // следующий этап подчиненный после главного
-                    if(NextStep.ro_check == 1)
-                    {
-                        // он уже был рассмотрен,  делаем прыжок
-                        NextStep = order.RouteOrders
-                            .FirstOrDefault(it => it.ro_step > NextStep.ro_step && it.ro_return_step is null);
+            //    if(NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
+            //    {
+            //        // следующий этап подчиненный после главного
+            //        if(NextStep.ro_check == 1)
+            //        {
+            //            // он уже был рассмотрен,  делаем прыжок
+            //            NextStep = order.RouteOrders
+            //                .FirstOrDefault(it => it.ro_step > NextStep.ro_step && it.ro_return_step is null);
 
-                    }
-                    else
-                        CurrentStep.ro_check = 0;
+            //        }
+            //        else
+            //            CurrentStep.ro_check = 0;
 
-                }
-                else if(NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
-                {
-                    // следующий этап после подчиненного уже основной
-                    // вохвращаемся на главный
-                    NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
-                    //order.o_stepRoute = NextStep.ro_step;
-                }
+            //    }
+            //    else if(NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
+            //    {
+            //        // следующий этап после подчиненного уже основной
+            //        // вохвращаемся на главный
+            //        NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
+            //        //order.o_stepRoute = NextStep.ro_step;
+            //    }
 
 
-                //order.o_statusId = (int)EnumStatus.Coordinated;
-            }
-            SetStatusStep(CurrentStep, NextStep, order);
+            //    //order.o_statusId = (int)EnumStatus.Coordinated;
+            //}
+            //ShareFunction.SetStatusStep(CurrentStep, NextStep, order);
+
+            ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
+
 
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
 
-            Mail mail = new Mail();
-            mail.SendMail(NextStep.User.u_email, @"Вам необходимо рассмотреть заказ. Ссылка на программу - s:\Производство\01_Мавричев\ПО Движение заказов");
 
         }
+
+        //--------------------------------------------------------------------------------
+        // Команда Drop
+        //--------------------------------------------------------------------------------
+
+        public void ItemsControl_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                ShareFunction.AddFiles(files, ListFiles);
+
+            }
+        }
+
 
         //--------------------------------------------------------------------------------
         // Команда Обзор файлов
@@ -191,51 +209,7 @@ namespace Orders.ViewModels
 
             if (dlgOpen.ShowDialog() == true)
             {
-
-                foreach(var file in dlgOpen.FileNames)
-                {
-                    FileInfo info = new FileInfo(file);
-
-                    if(info.Length > 8000000)
-                    {
-                        MessageBox.Show($"Файл \"{info.Name}\" имеет размер более 8 МБ.\r\n\r\nОн не будет добавлен.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        continue;
-                    }
-
-                    RouteAdding ra = new RouteAdding();
-                    ra.ad_text = info.Name;
-
-                    FileStream fs = new FileStream(file, FileMode.Open);
-                    ra.ad_file = new byte[fs.Length];
-                    fs.Read(ra.ad_file, 0, (int)fs.Length);
-                    fs.Close();
-
-                    ListFiles.Add(ra);
-
-                }
-
-
-
-                //foreach (var fs in dlgOpen.OpenFiles())
-                //{
-                //    RouteAdding ra = new RouteAdding();
-                //    ra.ad_text = Path.GetFileName(dlgOpen.FileName);
-
-                //    ra.ad_file = new byte[fs.Length];
-                //    fs.Read(ra.ad_file, 0, (int)fs.Length);
-                //    fs.Close();
-
-                //    ListFiles.Add(ra);
-
-                //}
-
-
-
-                //FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
-
-
-                //CurrentStep.RouteAddings.Add(ra);
-                //CurrentStep.OnPropertyChanged(nameof(CurrentStep.RouteAddings));
+                ShareFunction.AddFiles(dlgOpen.FileNames, ListFiles);
             }
         }
 
@@ -319,86 +293,86 @@ namespace Orders.ViewModels
 
 
 
-        //--------------------------------------------------------------------------------
-        // переустановки статусов при отправке далее
-        //--------------------------------------------------------------------------------
-        public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
-        {
-            int selectStatus = 0;
+        ////--------------------------------------------------------------------------------
+        //// переустановки статусов при отправке далее
+        ////--------------------------------------------------------------------------------
+        //public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
+        //{
+        //    int selectStatus = 0;
 
-            if (step.ro_check > 0)
-            {
-                switch ((EnumTypesStep)step.ro_typeId)
-                {
-                    case EnumTypesStep.Coordinate:
-                        //step.ro_statusId = (int)EnumStatus.Coordinated;
-                        selectStatus = (int)EnumStatus.Coordinated;
-                        break;
+        //    if (step.ro_check > 0)
+        //    {
+        //        switch ((EnumTypesStep)step.ro_typeId)
+        //        {
+        //            case EnumTypesStep.Coordinate:
+        //                //step.ro_statusId = (int)EnumStatus.Coordinated;
+        //                selectStatus = (int)EnumStatus.Coordinated;
+        //                break;
 
-                    case EnumTypesStep.Approve:
-                        selectStatus = (int)EnumStatus.Approved;
-                        break;
+        //            case EnumTypesStep.Approve:
+        //                selectStatus = (int)EnumStatus.Approved;
+        //                break;
 
-                    case EnumTypesStep.Review:
-                        selectStatus = (int)EnumStatus.Coordinated;
-                        break;
+        //            case EnumTypesStep.Review:
+        //                selectStatus = (int)EnumStatus.Coordinated;
+        //                break;
 
-                    case EnumTypesStep.Notify:
-                        selectStatus = (int)EnumStatus.Coordinated;
-                        break;
+        //            case EnumTypesStep.Notify:
+        //                selectStatus = (int)EnumStatus.Coordinated;
+        //                break;
 
-                    case EnumTypesStep.Created:
-                        selectStatus = (int)EnumStatus.Created;
-                        break;
+        //            case EnumTypesStep.Created:
+        //                selectStatus = (int)EnumStatus.Created;
+        //                break;
 
-                }
+        //        }
 
-                step.ro_statusId = selectStatus;
-                order.o_statusId = selectStatus;
-            }
-            else
-                step.ro_statusId = (int)EnumStatus.Waiting;
+        //        step.ro_statusId = selectStatus;
+        //        order.o_statusId = selectStatus;
+        //    }
+        //    else
+        //        step.ro_statusId = (int)EnumStatus.Waiting;
 
-            order.o_stepRoute = step.ro_step;
+        //    order.o_stepRoute = step.ro_step;
 
-            //step.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
-            //order.RouteStatus = step.RouteStatus;
+        //    //step.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
+        //    //order.RouteStatus = step.RouteStatus;
 
-            if (nextStep != null)
-            {
-                switch ((EnumTypesStep)nextStep.ro_typeId)
-                {
-                    case EnumTypesStep.Coordinate:
-                        selectStatus = (int)EnumStatus.CoordinateWork;
-                        break;
+        //    if (nextStep != null)
+        //    {
+        //        switch ((EnumTypesStep)nextStep.ro_typeId)
+        //        {
+        //            case EnumTypesStep.Coordinate:
+        //                selectStatus = (int)EnumStatus.CoordinateWork;
+        //                break;
 
-                    case EnumTypesStep.Approve:
-                        selectStatus = (int)EnumStatus.ApprovWork;
-                        break;
+        //            case EnumTypesStep.Approve:
+        //                selectStatus = (int)EnumStatus.ApprovWork;
+        //                break;
 
-                    case EnumTypesStep.Review:
-                        selectStatus = (int)EnumStatus.CoordinateWork;
-                        break;
+        //            case EnumTypesStep.Review:
+        //                selectStatus = (int)EnumStatus.CoordinateWork;
+        //                break;
 
-                    case EnumTypesStep.Notify:
-                        selectStatus = (int)EnumStatus.CoordinateWork;
-                        break;
+        //            case EnumTypesStep.Notify:
+        //                selectStatus = (int)EnumStatus.CoordinateWork;
+        //                break;
 
-                    case EnumTypesStep.Created:
-                        selectStatus = (int)EnumStatus.Created;
-                        break;
+        //            case EnumTypesStep.Created:
+        //                selectStatus = (int)EnumStatus.Created;
+        //                break;
 
-                }
+        //        }
 
-                nextStep.ro_statusId = selectStatus;
-                order.o_statusId = selectStatus;
-                order.o_stepRoute = nextStep.ro_step;
-                //nextStep.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
-                //order.RouteStatus = nextStep.RouteStatus;
-            }
+        //        nextStep.ro_statusId = selectStatus;
+        //        order.o_statusId = selectStatus;
+        //        order.o_stepRoute = nextStep.ro_step;
+        //        //nextStep.RouteStatus = MainWindowViewModel.repo.RouteStatus.FirstOrDefault(it => it.id == selectStatus);
+        //        //order.RouteStatus = nextStep.RouteStatus;
+        //    }
 
-            //order.o_statusId = nextStep.ro_statusId;
+        //    //order.o_statusId = nextStep.ro_statusId;
 
-        }
+        //}
     }
 }

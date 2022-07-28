@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
+using Orders.Infrastructure.Common;
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
@@ -59,6 +60,7 @@ namespace Orders.ViewModels
                 RouteAddings = ListFiles,
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
+                ro_enabled = true,
                 ro_statusId = (int)EnumStatus.Created,
                 ro_check = 1
             };
@@ -72,6 +74,8 @@ namespace Orders.ViewModels
 
 
         #region Команды
+
+
         //--------------------------------------------------------------------------------
         // Команда Создать
         //--------------------------------------------------------------------------------
@@ -84,13 +88,13 @@ namespace Orders.ViewModels
 
             foreach (var step in ListRouteStep)
             {
-                if (step.r_disabled == false)
+                if (step.r_enabled == true)
                 {
                     RouteOrder ro = new RouteOrder();
                     ro.ro_step = curStep++;
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
-                    ro.ro_disabled = false;
+                    ro.ro_enabled = true;
                     ro.ro_statusId = (int)EnumStatus.None;
                     Order.RouteOrders.Add(ro);
                 }
@@ -112,33 +116,10 @@ namespace Orders.ViewModels
         private bool CanSendCommand(object p) => true;
         private void OnSendCommandExecuted(object p)
         {
-            int curStep = 1;
 
-            foreach (var step in ListRouteStep)
-            {
-                if (step.r_disabled == false)
-                {
-                    RouteOrder ro = new RouteOrder();
-                    ro.ro_step = curStep++;
-                    ro.ro_userId = step.r_userId;
-                    ro.ro_typeId = step.r_type;
-                    ro.ro_disabled = false;
-                    ro.ro_statusId = (int)EnumStatus.None;
-                    Order.RouteOrders.Add(ro);
-                }
-            }
+            OnCreateCommandExecuted(p);
 
-            Order.o_stepRoute++;
-            RouteOrder NextStep = Order.RouteOrders.FirstOrDefault(it => it.ro_step == Order.o_stepRoute);
-            OrderWindowViewModel.SetStatusStep(CreateStep, NextStep, Order);
-
-            CreateStep.ro_check = 1;
-            CreateStep.ro_date_check = DateTime.Now;
-
-            repo.Add(Order, true);
-
-            App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().DialogResult = true;
-
+            ShareFunction.SendToNextStep(Order, CreateStep, ListFiles);
         }
 
         //--------------------------------------------------------------------------------
@@ -152,6 +133,23 @@ namespace Orders.ViewModels
             App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().Close();
         }
 
+
+        //--------------------------------------------------------------------------------
+        // Команда Drop
+        //--------------------------------------------------------------------------------
+
+        public void ItemsControl_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                ShareFunction.AddFiles(files, ListFiles);
+
+            }
+        }
+
+       
         //--------------------------------------------------------------------------------
         // Команда Добавить файл
         //--------------------------------------------------------------------------------
@@ -164,39 +162,7 @@ namespace Orders.ViewModels
 
             if (dlgOpen.ShowDialog() == true)
             {
-                foreach (var file in dlgOpen.FileNames)
-                {
-                    FileInfo info = new FileInfo(file);
-
-                    if (info.Length > 8000000)
-                    {
-                        MessageBox.Show($"Файл \"{info.Name}\" имеет размер более 8 МБ.\r\n\r\nОн не будет добавлен.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        continue;
-                    }
-
-                    RouteAdding ra = new RouteAdding();
-                    ra.ad_text = info.Name;
-
-                    FileStream fs = new FileStream(file, FileMode.Open);
-                    ra.ad_file = new byte[fs.Length];
-                    fs.Read(ra.ad_file, 0, (int)fs.Length);
-                    fs.Close();
-
-                    ListFiles.Add(ra);
-
-                }
-
-                //RouteAdding ra = new RouteAdding();
-                //ra.ad_text = Path.GetFileName(dlgOpen.FileName);
-
-                //FileStream fs = new FileStream(dlgOpen.FileName, FileMode.Open);
-
-                //ra.ad_file = new byte[fs.Length];
-                //fs.Read(ra.ad_file, 0, (int)fs.Length);
-                //fs.Close();
-
-                //ListFiles.Add(ra);
-            
+                ShareFunction.AddFiles(dlgOpen.FileNames, ListFiles);
             }
 
         }
