@@ -66,7 +66,7 @@ namespace Orders.ViewModels
             };
 
             Order.o_name = "Калькуляция КЗ ";
-            Order.o_number = MainWindowViewModel.repo.GetNumberOrder().ToString();
+            Order.o_number = MainWindowViewModel.repo.GetNumberOrder().ToString("000");
 
             //MainWindowViewModel.repo.ResetNumberOrder(100);
             //Order.o_number = "001";

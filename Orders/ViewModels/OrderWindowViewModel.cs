@@ -263,15 +263,11 @@ namespace Orders.ViewModels
             if( p is RouteAdding ra)
             {
                 string TempFileName = Path.GetTempPath() + ra.ad_text;
-
                 FileStream fs = new FileStream(TempFileName, FileMode.Create);
-
                 fs.Write(ra.ad_file, 0, (int)ra.ad_file.Length);
-
                 fs.Close();
 
                 Process.Start(TempFileName);
-
 
             }
         }

@@ -21,6 +21,10 @@ namespace Orders.ViewModels
     {
         private readonly DispatcherTimer timer = new DispatcherTimer();
 
+        private bool IsCreateUser => SelectedOrder?.RouteOrders.Count > 0
+                                        && SelectedOrder?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
+
+
         public static readonly RepositoryBase repo = new RepositoryBase();
         //private readonly IRepository<RouteOrder> repoRouteOrder;
         public ObservableCollection<Order> ListOrders { get; set; }
@@ -46,8 +50,7 @@ namespace Orders.ViewModels
             //    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any() )
             //    );
 
-
-            timer.Interval = new TimeSpan(0, 0, 5);
+            timer.Interval = new TimeSpan(0, 0, 10);
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -151,9 +154,12 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteCommand = null;
         public ICommand DeleteCommand => _DeleteCommand ?? new LambdaCommand(OnDeleteCommandExecuted, CanDeleteCommand);
-        private bool CanDeleteCommand(object p) => SelectedOrder != null && SelectedOrder.o_statusId == (int)EnumStatus.Closed;
+        private bool CanDeleteCommand(object p) => SelectedOrder != null 
+                            && SelectedOrder.o_statusId == (int)EnumStatus.Closed
+                            && IsCreateUser;
         private void OnDeleteCommandExecuted(object p)
         {
+
             if (MessageBox.Show($"Удалить заказ {SelectedOrder.o_name}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 repo.Delete(SelectedOrder, true);

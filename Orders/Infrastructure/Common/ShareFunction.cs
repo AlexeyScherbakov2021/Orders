@@ -101,7 +101,7 @@ namespace Orders.Infrastructure.Common
             }
             SetStatusStep(CurrentStep, NextStep, order);
 
-            SendMail(NextStep.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. " +
+            SendMail(NextStep?.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. " +
                 $"Ссылка на программу - \"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\"");
         }
 

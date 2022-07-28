@@ -73,7 +73,7 @@ namespace Orders.ViewModels
         public RouteControlViewModel(RepositoryBase repoBase)
         {
             repo = repoBase;
-            ListUser = new ObservableCollection<User>( repo.Users.Where(it => it.u_role < 1));
+            ListUser = new ObservableCollection<User>( repo.Users.Where(it => it.u_role < 1).OrderBy(o => o.u_name));
             ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created));
             ListRouteType[0].IsCheck = true;
             ListRoute = new ObservableCollection<Route>(repo.Routes);
@@ -164,7 +164,7 @@ namespace Orders.ViewModels
         //private bool CanRefreshCommand(object p) => SelectedStep != null;
         private void OnRefreshCommandExecuted(object p)
         {
-            ListUser = new ObservableCollection<User>(repo.Users.Where(it => it.u_role < 1));
+            ListUser = new ObservableCollection<User>(repo.Users.Where(it => it.u_role < 1).OrderBy(o => o.u_name));
             OnPropertyChanged(nameof(ListUser));
         }
 
