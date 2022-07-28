@@ -1,0 +1,49 @@
+﻿<UserControl x:Name="SpinCtrl" Template="{DynamicResource CtrlTemplate}" 
+         x:Class="SpinUpDown.SpinControl.SpinControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpinUpDown.SpinControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="24" d:DesignWidth="100" PreviewKeyDown="SpinCtrl_KeyDown">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="Control.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="Control.Focus.Border" Color="#FF569DE5"/>
+
+        <ControlTemplate x:Key="CtrlTemplate" TargetType="{x:Type Control}">
+            <Border x:Name="border" Background="{TemplateBinding Background}" 
+                    BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    SnapsToDevicePixels="True"
+                    
+                    >
+                <DockPanel >
+                    <UniformGrid Width="18" DockPanel.Dock="Right" Rows="2">
+                        <RepeatButton  Click="UpValue_Click" Focusable="True" Padding="0">
+                            <Image Source="Up32.png"/>
+                        </RepeatButton>
+                        <RepeatButton Click="DownValue_Click" Focusable="True" Padding="0">
+                            <Image Source="Down32.png"/>
+                        </RepeatButton>
+                    </UniformGrid>
+                    <TextBox Text="{Binding Value, ElementName=SpinCtrl, StringFormat=0.###, Mode=TwoWay}" VerticalContentAlignment="Center" 
+                             IsReadOnly="False" PreviewTextInput="TextBox_PreviewTextInput"/>
+                </DockPanel>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Control.MouseOver.Border}"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="true">
+                    <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Control.Focus.Border}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+
+</UserControl>

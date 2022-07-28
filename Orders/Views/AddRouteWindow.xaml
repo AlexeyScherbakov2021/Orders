@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Добавление этапа" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Добавление этапа" Height="600" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:AddRouteWindowViewModel/>
     </Window.DataContext>
@@ -18,7 +18,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="13*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
         <ToolBar Grid.ColumnSpan="2">
@@ -89,14 +89,14 @@
 
                 <GroupBox Header="Добавить перед..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD" Visibility="{Binding IsVisible}">
                     <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" 
-                             ItemContainerStyle="{StaticResource ListBoxItemStyleSelected}" >
+                             ItemContainerStyle="{StaticResource ListBoxItemStyleSelected}" HorizontalContentAlignment="Stretch" >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="26"/>
-                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="28"/>
+                                            <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
                                         <Ellipse Width="22" Height="22" StrokeThickness="1" Stroke="Blue" Margin="2,2,2,2"/>

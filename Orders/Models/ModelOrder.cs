@@ -34,6 +34,7 @@ namespace Orders.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Order>()
                 .Property(e => e.o_name)
                 .IsUnicode(false);

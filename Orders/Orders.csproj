@@ -107,6 +107,9 @@
     <Compile Include="Infrastructure\Converters\StatusToImageConverter.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\LogFile.cs" />
+    <Compile Include="Infrastructure\SpinControl\SpinControl.xaml.cs">
+      <DependentUpon>SpinControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Repository\RepositoryBase.cs" />
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
     <Compile Include="ViewModels\OrderWindowViewModel.cs" />
@@ -132,6 +135,10 @@
     <Compile Include="Views\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Infrastructure\SpinControl\SpinControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\Button.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -261,6 +268,10 @@
     <Resource Include="Resource\рассмотрен.png" />
     <Resource Include="Resource\рассмотр.png" />
     <Resource Include="Resource\создан.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Infrastructure\SpinControl\Down32.png" />
+    <Resource Include="Infrastructure\SpinControl\Up32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,8 +21,11 @@ namespace Orders.Repository
         public IQueryable<Order> Orders => db.Orders.Include(it => it.RouteOrders.Select(it2 => it2.RouteAddings)   );
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
 
-               
-        
+
+
+        //--------------------------------------------------------------------------------------------------
+        // обновление записей в списке и вложенном списке
+        //--------------------------------------------------------------------------------------------------
         public void Refresh<T>(ICollection<T> item) 
         {
             if (item is null || item.Count == 0)
@@ -38,13 +41,27 @@ namespace Orders.Repository
         }
 
 
-        //public void GetAll()
-        //{
-        //    List<Order> list = db.Orders.Where(it => it.o_stepRoute < 20).Include(ink => ink.RouteOrders).ToList();
-        //    db.Entry(list[1]).Reload();
-        //}
+        //--------------------------------------------------------------------------------------------------
+        // получение очередного номера
+        //--------------------------------------------------------------------------------------------------
+        public int GetNumberOrder()
+        {
+            int num = db.Database.SqlQuery<int>("select next value for numberOrder").FirstOrDefault();
+            return num;
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // сброс нумерации заказов
+        //--------------------------------------------------------------------------------------------------
+        public void ResetNumberOrder(int newNumber = 1)
+        {
+            db.Database.ExecuteSqlCommand($"alter sequence numberOrder restart with {newNumber}");
+        }
 
 
+        //--------------------------------------------------------------------------------------------------
+        // конструктор
+        //--------------------------------------------------------------------------------------------------
         public RepositoryBase()
         {
 

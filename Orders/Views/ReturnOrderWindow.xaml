@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <ToolBar Grid.ColumnSpan="2">
-            <Button Margin="3" Style="{DynamicResource ButtonStyleShadow}" VerticalAlignment="Stretch"
+            <Button Margin="3" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:ReturnOrderWindow}}">
                 <Button.Command>
                     <cmd:CloseDialogCommand DialogResult="True"/>

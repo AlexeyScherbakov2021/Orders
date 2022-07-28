@@ -36,10 +36,20 @@ namespace Orders.Infrastructure.Common
                 RouteAdding ra = new RouteAdding();
                 ra.ad_text = info.Name;
 
-                FileStream fs = new FileStream(file, FileMode.Open);
-                ra.ad_file = new byte[fs.Length];
-                fs.Read(ra.ad_file, 0, (int)fs.Length);
-                fs.Close();
+                try
+                {
+
+                    FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    ra.ad_file = new byte[fs.Length];
+                    fs.Read(ra.ad_file, 0, (int)fs.Length);
+                    fs.Close();
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.Message,"Ошибка добавления файла", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
 
                 ListFiles.Add(ra);
 
@@ -91,7 +101,8 @@ namespace Orders.Infrastructure.Common
             }
             SetStatusStep(CurrentStep, NextStep, order);
 
-            SendMail(NextStep.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. Ссылка на программу - s:\\Производство\\01_Мавричев\\ПО Движение заказов");
+            SendMail(NextStep.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. " +
+                $"Ссылка на программу - \"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\"");
         }
 
 
