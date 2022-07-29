@@ -172,6 +172,17 @@ namespace Orders.ViewModels
             }
         }
 
+        //--------------------------------------------------------------------------------
+        // Команда Отчет
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _ReportCommand = null;
+        public ICommand ReportCommand => _ReportCommand ?? new LambdaCommand(OnReportCommandExecuted, CaReportCommand);
+        private bool CaReportCommand(object p) => true;
+        private void OnReportCommandExecuted(object p)
+        {
+
+        }
+
 
         //--------------------------------------------------------------------------------
         // Команда Двойной щелчок
