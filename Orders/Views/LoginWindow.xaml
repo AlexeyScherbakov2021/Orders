@@ -10,13 +10,13 @@
     <Window.DataContext>
         <vm:LoginWindowViewModel/>
     </Window.DataContext>
-    <Grid Background="#FFEAEAEA" FocusManager.FocusedElement="{Binding ElementName=listUser}">
+    <Grid Background="#FFEAEAEA" FocusManager.FocusedElement="{Binding ElementName=pwd}" >
         <Label Content="Пользователь" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top"/>
         <Label Content="Пароль" HorizontalAlignment="Left" Margin="45,72,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.02,-0.115"/>
         <PasswordBox Name="pwd" HorizontalAlignment="Left" Height="23" Margin="101,75,0,0" VerticalAlignment="Top" Width="211" TabIndex="1"/>
-        <Button Content="OK" Command="{Binding OkCommand}" CommandParameter="{Binding ElementName=pwd}" HorizontalAlignment="Left" Margin="72,134,0,0" VerticalAlignment="Top" Width="75" Height="31" IsDefault="True" Style="{DynamicResource ButtonStyleShadow}"/>
-        <Button Content="Отмена" Command="{Binding OkCommand}" CommandParameter="cancel" HorizontalAlignment="Left" Margin="196,134,0,0" VerticalAlignment="Top" Width="75" Height="31" IsCancel="True" Style="{DynamicResource ButtonStyleShadow}"/>
-        <Grid HorizontalAlignment="Left" Margin="119,110,0,0" VerticalAlignment="Top">
+        <Button Content="OK" Command="{Binding OkCommand}" CommandParameter="{Binding ElementName=pwd}" HorizontalAlignment="Left" Margin="72,134,0,0" VerticalAlignment="Top" Width="75" Height="31" IsDefault="True" Style="{StaticResource ButtonStyleShadow}"/>
+        <Button Content="Отмена" Command="{Binding OkCommand}" CommandParameter="cancel" HorizontalAlignment="Left" Margin="196,134,0,0" VerticalAlignment="Top" Width="75" Height="31" IsCancel="True" Style="{StaticResource ButtonStyleShadow}"/>
+        <Grid HorizontalAlignment="Left" Margin="119,110,0,0" VerticalAlignment="Top" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>

@@ -34,6 +34,9 @@ namespace Orders.Models
 
         public int o_statusId { get; set; }
 
+        [NotMapped]
+        public User WorkUser { get; set; }
+
         public DateTime o_date_created { get; set; }
 
         public virtual RouteStatus RouteStatus { get; set; }

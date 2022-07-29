@@ -1,4 +1,5 @@
-﻿using Orders.Infrastructure;
+﻿using Microsoft.Win32;
+using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
 using Orders.Models;
 using Orders.Repository;
@@ -7,10 +8,16 @@ using Orders.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+//using System.DirectoryServices;
+//using System.Collections;
+//using System.DirectoryServices.AccountManagement;
+//using System.DirectoryServices.Protocols;
+
 
 namespace Orders.ViewModels
 {
@@ -48,15 +55,20 @@ namespace Orders.ViewModels
                 }
                 else
                 {
+                    // записываем в реестр
+                    RegistryKey SoftKey= Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
+                    RegistryKey ProgKey = SoftKey.CreateSubKey("MoveOrders");
+                    ProgKey.SetValue("login", SelectUser.u_login);
+                    ProgKey.Close();
+                    SoftKey.Close();
+
                     // если пользователь, то запускаем табель
                     MainWindow win = new MainWindow();
                     win.Show();
                     App.Current.MainWindow = win;
                 }
 
-
             }
-
             App.Current.Windows.OfType<LoginWindow>().First().Close();
         }
 
@@ -77,6 +89,52 @@ namespace Orders.ViewModels
             {
                 ListUser = new List<User> { new User { u_name = "Admin", u_pass = "adm", u_role = 1, u_login="Admin" } };
             }
+
+            //var user = WindowsIdentity.GetCurrent();
+
+            //DirectoryEntry CurrentDomain = new DirectoryEntry();
+            //DirectoryEntries D = CurrentDomain.Children;
+            //IEnumerator Reed = D.GetEnumerator();
+
+            ////while (Reed.MoveNext())
+            ////{
+            ////    DirectoryEntry Child = Reed.Current as DirectoryEntry;
+            ////}
+
+
+            //DirectorySearcher Search = new DirectorySearcher(CurrentDomain);
+            //Search.Filter = "(objectCategory=user)";
+            //Search.PropertiesToLoad.Add("cn"); // Общее имя (ADName ?)
+            //Search.PropertiesToLoad.Add("displayName"); // Отображаемое имя
+            //Search.PropertiesToLoad.Add("givenName"); // Имя
+            //Search.PropertiesToLoad.Add("sn"); // Фамилия
+            //Search.PropertiesToLoad.Add("email"); // Емаил
+            //Search.PropertiesToLoad.Add("mobile"); // Мобильный
+            //Search.PropertiesToLoad.Add("telephoneNumber"); // Номер телефона       
+
+            //SearchResultCollection ResultCollection = Search.FindAll();
+            //foreach (SearchResult result in ResultCollection)
+            //{
+            //    var strName = result.GetDirectoryEntry();
+            //    //var prop = (result.GetDirectoryEntry().Properties["mail"].Value).ToString();
+            //    var name = result.GetDirectoryEntry().Properties["displayName"].Value.ToString();
+            //}
+
+            string login = "Admin";
+            RegistryKey SoftKey = Registry.CurrentUser.OpenSubKey("SOFTWARE");
+            RegistryKey ProgKey = SoftKey.OpenSubKey("MoveOrders");
+            if(ProgKey != null)
+            {
+                login = ProgKey.GetValue("login", "Admin").ToString();
+                App.Log.WriteLineLog("LoginWindowViewModel login");
+                ProgKey.Close();
+            }
+            SoftKey.Close();
+
+
+
+            SelectUser = ListUser.FirstOrDefault(it => it.u_login == login);
+
         }
     }
 

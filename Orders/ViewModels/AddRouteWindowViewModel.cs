@@ -43,7 +43,7 @@ namespace Orders.ViewModels
             ListRouteOrder = order.RouteOrders.Where(it => it.ro_step > order.o_stepRoute).ToList();
             SelectedRouteOrder = ListRouteOrder.FirstOrDefault();
 
-            ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).ToList();
+            ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).OrderBy(o => o.u_name).ToList();
             ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created).ToList();
             SelectedType = ListRouteType[0];
         }

@@ -62,7 +62,7 @@ namespace Orders.ViewModels
                 ro_typeId = 5,
                 ro_enabled = true,
                 ro_statusId = (int)EnumStatus.Created,
-                ro_check = 1
+                ro_check = 0
             };
 
             Order.o_name = "Калькуляция КЗ ";

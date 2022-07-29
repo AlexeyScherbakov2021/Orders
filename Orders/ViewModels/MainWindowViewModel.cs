@@ -142,6 +142,11 @@ namespace Orders.ViewModels
                 item.RouteOrders = SortStepRoute(item.RouteOrders);
             }
 
+            foreach(var item in ListOrders)
+            {
+                item.WorkUser = item.RouteOrders.FirstOrDefault(it => it.ro_step == item.o_stepRoute && it.ro_check == 0)?.User;
+            }
+
 
             OnPropertyChanged(nameof(ListOrders));
 
@@ -155,7 +160,7 @@ namespace Orders.ViewModels
         private readonly ICommand _DeleteCommand = null;
         public ICommand DeleteCommand => _DeleteCommand ?? new LambdaCommand(OnDeleteCommandExecuted, CanDeleteCommand);
         private bool CanDeleteCommand(object p) => SelectedOrder != null 
-                            && SelectedOrder.o_statusId == (int)EnumStatus.Closed
+                            && (SelectedOrder.o_statusId == (int)EnumStatus.Closed || SelectedOrder.o_statusId == (int)EnumStatus.Created)
                             && IsCreateUser;
         private void OnDeleteCommandExecuted(object p)
         {

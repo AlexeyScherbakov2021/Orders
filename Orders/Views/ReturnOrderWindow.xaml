@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:cmd="clr-namespace:Orders.Infrastructure.Commands"
         xmlns:local="clr-namespace:Orders.Views"
@@ -16,11 +17,7 @@
         </Grid.RowDefinitions>
 
         <ToolBar Grid.ColumnSpan="2">
-            <Button Margin="3" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:ReturnOrderWindow}}">
-                <Button.Command>
-                    <cmd:CloseDialogCommand DialogResult="True"/>
-                </Button.Command>
+            <Button Margin="3" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" Command="{Binding ReturnCommand}">
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Backward" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
