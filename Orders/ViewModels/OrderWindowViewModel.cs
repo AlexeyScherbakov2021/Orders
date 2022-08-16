@@ -23,7 +23,9 @@ namespace Orders.ViewModels
     {
         public User CurrentUser => App.CurrentUser;
 
-        private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == 1) ?? false;
+        public RouteOrder SelectedRouteStep { get; set; }
+
+        private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
         private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
         private bool IsCreateUser => order?.RouteOrders.Count > 0
                                                 && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
@@ -67,42 +69,86 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _ReturnCommand = null;
         public ICommand ReturnCommand => _ReturnCommand ?? new LambdaCommand(OnReturnCommandExecuted, CanReturnCommand);
-        private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps 
+            && SelectedRouteStep?.ro_check == EnumCheckedStatus.Checked
+            && order.o_statusId != (int)EnumStatus.Refused;
         private void OnReturnCommandExecuted(object p)
         {
-            ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
-            ReturnOrderWindow winReturnRoute = new ReturnOrderWindow();
-            winReturnRoute.DataContext = view;
-            view.ReturnMessage = CurrentStep.ro_text;
-            if (winReturnRoute.ShowDialog() == true)
+            if(MessageBox.Show($"Вернуть заказ на этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"?",
+                "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes )
             {
-                CurrentStep.ro_text = view.ReturnMessage;
-                foreach (var item in order.RouteOrders)
+                if (string.IsNullOrEmpty(CurrentStep.ro_text) && MessageBox.Show("Вы не добавили сообщение. Продолжить возврат? ",
+                        "Предупреждение", MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
-                    // у промежуточных этапов удаляем статус
-                    if (item.ro_step >= view.SelectedRouteOrder.ro_step && item.ro_step < order.o_stepRoute)
-                    {
-                        item.ro_check = 0;
-                        item.ro_statusId = (int)EnumStatus.None;
-                        item.ro_date_check = null;
-                    }
+                    return;
                 }
 
-                view.SelectedRouteOrder.ro_statusId = (int)EnumStatus.CoordinateWork;
+
+               foreach (var item in order.RouteOrders)
+                {
+                   // у промежуточных этапов удаляем статус
+                   if (item.ro_step >= SelectedRouteStep.ro_step && item.ro_step < order.o_stepRoute)
+                   {
+                       item.ro_check = EnumCheckedStatus.CheckedNone;
+                       item.ro_statusId = (int)EnumStatus.None;
+                       item.ro_date_check = null;
+                   }
+                }
+
                 CurrentStep.ro_statusId = (int)EnumStatus.Return;
                 CurrentStep.ro_date_check = DateTime.Now;
-                order.o_stepRoute = view.SelectedRouteOrder.ro_step;
+                CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
+
+                SelectedRouteStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                SelectedRouteStep.ro_check = EnumCheckedStatus.CheckedProcess;
+                order.o_stepRoute = SelectedRouteStep.ro_step;
                 order.o_statusId = (int)EnumStatus.Return;
 
-                //MainWindowViewModel.repo.Refresh<RouteOrder>(order.RouteOrders);
-
-                ShareFunction.SendMail(view.SelectedRouteOrder?.User.u_email, order.o_number);
-
-
-                //MainWindowViewModel.repo.Save();
-                //OnPropertyChanged(nameof(order));
+                ShareFunction.SendMail(SelectedRouteStep.User.u_email, order.o_number);
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
+
+            return;
+
+
+
+            //ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
+            //ReturnOrderWindow winReturnRoute = new ReturnOrderWindow();
+            //winReturnRoute.DataContext = view;
+            //view.ReturnMessage = CurrentStep.ro_text;
+            //if (winReturnRoute.ShowDialog() == true)
+            //{
+            //    CurrentStep.ro_text = view.ReturnMessage;
+            //    foreach (var item in order.RouteOrders)
+            //    {
+            //        // у промежуточных этапов удаляем статус
+            //        if (item.ro_step >= view.SelectedRouteOrder.ro_step && item.ro_step < order.o_stepRoute)
+            //        {
+            //            item.ro_check = EnumCheckedStatus.CheckedNone;
+            //            item.ro_statusId = (int)EnumStatus.None;
+            //            item.ro_date_check = null;
+            //        }
+            //    }
+
+            //    CurrentStep.ro_statusId = (int)EnumStatus.Return;
+            //    CurrentStep.ro_date_check = DateTime.Now;
+            //    CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
+
+            //    view.SelectedRouteOrder.ro_statusId = (int)EnumStatus.CoordinateWork;
+            //    view.SelectedRouteOrder.ro_check = EnumCheckedStatus.CheckedProcess;
+            //    order.o_stepRoute = view.SelectedRouteOrder.ro_step;
+            //    order.o_statusId = (int)EnumStatus.Return;
+
+            //    //MainWindowViewModel.repo.Refresh<RouteOrder>(order.RouteOrders);
+
+            //    ShareFunction.SendMail(view.SelectedRouteOrder?.User.u_email, order.o_number);
+
+
+            //    //MainWindowViewModel.repo.Save();
+            //    //OnPropertyChanged(nameof(order));
+            //    App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+            //}
         }
 
 
@@ -130,15 +176,35 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteRouteCommand = null;
         public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
-        private bool CanDeleteRouteCommand(object p) => order != null &&
-            order.RouteOrders.Any(it => it.ro_ownerId == App.CurrentUser.id && it.ro_check == 0);
+        private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.ro_ownerId == App.CurrentUser.id &&
+            SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
+
+
         private void OnDeleteRouteCommandExecuted(object p)
         {
-            AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
-            AddRouteWindow winAddRoute = new AddRouteWindow();
-            winAddRoute.DataContext = view;
-            if (winAddRoute.ShowDialog() == true)
+            if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"",
+                "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
+
+                // перенумерауия этапов
+                List<RouteOrder> TempList = new List<RouteOrder>();
+
+                foreach (var item in order.RouteOrders)
+                {
+                    if (item.ro_step == SelectedRouteStep.ro_step)
+                        continue;
+
+                    if (item.ro_step >= SelectedRouteStep.ro_step)
+                        item.ro_step--;
+
+                    TempList.Add(item);
+
+                }
+                MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep);
+                order.RouteOrders = TempList;
+                MainWindowViewModel.repo.Update(order, true);
+
+                //order.RouteOrders.Remove(SelectedRouteStep);
                 OnPropertyChanged(nameof(order));
                 //RepositoryBase repo = new RepositoryBase();
                 //repo.Save();

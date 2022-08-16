@@ -62,7 +62,7 @@ namespace Orders.ViewModels
                 ro_typeId = 5,
                 ro_enabled = true,
                 ro_statusId = (int)EnumStatus.Created,
-                ro_check = 0,
+                ro_check = EnumCheckedStatus.CheckedNone,
                 ro_ownerId = App.CurrentUser.id
             };
 

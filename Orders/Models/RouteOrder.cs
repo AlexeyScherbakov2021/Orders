@@ -1,5 +1,6 @@
 namespace Orders.Models
 {
+    using Orders.Infrastructure;
     using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Orders.Models
 
         public string ro_text { get; set; }
 
-        public int ro_check { get; set; }
+        public EnumCheckedStatus ro_check { get; set; }
 
         public int ro_statusId { get; set; }
 

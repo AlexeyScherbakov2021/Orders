@@ -63,11 +63,11 @@ namespace Orders.Infrastructure.Common
         public static void SendToNextStep(Order order, RouteOrder CurrentStep, ICollection<RouteAdding> ListFiles)
         {
             CurrentStep.RouteAddings = ListFiles;
-            CurrentStep.ro_check = 1;
+            CurrentStep.ro_check = EnumCheckedStatus.Checked;
             CurrentStep.ro_date_check = DateTime.Now;
             RouteOrder NextStep;
 
-            if (order.RouteOrders.All(it => it.ro_check == 1))
+            if (order.RouteOrders.All(it => it.ro_check > EnumCheckedStatus.CheckedProcess))
             {
                 // маршрут окончен
                 NextStep = null;
@@ -79,7 +79,7 @@ namespace Orders.Infrastructure.Common
                 if (NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
                 {
                     // следующий этап подчиненный после главного
-                    if (NextStep.ro_check == 1)
+                    if (NextStep.ro_check == EnumCheckedStatus.Checked)
                     {
                         // он уже был рассмотрен,  делаем прыжок
                         NextStep = order.RouteOrders
@@ -87,7 +87,7 @@ namespace Orders.Infrastructure.Common
 
                     }
                     else
-                        CurrentStep.ro_check = 0;
+                        CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
 
                 }
                 else if (NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
@@ -115,7 +115,7 @@ namespace Orders.Infrastructure.Common
         {
             int selectStatus = 0;
 
-            if (step.ro_check > 0)
+            if (step.ro_check > EnumCheckedStatus.CheckedProcess)
             {
                 switch ((EnumTypesStep)step.ro_typeId)
                 {
@@ -176,6 +176,7 @@ namespace Orders.Infrastructure.Common
                 }
 
                 nextStep.ro_statusId = selectStatus;
+                nextStep.ro_check = EnumCheckedStatus.CheckedProcess;
                 order.o_statusId = selectStatus;
                 order.o_stepRoute = nextStep.ro_step;
             }
