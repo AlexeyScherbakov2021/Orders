@@ -71,6 +71,7 @@ namespace Orders.ViewModels
         public ICommand ReturnCommand => _ReturnCommand ?? new LambdaCommand(OnReturnCommandExecuted, CanReturnCommand);
         private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps 
             && SelectedRouteStep?.ro_check == EnumCheckedStatus.Checked
+            && SelectedRouteStep?.ro_return_step == null
             && order.o_statusId != (int)EnumStatus.Refused;
         private void OnReturnCommandExecuted(object p)
         {
@@ -109,9 +110,7 @@ namespace Orders.ViewModels
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
 
-            return;
-
-
+            
 
             //ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
             //ReturnOrderWindow winReturnRoute = new ReturnOrderWindow();
@@ -221,54 +220,8 @@ namespace Orders.ViewModels
                                         && !IsAllSteps;
         private void OnSendCommandExecuted(object p)
         {
-
-            //CurrentStep.RouteAddings = ListFiles;
-            //CurrentStep.ro_check = 1;
-            //CurrentStep.ro_date_check = DateTime.Now;
-            //RouteOrder NextStep;
-
-            //if (order.RouteOrders.All(it => it.ro_check == 1))
-            //{
-            //    // маршрут окончен
-            //    NextStep = null;
-            //}
-            //else
-            //{
-            //    //order.o_stepRoute++;
-            //    NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute + 1);
-
-            //    if(NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
-            //    {
-            //        // следующий этап подчиненный после главного
-            //        if(NextStep.ro_check == 1)
-            //        {
-            //            // он уже был рассмотрен,  делаем прыжок
-            //            NextStep = order.RouteOrders
-            //                .FirstOrDefault(it => it.ro_step > NextStep.ro_step && it.ro_return_step is null);
-
-            //        }
-            //        else
-            //            CurrentStep.ro_check = 0;
-
-            //    }
-            //    else if(NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
-            //    {
-            //        // следующий этап после подчиненного уже основной
-            //        // вохвращаемся на главный
-            //        NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
-            //        //order.o_stepRoute = NextStep.ro_step;
-            //    }
-
-
-            //    //order.o_statusId = (int)EnumStatus.Coordinated;
-            //}
-            //ShareFunction.SetStatusStep(CurrentStep, NextStep, order);
-
             ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
-
-
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
-
 
         }
 
@@ -313,8 +266,9 @@ namespace Orders.ViewModels
         private bool CanDeleteFileCommand(object p) => order.o_statusId != (int)EnumStatus.Refused;
         private void OnDeleteFileCommandExecuted(object p)
         {
-            RouteAdding FileName = p as RouteAdding ;
+            RouteAdding FileName = p as RouteAdding;
 
+            MainWindowViewModel.repo.Delete<RouteAdding>(FileName);
             ListFiles.Remove(FileName);
 
         }
@@ -339,9 +293,20 @@ namespace Orders.ViewModels
         private bool CanRefuseCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnRefuseCommandExecuted(object p)
         {
-            order.o_statusId = (int)EnumStatus.Refused;
-            CurrentStep.ro_statusId = (int)EnumStatus.Refused;
-            App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+            if(MessageBox.Show("Подтверждаете отказ?","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                if(string.IsNullOrEmpty(CurrentStep.ro_text))
+                {
+                    MessageBox.Show("В сообщении нужно указать причину.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                order.o_statusId = (int)EnumStatus.Refused;
+                CurrentStep.ro_date_check = DateTime.Now;
+                CurrentStep.ro_statusId = (int)EnumStatus.Refused;
+                App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+            }
+
         }
 
         //--------------------------------------------------------------------------------
