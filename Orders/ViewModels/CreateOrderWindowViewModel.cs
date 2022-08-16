@@ -62,7 +62,8 @@ namespace Orders.ViewModels
                 ro_typeId = 5,
                 ro_enabled = true,
                 ro_statusId = (int)EnumStatus.Created,
-                ro_check = 0
+                ro_check = 0,
+                ro_ownerId = App.CurrentUser.id
             };
 
             Order.o_name = "Калькуляция КЗ ";
@@ -99,6 +100,7 @@ namespace Orders.ViewModels
                     ro.ro_typeId = step.r_type;
                     ro.ro_enabled = true;
                     ro.ro_statusId = (int)EnumStatus.None;
+                    ro.ro_ownerId = App.CurrentUser.id;
                     Order.RouteOrders.Add(ro);
                 }
             }

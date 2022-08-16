@@ -73,9 +73,11 @@ namespace Orders.ViewModels
             ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
             ReturnOrderWindow winReturnRoute = new ReturnOrderWindow();
             winReturnRoute.DataContext = view;
+            view.ReturnMessage = CurrentStep.ro_text;
             if (winReturnRoute.ShowDialog() == true)
             {
-                foreach(var item in order.RouteOrders)
+                CurrentStep.ro_text = view.ReturnMessage;
+                foreach (var item in order.RouteOrders)
                 {
                     // у промежуточных этапов удаляем статус
                     if (item.ro_step >= view.SelectedRouteOrder.ro_step && item.ro_step < order.o_stepRoute)
@@ -88,6 +90,7 @@ namespace Orders.ViewModels
 
                 view.SelectedRouteOrder.ro_statusId = (int)EnumStatus.CoordinateWork;
                 CurrentStep.ro_statusId = (int)EnumStatus.Return;
+                CurrentStep.ro_date_check = DateTime.Now;
                 order.o_stepRoute = view.SelectedRouteOrder.ro_step;
                 order.o_statusId = (int)EnumStatus.Return;
 
@@ -110,6 +113,26 @@ namespace Orders.ViewModels
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
         private bool CanAddRouteCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnAddRouteCommandExecuted(object p)
+        {
+            AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
+            AddRouteWindow winAddRoute = new AddRouteWindow();
+            winAddRoute.DataContext = view;
+            if (winAddRoute.ShowDialog() == true)
+            {
+                OnPropertyChanged(nameof(order));
+                //RepositoryBase repo = new RepositoryBase();
+                //repo.Save();
+            }
+        }
+
+        //--------------------------------------------------------------------------------
+        // Команда Удалить этап
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _DeleteRouteCommand = null;
+        public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
+        private bool CanDeleteRouteCommand(object p) => order != null &&
+            order.RouteOrders.Any(it => it.ro_ownerId == App.CurrentUser.id && it.ro_check == 0);
+        private void OnDeleteRouteCommandExecuted(object p)
         {
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
             AddRouteWindow winAddRoute = new AddRouteWindow();

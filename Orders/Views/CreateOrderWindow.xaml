@@ -84,7 +84,7 @@
                     <TextBox Text="{Binding Order.o_name, Mode=TwoWay}"  Grid.Row="3" />
 
                     <TextBlock Text="Текстовое дополнение" Grid.Row="4" VerticalAlignment="Center" />
-                    <TextBox Text="{Binding Order.o_body, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5"/>
+                    <TextBox Text="{Binding Order.o_body, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5" VerticalScrollBarVisibility="Auto"/>
 
                     <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6" VerticalAlignment="Center"/>
                     <!--<Button Content="..." Command="{Binding AddFileCommand}" Grid.Row="6" Margin="112,2,0,2" Width="28" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleShadow}"/>-->

@@ -41,6 +41,12 @@ namespace Orders.Models
         public DateTime? ro_date_check { get; set; }
 
         public int? ro_return_step { get; set; }
+
+        //[NotMapped]
+        public int? ro_ownerId { get; set; }
+        //[NotMapped]
+        //public User Owner { get; set; }
+
         //[NotMapped]
         //public int? ro_child { get;set; }
 

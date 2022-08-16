@@ -38,5 +38,6 @@ namespace Orders.Models
         public virtual RouteType RouteType { get; set; }
 
         public virtual User User { get; set; }
+
     }
 }

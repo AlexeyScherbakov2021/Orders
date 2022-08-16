@@ -65,6 +65,7 @@ namespace Orders.ViewModels
             ro.ro_userId = SelectedUser.id;
             ro.ro_statusId = (int)EnumStatus.None;
             ro.ro_orderId = CurrentOrder.id;
+            ro.ro_ownerId = App.CurrentUser.id;
 
             int insertToStep;
 

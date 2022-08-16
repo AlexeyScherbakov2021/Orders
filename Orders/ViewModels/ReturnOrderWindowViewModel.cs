@@ -15,7 +15,7 @@ namespace Orders.ViewModels
     {
         public List<RouteOrder> ListRouteOrder { get; set; }
         public RouteOrder SelectedRouteOrder { get; set;}
-
+        public string ReturnMessage { get; set; }
 
         public ReturnOrderWindowViewModel(Order order)
         {

@@ -50,6 +50,14 @@
                     <TextBlock Text="Добавить этап" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
             </Button>
+            <Button Margin="2" Command="{Binding DeleteRouteCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_UserMinus" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Удалить этап" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+            </Button>
             <Button Margin="2"  Command="{Binding RefuseCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch">
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_Ban" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
@@ -137,9 +145,9 @@
                     <TextBlock Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
                     <TextBlock Text="Описание заказа" Grid.Row="4" VerticalAlignment="Center" Height="16" />
-                    <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="5"  Grid.ColumnSpan="2" TextWrapping="Wrap"/>
+                    <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="5"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFEDEDED" VerticalScrollBarVisibility="Auto"/>
                     <TextBlock Text="Добавить сообщение" Grid.Row="6" VerticalAlignment="Center" Height="16" Grid.ColumnSpan="2" />
-                    <TextBox Text="{Binding CurrentStep.ro_text}" Grid.Row="7" Grid.ColumnSpan="2" TextWrapping="Wrap" AcceptsReturn="True" />
+                    <TextBox Text="{Binding CurrentStep.ro_text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Grid.ColumnSpan="2" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
 
                     <TextBlock Text="Прикрепить файлы" Grid.Row="8" VerticalAlignment="Bottom" Height="16" Margin="0,0,0,4" />
 
