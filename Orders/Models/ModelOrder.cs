@@ -8,19 +8,27 @@ namespace Orders.Models
     public partial class ModelOrder : DbContext
     {
 
-#if DEBUG
-        public ModelOrder()
-        : base("name=ModelLocal")
+        public ModelOrder(string cs) : base(cs)
         {
-            App.Log.WriteLineLog("ModelOrder() Debug");
+
         }
-#else
-        public ModelOrder()
-            : base("name=ModelOrder")
-        {
-            App.Log.WriteLineLog("ModelOrder() Release");
-        }
-#endif
+
+
+//#if !DEBUG
+//        public ModelOrder()
+//        : base("name=ModelLocal")
+//        {
+//            App.Log.WriteLineLog("ModelOrder() Debug");
+//        }
+//#else
+//        public ModelOrder()
+//            : base("name=ModelOrder")
+//        {
+
+//            Database.Connection.ConnectionString = "data source=SFP\\FPSQLN;initial catalog=MoveOrders;user id=fpLoginName;password=ctcnhjt,s;MultipleActiveResultSets=True;App=EntityFramework\" providerName=\"System.Data.SqlClient";
+//            App.Log.WriteLineLog("ModelOrder() Release");
+//        }
+//#endif
 
 
         public virtual DbSet<Order> Orders { get; set; }

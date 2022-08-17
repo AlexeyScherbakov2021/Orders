@@ -1,5 +1,6 @@
 namespace Orders.Models
 {
+    using Orders.Infrastructure;
     using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;

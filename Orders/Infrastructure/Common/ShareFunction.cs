@@ -113,7 +113,7 @@ namespace Orders.Infrastructure.Common
         //--------------------------------------------------------------------------------
         public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
         {
-            int selectStatus = 0;
+            int selectStatus = (int)EnumStatus.None;
 
             if (step.ro_check > EnumCheckedStatus.CheckedProcess)
             {

@@ -54,12 +54,18 @@ namespace Orders.ViewModels
         public OrderWindowViewModel(Order ord)
         {
             order = ord;
+
+            MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
+
             CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
-            ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
+            if(CurrentStep != null)
+                ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
+            else
+                ListFiles = new ObservableCollection<RouteAdding>();
 
         }
 
-        public ObservableCollection<RouteAdding> ListFiles { get; set; } // = new ObservableCollection<RouteAdding>();
+        public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
 
 
         #region Команды
@@ -306,7 +312,6 @@ namespace Orders.ViewModels
                 CurrentStep.ro_statusId = (int)EnumStatus.Refused;
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
-
         }
 
         //--------------------------------------------------------------------------------

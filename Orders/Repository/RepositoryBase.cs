@@ -1,6 +1,7 @@
 ﻿using Orders.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,15 @@ namespace Orders.Repository
 {
     internal class RepositoryBase
     {
-        protected ModelOrder db = new ModelOrder();
+        protected ModelOrder db;
 
         public IQueryable<Route> Routes => db.Routes;
         public IQueryable<RouteStep> RouteSteps => db.RouteSteps;
         public IQueryable<User> Users => db.Users;
         public IQueryable<RouteType> RouteTypes => db.RouteTypes;
         public IQueryable<RouteOrder> RouteOrders => db.RouteOrders;
-        public IQueryable<Order> Orders => db.Orders.Include(it => it.RouteOrders.Select(it2 => it2.RouteAddings)   );
+        //public IQueryable<Order> Orders => db.Orders.Include(it => it.RouteOrders.Select(it2 => it2.RouteAddings)   );
+        public IQueryable<Order> Orders => db.Orders;
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
 
 
@@ -64,14 +66,34 @@ namespace Orders.Repository
         //--------------------------------------------------------------------------------------------------
         public RepositoryBase()
         {
+            string ConnectString;
 
-            //db.Configuration.ProxyCreationEnabled = false;
+#if DEBUG
+            ConnectString = ConfigurationManager.ConnectionStrings["ModelLocal"].ConnectionString;
+#else
+            ConnectString = ConfigurationManager.ConnectionStrings["ModelOrder"].ConnectionString;
+            ConnectString += ";password=ctcnhjt,s";
+#endif
+
+            db = new ModelOrder(ConnectString);
+
+            db.Configuration.ProxyCreationEnabled = false;
             //db.Configuration.LazyLoadingEnabled = false;
 
-                RouteTypes.Load();
-                Users.Load();
-                RouteStatus.Load();
+            RouteTypes.Load();
+            Users.Load();
+            RouteStatus.Load();
         }
+
+
+        public void LoadAddFiles(ICollection<RouteOrder> collection)
+        {
+            foreach(var item in collection)
+            {
+                db.Entry(item).Collection(x => x.RouteAddings).Load();
+            }
+        }
+
 
         //-----------------------------------------------------------------------------------------
         // сохранение базы
