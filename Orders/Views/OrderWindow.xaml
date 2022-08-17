@@ -184,7 +184,7 @@
                     <TextBlock Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
                     <TextBlock Text="Описание заказа" Grid.Row="4" VerticalAlignment="Center" Height="16" />
-                    <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="5"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFEDEDED" VerticalScrollBarVisibility="Auto"/>
+                    <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="5"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFF8F8F8" VerticalScrollBarVisibility="Auto"/>
                     <TextBlock Text="Добавить сообщение" Grid.Row="6" VerticalAlignment="Center" Height="16" Grid.ColumnSpan="2" />
                     <TextBox Text="{Binding CurrentStep.ro_text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Grid.ColumnSpan="2" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
 

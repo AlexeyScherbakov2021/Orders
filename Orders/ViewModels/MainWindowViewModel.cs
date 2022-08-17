@@ -145,7 +145,7 @@ namespace Orders.ViewModels
             foreach(var item in ListOrders)
             {
                 item.WorkUser = item.RouteOrders.FirstOrDefault(it => it.ro_step == item.o_stepRoute 
-                            && it.ro_check == EnumCheckedStatus.CheckedNone)?.User;
+                            && it.ro_check == EnumCheckedStatus.CheckedProcess)?.User;
             }
 
 
