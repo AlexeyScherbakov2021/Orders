@@ -39,6 +39,8 @@ namespace Orders.Models
         public User WorkUser { get; set; }
 
         public DateTime o_date_created { get; set; }
+        public string o_buyer { get; set; }
+        public string o_CardOrder { get; set; }
 
         public virtual RouteStatus RouteStatus { get; set; }
 

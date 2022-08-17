@@ -8,7 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Создание заказа" Height="600" Width="900" WindowStartupLocation="CenterScreen">
+        Title="Создание заказа" Height="642" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:CreateOrderWindowViewModel/>
     </Window.DataContext>
@@ -73,6 +73,10 @@
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="28"/>
                         <RowDefinition Height="*"/>
@@ -83,12 +87,19 @@
                     <TextBlock Text="Наименование" Grid.Row="2" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_name, Mode=TwoWay}"  Grid.Row="3" />
 
-                    <TextBlock Text="Текстовое дополнение" Grid.Row="4" VerticalAlignment="Center" />
-                    <TextBox Text="{Binding Order.o_body, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="5" VerticalScrollBarVisibility="Auto"/>
+                    <TextBlock Text="Покупатель" Grid.Row="4" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Order.o_buyer, Mode=TwoWay}"  Grid.Row="5" />
 
-                    <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="6" VerticalAlignment="Center"/>
+                    <TextBlock Text="Карта заказа" Grid.Row="6" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Order.o_CardOrder, Mode=TwoWay}"  Grid.Row="7" />
+
+                    <TextBlock Text="Текстовое дополнение" Grid.Row="8" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Order.o_body, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="9" VerticalScrollBarVisibility="Auto"/>
+
+
+                    <TextBlock Text="Прикрепить файлы" DockPanel.Dock="Top" Grid.Row="10" VerticalAlignment="Center"/>
                     <!--<Button Content="..." Command="{Binding AddFileCommand}" Grid.Row="6" Margin="112,2,0,2" Width="28" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyleShadow}"/>-->
-                    <Button Command="{Binding AddFileCommand}" Grid.Row="6" Grid.Column="1" Width="55" Height="23" 
+                    <Button Command="{Binding AddFileCommand}" Grid.Row="10" Grid.Column="1" Width="55" Height="23" 
                             HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                             Style="{DynamicResource ButtonStyleShadow}" Margin="112,2,0,2" Padding="0,-3,0,-3">
                         <fa:ImageAwesome Icon="Solid_Paperclip" Foreground="Blue" Stretch="Uniform" Width="18" 
@@ -100,7 +111,7 @@
                     <!--<ListBox ItemsSource="{Binding ListFiles}" DisplayMemberPath="ad_text" AllowDrop="True" Grid.Row="7" />-->
 
                         <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" Background="White" 
-                                      AllowDrop="True" Grid.Row="7" Grid.ColumnSpan="2" >
+                                      AllowDrop="True" Grid.Row="11" Grid.ColumnSpan="2" >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Drop">
                                 <i:CallMethodAction MethodName="ItemsControl_Drop" TargetObject="{Binding}"/>
