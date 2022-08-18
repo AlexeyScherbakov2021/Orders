@@ -65,7 +65,7 @@ namespace Orders.ViewModels
             ro_ownerId = App.CurrentUser.id
             };
 
-            Order.o_name = "Калькуляция КЗ ";
+            //Order.o_name = "Калькуляция КЗ ";
             Order.o_number = MainWindowViewModel.repo.GetNumberOrder().ToString("000");
 
             //MainWindowViewModel.repo.ResetNumberOrder(100);

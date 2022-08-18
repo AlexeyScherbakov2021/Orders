@@ -158,7 +158,7 @@
             <GroupBox Header="Рассмотрение заказа"  BorderBrush="#FFADADAD">
                 <Grid Margin="4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="109"/>
+                        <ColumnDefinition Width="180"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -172,14 +172,14 @@
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="150"/>
-                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="26"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <TextBlock x:Name="textBlock" Text="Номер" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_number}" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
-                    <TextBlock Text="Наименование" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Наименование ГП (работ, услуг)" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_name}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
 
                     <TextBlock Text="Покупатель" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />

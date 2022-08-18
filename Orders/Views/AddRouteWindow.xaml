@@ -87,7 +87,7 @@
 
                 <CheckBox Margin="10,3" Content="Вернуть назад после рассмотрения" Grid.Row="1" IsChecked="{Binding IsReturn}" />
 
-                <GroupBox Header="Добавить перед..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD" Visibility="{Binding IsVisible}">
+                <GroupBox Header="Добавить после..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD" Visibility="{Binding IsVisible}">
                     <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" 
                              ItemContainerStyle="{StaticResource ListBoxItemStyleSelected}" HorizontalContentAlignment="Stretch" >
                         <ListBox.ItemTemplate>

@@ -76,6 +76,7 @@ namespace Orders.Infrastructure.Common
             {
                 // маршрут окончен
                 NextStep = null;
+                SendMail(order.RouteOrders.First().User.u_email, order.o_number);
             }
             else
             {
@@ -197,12 +198,10 @@ namespace Orders.Infrastructure.Common
             string Message = "<html><body>Вам необходимо рассмотреть заказ № " + Text + 
                 ". Ссылка на программу - <a href=\"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\">ПО Движение заказов</ф></body></html>";
 
-
-
             MailAddress from = new MailAddress("orders@ngk-ehz.ru", "Order PO");
             MailAddress to = new MailAddress(Email);
             MailMessage m = new MailMessage(from, to);
-            m.Subject = "Оповещение ПО Заказы";
+            m.Subject = "Оповещение ПО Движение заказов";
 
             m.IsBodyHtml = true;
             m.Body = Message;

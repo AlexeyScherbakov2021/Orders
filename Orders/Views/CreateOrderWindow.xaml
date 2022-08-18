@@ -84,7 +84,7 @@
                     <TextBlock Margin="2,2,2,2" Text="Номер" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_number, Mode=TwoWay}" Grid.Row="1"/>
 
-                    <TextBlock Text="Наименование" Grid.Row="2" VerticalAlignment="Center" />
+                    <TextBlock Text="Наименование ГП (работ, услуг)" Grid.Row="2" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_name, Mode=TwoWay}"  Grid.Row="3" />
 
                     <TextBlock Text="Покупатель" Grid.Row="4" VerticalAlignment="Center" />

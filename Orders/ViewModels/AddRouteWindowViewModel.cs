@@ -40,7 +40,7 @@ namespace Orders.ViewModels
         public AddRouteWindowViewModel(Order order )
         {
             CurrentOrder = order;
-            ListRouteOrder = order.RouteOrders.Where(it => it.ro_step > order.o_stepRoute).ToList();
+            ListRouteOrder = order.RouteOrders.Where(it => it.ro_step >= order.o_stepRoute).ToList();
             SelectedRouteOrder = ListRouteOrder.FirstOrDefault();
 
             ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).OrderBy(o => o.u_name).ToList();
@@ -86,24 +86,31 @@ namespace Orders.ViewModels
                 ro.ro_return_step = CurrentOrder.o_stepRoute;
             }
             else
-                insertToStep = ro.ro_step = SelectedRouteOrder.ro_step;
+                insertToStep =  SelectedRouteOrder.ro_step + 1;
 
             ro.ro_step = insertToStep;
 
             // перенумерауия этапов
-            List<RouteOrder> TempList = new List<RouteOrder>();                
-               
-            foreach(var item in CurrentOrder.RouteOrders)
+            List<RouteOrder> TempList = new List<RouteOrder>();
+
+            bool IsAdded = false;
+            foreach (var item in CurrentOrder.RouteOrders)
             {
                 if (item.ro_step == ro.ro_step)
+                {
                     TempList.Add(ro);
+                    IsAdded = true;
+                }
 
                 if(item.ro_step >= ro.ro_step)
                     item.ro_step++;
 
                 TempList.Add(item);
-
             }
+
+            if(!IsAdded)
+                TempList.Add(ro);
+
 
             MainWindowViewModel.repo.Add<RouteOrder>(ro);
             CurrentOrder.RouteOrders = TempList;
