@@ -1,0 +1,45 @@
+﻿<Window x:Class="Orders.Views.ReportRoutesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Orders.ViewModels"
+        xmlns:local="clr-namespace:Orders.Views"
+        xmlns:cmd="clr-namespace:Orders.Infrastructure.Commands"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
+        mc:Ignorable="d"
+        Title="Отчет по заказам" Height="700" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:ReportRoutesWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="47.003"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <ToolBarPanel Orientation="Horizontal" Grid.Row="0" >
+            <Button Margin="5"  Style="{StaticResource ButtonStyleShadow}" 
+                    CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ReportRoutesWindow}}}">
+                <Button.Command>
+                    <cmd:CloseWindowCommand/>
+                </Button.Command>
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_DoorClosed" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" />
+                    <TextBlock Text="Закрыть" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+            </Button>
+        </ToolBarPanel>
+        <DataGrid ItemsSource="{Binding ListOrder}" Margin="5" Grid.Row="1" IsReadOnly="True" Style="{DynamicResource DataGridStyle}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Наименование" Binding="{Binding o_name}" MinWidth="200"/>
+                <DataGridTextColumn Header="Покупатель" Binding="{Binding o_buyer}" MinWidth="100"/>
+                <DataGridTextColumn Header="Карта заказа" Binding="{Binding o_CardOrder}" MinWidth="60" />
+                <DataGridTextColumn Header="Статус" Binding="{Binding RouteStatus.sr_name}" MinWidth="100" />
+                <DataGridTextColumn Header="На этапе" Binding="{Binding WorkUser.u_name}" MinWidth="100" />
+                <DataGridTextColumn Header="Дата создания" Binding="{Binding o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" MinWidth="90" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

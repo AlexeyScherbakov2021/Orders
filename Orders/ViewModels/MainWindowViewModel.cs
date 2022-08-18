@@ -188,6 +188,10 @@ namespace Orders.ViewModels
         }
 
         //--------------------------------------------------------------------------------
+        // Команда Отчет по заказам
+        //----------        ----------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------------
         // Команда Отчет
         //--------------------------------------------------------------------------------
         private readonly ICommand _ReportCommand = null;
@@ -195,7 +199,11 @@ namespace Orders.ViewModels
         private bool CaReportCommand(object p) => true;
         private void OnReportCommandExecuted(object p)
         {
-
+            timer.Stop();
+            //ReportRoutesWindowViewModel vm = new ReportRoutesWindowViewModel();
+            ReportRoutesWindow reportWindow = new ReportRoutesWindow();
+            reportWindow.ShowDialog();
+            timer.Start();
         }
 
 

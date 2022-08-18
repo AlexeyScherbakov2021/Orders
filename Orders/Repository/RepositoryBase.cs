@@ -72,7 +72,7 @@ namespace Orders.Repository
             ConnectString = ConfigurationManager.ConnectionStrings["ModelLocal"].ConnectionString;
 #else
             ConnectString = ConfigurationManager.ConnectionStrings["ModelOrder"].ConnectionString;
-            ConnectString += ";password=ctcnhjt,s";
+            ConnectString += ";user id=fpLoginName;password=ctcnhjt,s";
 #endif
 
             db = new ModelOrder(ConnectString);
@@ -94,6 +94,10 @@ namespace Orders.Repository
             }
         }
 
+        public void LoadUser(RouteOrder ro)
+        {
+            db.Entry(ro).Reference(x => x.User).Load();
+        }
 
         //-----------------------------------------------------------------------------------------
         // сохранение базы
