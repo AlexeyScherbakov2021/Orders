@@ -19,8 +19,11 @@ namespace Orders.Models
         [StringLength(200)]
         public string ad_text { get; set; }
 
-        [Column(TypeName = "image")]
-        public byte[] ad_file { get; set; }
+        //[Column(TypeName = "image")]
+        //public byte[] ad_file { get; set; }
+
+        [NotMapped]
+        public string FullName;
 
         public virtual RouteOrder RouteOrder { get; set; }
     }

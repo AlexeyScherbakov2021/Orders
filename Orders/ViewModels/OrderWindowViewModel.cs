@@ -22,6 +22,7 @@ namespace Orders.ViewModels
     internal class OrderWindowViewModel : ViewModel
     {
         public User CurrentUser => App.CurrentUser;
+        public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
 
         public RouteOrder SelectedRouteStep { get; set; }
 
@@ -64,9 +65,6 @@ namespace Orders.ViewModels
                 ListFiles = new ObservableCollection<RouteAdding>();
 
         }
-
-        public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
-
 
         #region Команды
 
@@ -184,7 +182,6 @@ namespace Orders.ViewModels
         private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.ro_ownerId == App.CurrentUser.id &&
             SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
 
-
         private void OnDeleteRouteCommandExecuted(object p)
         {
             if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"",
@@ -226,6 +223,9 @@ namespace Orders.ViewModels
                                         && !IsAllSteps;
         private void OnSendCommandExecuted(object p)
         {
+
+            // TODO Добавить прикрепленные файлы
+
             ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
 
@@ -324,12 +324,17 @@ namespace Orders.ViewModels
         {
             if( p is RouteAdding ra)
             {
-                string TempFileName = Path.GetTempPath() + ra.ad_text;
-                FileStream fs = new FileStream(TempFileName, FileMode.Create);
-                fs.Write(ra.ad_file, 0, (int)ra.ad_file.Length);
-                fs.Close();
 
-                Process.Start(TempFileName);
+                RepositoryFiles repoFiles = new RepositoryFiles();
+
+                string TempFileName = repoFiles.GetFile(ra);
+
+                //string TempFileName = Path.GetTempPath() + ra.ad_text;
+                //FileStream fs = new FileStream(TempFileName, FileMode.Create);
+                //fs.Write(ra.ad_file, 0, (int)ra.ad_file.Length);
+                //fs.Close();
+                if(TempFileName != null)
+                    Process.Start(TempFileName);
 
             }
         }

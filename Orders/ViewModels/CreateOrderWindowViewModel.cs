@@ -20,7 +20,6 @@ namespace Orders.ViewModels
 {
     internal class CreateOrderWindowViewModel : ViewModel
     {
-
         private readonly RepositoryBase repo = MainWindowViewModel.repo;
         public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
@@ -72,7 +71,6 @@ namespace Orders.ViewModels
             //MainWindowViewModel.repo.ResetNumberOrder(100);
             //Order.o_number = "001";
 
-
             Order.RouteOrders.Add(CreateStep);
         }
 
@@ -108,6 +106,12 @@ namespace Orders.ViewModels
             Order.o_statusId = (int)EnumStatus.Created;
 
             repo.Add(Order, true);
+
+            //TODO Добавить прикрепленные файлы
+            RepositoryFiles repoFiles = new RepositoryFiles();
+            repoFiles.AddFiles(CreateStep);
+
+            CreateStep.RouteAddings = ListFiles;
 
             App.Current.Windows.OfType<CreateOrderWindow>().FirstOrDefault().DialogResult = true;
 
@@ -164,6 +168,7 @@ namespace Orders.ViewModels
         private void OnAddFileCommandExecuted(object p)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog();
+            dlgOpen.Multiselect = true;
 
             if (dlgOpen.ShowDialog() == true)
             {

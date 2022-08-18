@@ -1,4 +1,5 @@
 ﻿using Orders.Models;
+using Orders.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,7 @@ namespace Orders.Infrastructure.Common
 {
     internal class ShareFunction
     {
+        private static readonly RepositoryFiles repoFiles = new RepositoryFiles();
 
 
         //--------------------------------------------------------------------------------
@@ -27,29 +29,29 @@ namespace Orders.Infrastructure.Common
             {
                 FileInfo info = new FileInfo(file);
 
-                if (info.Length > 5000000)
-                {
-                    MessageBox.Show($"Файл \"{info.Name}\" имеет размер более 5 МБ.\r\n\r\nОн не будет добавлен.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    continue;
-                }
+                //if (info.Length > 5000000)
+                //{
+                //    MessageBox.Show($"Файл \"{info.Name}\" имеет размер более 5 МБ.\r\n\r\nОн не будет добавлен.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //    continue;
+                //}
 
                 RouteAdding ra = new RouteAdding();
                 ra.ad_text = info.Name;
+                ra.FullName = file;
 
-                try
-                {
+                //try
+                //{
 
-                    FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    ra.ad_file = new byte[fs.Length];
-                    fs.Read(ra.ad_file, 0, (int)fs.Length);
-                    fs.Close();
-                }
-                catch(Exception e)
-                {
-                    MessageBox.Show(e.Message,"Ошибка добавления файла", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
+                //    FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                //    ra.ad_file = new byte[fs.Length];
+                //    fs.Read(ra.ad_file, 0, (int)fs.Length);
+                //    fs.Close();
+                //}
+                //catch(Exception e)
+                //{
+                //    MessageBox.Show(e.Message,"Ошибка добавления файла", MessageBoxButton.OK, MessageBoxImage.Error);
+                //    return;
+                //}
 
                 ListFiles.Add(ra);
 
@@ -66,6 +68,9 @@ namespace Orders.Infrastructure.Common
             CurrentStep.ro_check = EnumCheckedStatus.Checked;
             CurrentStep.ro_date_check = DateTime.Now;
             RouteOrder NextStep;
+
+            // TODO Добавление прикрепленных файлов
+            repoFiles.AddFiles(CurrentStep);
 
             if (order.RouteOrders.All(it => it.ro_check > EnumCheckedStatus.CheckedProcess))
             {
@@ -97,10 +102,8 @@ namespace Orders.Infrastructure.Common
                     NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
                 }
 
-
             }
             SetStatusStep(CurrentStep, NextStep, order);
-
 
             SendMail(NextStep?.User.u_email, order.o_number);
             //SendMail(NextStep?.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. " +

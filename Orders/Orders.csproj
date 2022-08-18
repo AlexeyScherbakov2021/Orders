@@ -116,6 +116,7 @@
       <DependentUpon>SpinControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Repository\RepositoryBase.cs" />
+    <Compile Include="Repository\RepositoryFiles.cs" />
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
     <Compile Include="ViewModels\OrderWindowViewModel.cs" />
     <Compile Include="ViewModels\ReportRoutesWindowViewModel.cs" />

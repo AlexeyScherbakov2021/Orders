@@ -182,6 +182,8 @@ namespace Orders.ViewModels
 
             if (MessageBox.Show($"Удалить заказ {SelectedOrder.o_name}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
+                RepositoryFiles repoFiles = new RepositoryFiles();
+                repoFiles.DeleteFiles(SelectedOrder);
                 repo.Delete(SelectedOrder, true);
                 ListOrders.Remove(SelectedOrder);
             }
