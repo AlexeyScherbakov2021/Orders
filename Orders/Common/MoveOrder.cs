@@ -32,7 +32,7 @@ namespace Orders.Common
         {
             CurrentStep.RouteAddings = ListFiles;
             RepositoryFiles repoFiles = new RepositoryFiles();
-            repoFiles.AddFiles(CurrentStep);
+            repoFiles.AddFilesAsync(CurrentStep);
 
             switch (action)
             {

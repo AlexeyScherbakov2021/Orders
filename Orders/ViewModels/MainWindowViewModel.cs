@@ -24,11 +24,9 @@ namespace Orders.ViewModels
         private bool IsCreateUser => SelectedOrder?.RouteOrders.Count > 0
                                         && SelectedOrder?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
 
-
         public static readonly RepositoryBase repo = new RepositoryBase();
         //private readonly IRepository<RouteOrder> repoRouteOrder;
         public ObservableCollection<Order> ListOrders { get; set; }
-
                
         public Order SelectedOrder { get; set; }
 
@@ -39,7 +37,6 @@ namespace Orders.ViewModels
         public bool CheckClosed { get; set; }
         public bool CheckWork { get; set; }
         public bool CheckAll { get; set; }
-
 
         public MainWindowViewModel()
         {
@@ -76,9 +73,9 @@ namespace Orders.ViewModels
             //int select = int.Parse(p.ToString());
             timer.Stop();
 
-
             // подготовка к обновлению всех записей
             repo.Refresh<Order>(ListOrders);
+
             if (ListOrders != null)
             {
                 foreach (var ro in ListOrders)
@@ -165,7 +162,7 @@ namespace Orders.ViewModels
 
             OnPropertyChanged(nameof(ListOrders));
 
-            timer.Start();
+            //timer.Start();
         }
 
 

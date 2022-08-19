@@ -52,6 +52,38 @@ namespace Orders.Repository
         }
 
         //--------------------------------------------------------------------------------------------
+        // Добавление файлов
+        //--------------------------------------------------------------------------------------------
+        public async void AddFilesAsync( RouteOrder CurrentStep)
+        {
+            await Task.Run(() => CopyFiles(CurrentStep) );
+        }
+
+
+        public Task<bool> CopyFiles(RouteOrder CurrentStep)
+        {
+            string NewName;
+            string NewPath = CurrentPath(CurrentStep.Order.o_date_created.Year);
+            foreach (RouteAdding item in CurrentStep.RouteAddings)
+            {
+                if (item.FullName != null)
+                {
+                    NewName = NewPath + CurrentStep.id.ToString() + "." + item.ad_text;
+                    try
+                    {
+                        File.Copy(item.FullName, NewName, true);
+                    }
+                    catch { };
+
+                    // записано, обнуляем
+                    item.FullName = null;
+                }
+            }
+
+            return Task.FromResult(true);
+        }
+
+        //--------------------------------------------------------------------------------------------
         // Удаление файлов
         //--------------------------------------------------------------------------------------------
         public void DeleteFiles(Order order)
