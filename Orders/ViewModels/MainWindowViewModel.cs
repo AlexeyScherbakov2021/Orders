@@ -76,17 +76,17 @@ namespace Orders.ViewModels
             // подготовка к обновлению всех записей
             repo.Refresh<Order>(ListOrders);
 
-            if (ListOrders != null)
-            {
-                foreach (var ro in ListOrders)
-                {
-                    repo.Refresh<RouteOrder>(ro.RouteOrders);
-                    foreach (var item2 in ro.RouteOrders)
-                    {
-                        repo.Refresh<RouteAdding>(item2.RouteAddings);
-                    }
-                }
-            }
+            //if (ListOrders != null)
+            //{
+            //    foreach (var ro in ListOrders)
+            //    {
+            //        repo.Refresh<RouteOrder>(ro.RouteOrders);
+            //        foreach (var item2 in ro.RouteOrders)
+            //        {
+            //            repo.Refresh<RouteAdding>(item2.RouteAddings);
+            //        }
+            //    }
+            //}
 
 
             if (CheckCreated)
@@ -162,7 +162,7 @@ namespace Orders.ViewModels
 
             OnPropertyChanged(nameof(ListOrders));
 
-            //timer.Start();
+            timer.Start();
         }
 
 

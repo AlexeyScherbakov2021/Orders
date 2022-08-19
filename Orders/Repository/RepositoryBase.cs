@@ -30,16 +30,22 @@ namespace Orders.Repository
         //--------------------------------------------------------------------------------------------------
         public void Refresh<T>(ICollection<T> item) 
         {
-            if (item is null || item.Count == 0)
-                return;
 
-            try
-            {
+            db.Dispose();
+            db = new ModelOrder(ConfigurationManager.ConnectionStrings["ModelLocal"].ConnectionString);
 
-                foreach (var it in item)
-                    db.Entry(it).Reload();
-            }
-            catch { }
+            //return;
+
+            //if (item is null || item.Count == 0)
+            //    return;
+
+            //try
+            //{
+
+            //    foreach (var it in item)
+            //        db.Entry(it).Reload();
+            //}
+            //catch { }
         }
 
 
@@ -77,7 +83,7 @@ namespace Orders.Repository
 
             db = new ModelOrder(ConnectString);
 
-            db.Configuration.ProxyCreationEnabled = false;
+            //db.Configuration.ProxyCreationEnabled = false;
             //db.Configuration.LazyLoadingEnabled = false;
 
             RouteTypes.Load();
@@ -86,18 +92,18 @@ namespace Orders.Repository
         }
 
 
-        public void LoadAddFiles(ICollection<RouteOrder> collection)
-        {
-            foreach(var item in collection)
-            {
-                db.Entry(item).Collection(x => x.RouteAddings).Load();
-            }
-        }
+        //public void LoadAddFiles(ICollection<RouteOrder> collection)
+        //{
+        //    foreach(var item in collection)
+        //    {
+        //        db.Entry(item).Collection(x => x.RouteAddings).Load();
+        //    }
+        //}
 
-        public void LoadUser(RouteOrder ro)
-        {
-            db.Entry(ro).Reference(x => x.User).Load();
-        }
+        //public void LoadUser(RouteOrder ro)
+        //{
+        //    db.Entry(ro).Reference(x => x.User).Load();
+        //}
 
         //-----------------------------------------------------------------------------------------
         // сохранение базы

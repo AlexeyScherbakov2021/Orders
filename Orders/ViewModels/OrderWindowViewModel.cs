@@ -45,7 +45,7 @@ namespace Orders.ViewModels
         {
             order = ord;
 
-            MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
+            //MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
 
             CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             if(CurrentStep != null)
