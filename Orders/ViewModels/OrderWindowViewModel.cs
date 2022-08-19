@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Orders.Common;
 using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
 using Orders.Infrastructure.Common;
@@ -30,24 +31,12 @@ namespace Orders.ViewModels
         private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
         private bool IsCreateUser => order?.RouteOrders.Count > 0
                                                 && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
-
-        //private Order _order;
         public Order order { get; set; }
-        //{ 
-        //    get => _order; 
-        //    set 
-        //    { 
-        //        if(Set(ref _order, value))
-        //        {
-        //            CurrentStep = value.RouteOrders.FirstOrDefault(it => it.ro_step == value.o_stepRoute);
-        //            ListFiles = new ObservableCollection<RouteAdding>( CurrentStep.RouteAddings);
-        //            OnPropertyChanged(nameof(ListFiles));
-        //        }
-        //    } 
-        //}
         
         private RouteOrder _CurrentStep;
         public RouteOrder CurrentStep { get => _CurrentStep; set { Set(ref _CurrentStep, value); } }
+        public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id 
+            || IsAllSteps || order.o_statusId == (int)EnumStatus.Refused;
 
 
         public OrderWindowViewModel() { }
@@ -90,27 +79,30 @@ namespace Orders.ViewModels
                 }
 
 
-               foreach (var item in order.RouteOrders)
-                {
-                   // у промежуточных этапов удаляем статус
-                   if (item.ro_step >= SelectedRouteStep.ro_step && item.ro_step < order.o_stepRoute)
-                   {
-                       item.ro_check = EnumCheckedStatus.CheckedNone;
-                       item.ro_statusId = (int)EnumStatus.None;
-                       item.ro_date_check = null;
-                   }
-                }
+                MoveOrder move = new MoveOrder(order, EnumAction.Return, CurrentStep, SelectedRouteStep);
+                move.MoveToNextStep(ListFiles);
 
-                CurrentStep.ro_statusId = (int)EnumStatus.Return;
-                CurrentStep.ro_date_check = DateTime.Now;
-                CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
+                //foreach (var item in order.RouteOrders)
+                // {
+                //    // у промежуточных этапов удаляем статус
+                //    if (item.ro_step >= SelectedRouteStep.ro_step && item.ro_step < order.o_stepRoute)
+                //    {
+                //        item.ro_check = EnumCheckedStatus.CheckedNone;
+                //        item.ro_statusId = (int)EnumStatus.None;
+                //        item.ro_date_check = null;
+                //    }
+                // }
 
-                SelectedRouteStep.ro_statusId = (int)EnumStatus.CoordinateWork;
-                SelectedRouteStep.ro_check = EnumCheckedStatus.CheckedProcess;
-                order.o_stepRoute = SelectedRouteStep.ro_step;
-                order.o_statusId = (int)EnumStatus.Return;
+                // CurrentStep.ro_statusId = (int)EnumStatus.Return;
+                // CurrentStep.ro_date_check = DateTime.Now;
+                // CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
 
-                ShareFunction.SendMail(SelectedRouteStep.User.u_email, order.o_number);
+                // SelectedRouteStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                // SelectedRouteStep.ro_check = EnumCheckedStatus.CheckedProcess;
+                // order.o_stepRoute = SelectedRouteStep.ro_step;
+                // order.o_statusId = (int)EnumStatus.Return;
+
+                // ShareFunction.SendMail(SelectedRouteStep.User.u_email, order.o_number);
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
 
@@ -160,10 +152,10 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanAddRouteCommand(object p) => !IsDisabledElement; //IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnAddRouteCommandExecuted(object p)
         {
-            AddRouteWindowViewModel view = new AddRouteWindowViewModel(order);
+            AddRouteWindowViewModel view = new AddRouteWindowViewModel(order, CurrentStep);
             AddRouteWindow winAddRoute = new AddRouteWindow();
             winAddRoute.DataContext = view;
             if (winAddRoute.ShowDialog() == true)
@@ -206,10 +198,7 @@ namespace Orders.ViewModels
                 order.RouteOrders = TempList;
                 MainWindowViewModel.repo.Update(order, true);
 
-                //order.RouteOrders.Remove(SelectedRouteStep);
                 OnPropertyChanged(nameof(order));
-                //RepositoryBase repo = new RepositoryBase();
-                //repo.Save();
             }
         }
 
@@ -218,15 +207,15 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _SendCommand = null;
         public ICommand SendCommand => _SendCommand ?? new LambdaCommand(OnSendCommandExecuted, CanSendCommand);
-        private bool CanSendCommand(object p) => IsWorkUser
-                                        && order.o_statusId != (int)EnumStatus.Refused
-                                        && !IsAllSteps;
+        private bool CanSendCommand(object p) => !IsDisabledElement; 
+                        // IsWorkUser && order.o_statusId != (int)EnumStatus.Refused  && !IsAllSteps;
         private void OnSendCommandExecuted(object p)
         {
 
-            // TODO Добавить прикрепленные файлы
+            MoveOrder move = new MoveOrder(order, EnumAction.Send, CurrentStep);
+            move.MoveToNextStep(ListFiles);
 
-            ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
+            //ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
 
         }
@@ -252,7 +241,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _BrowseCommand = null;
         public ICommand BrowseCommand => _BrowseCommand ?? new LambdaCommand(OnBrowseCommandExecuted, CanBrowseCommand);
-        private bool CanBrowseCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanBrowseCommand(object p) => !IsDisabledElement; // IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnBrowseCommandExecuted(object p)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog();
@@ -269,7 +258,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteFileCommand = null;
         public ICommand DeleteFileCommand => _DeleteFileCommand ?? new LambdaCommand(OnDeleteFileCommandExecuted, CanDeleteFileCommand);
-        private bool CanDeleteFileCommand(object p) => order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanDeleteFileCommand(object p) => !IsDisabledElement; // order.o_statusId != (int)EnumStatus.Refused;
         private void OnDeleteFileCommandExecuted(object p)
         {
             RouteAdding FileName = p as RouteAdding;
@@ -296,7 +285,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _RefuseCommand = null;
         public ICommand RefuseCommand => _RefuseCommand ?? new LambdaCommand(OnRefuseCommandExecuted, CanRefuseCommand);
-        private bool CanRefuseCommand(object p) => IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanRefuseCommand(object p) => !IsDisabledElement; // IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnRefuseCommandExecuted(object p)
         {
             if(MessageBox.Show("Подтверждаете отказ?","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
@@ -329,10 +318,6 @@ namespace Orders.ViewModels
 
                 string TempFileName = repoFiles.GetFile(ra);
 
-                //string TempFileName = Path.GetTempPath() + ra.ad_text;
-                //FileStream fs = new FileStream(TempFileName, FileMode.Create);
-                //fs.Write(ra.ad_file, 0, (int)ra.ad_file.Length);
-                //fs.Close();
                 if(TempFileName != null)
                     Process.Start(TempFileName);
 

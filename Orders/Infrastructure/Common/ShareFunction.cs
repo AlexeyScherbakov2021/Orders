@@ -14,7 +14,7 @@ namespace Orders.Infrastructure.Common
 {
     internal class ShareFunction
     {
-        private static readonly RepositoryFiles repoFiles = new RepositoryFiles();
+        //private static readonly RepositoryFiles repoFiles = new RepositoryFiles();
 
 
         //--------------------------------------------------------------------------------
@@ -62,130 +62,130 @@ namespace Orders.Infrastructure.Common
         //--------------------------------------------------------------------------------
         // Отправка на следующий этап маршрута
         //--------------------------------------------------------------------------------
-        public static void SendToNextStep(Order order, RouteOrder CurrentStep, ICollection<RouteAdding> ListFiles)
-        {
-            CurrentStep.RouteAddings = ListFiles;
-            CurrentStep.ro_check = EnumCheckedStatus.Checked;
-            CurrentStep.ro_date_check = DateTime.Now;
-            RouteOrder NextStep;
+        //public static void SendToNextStep(Order order, RouteOrder CurrentStep, ICollection<RouteAdding> ListFiles)
+        //{
+        //    CurrentStep.RouteAddings = ListFiles;
+        //    CurrentStep.ro_check = EnumCheckedStatus.Checked;
+        //    CurrentStep.ro_date_check = DateTime.Now;
+        //    RouteOrder NextStep;
 
-            // TODO Добавление прикрепленных файлов
-            repoFiles.AddFiles(CurrentStep);
+        //    // TODO Добавление прикрепленных файлов
+        //    repoFiles.AddFiles(CurrentStep);
 
-            if (order.RouteOrders.All(it => it.ro_check > EnumCheckedStatus.CheckedProcess))
-            {
-                // маршрут окончен
-                NextStep = null;
-                SendMail(order.RouteOrders.First().User.u_email, order.o_number);
-            }
-            else
-            {
-                NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute + 1);
+        //    if (order.RouteOrders.All(it => it.ro_check > EnumCheckedStatus.CheckedProcess))
+        //    {
+        //        // маршрут окончен
+        //        NextStep = null;
+        //        SendMail(order.RouteOrders.First().User.u_email, order.o_number);
+        //    }
+        //    else
+        //    {
+        //        NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute + 1);
 
-                if (NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
-                {
-                    // следующий этап подчиненный после главного
-                    if (NextStep.ro_check == EnumCheckedStatus.Checked)
-                    {
-                        // он уже был рассмотрен,  делаем прыжок
-                        NextStep = order.RouteOrders
-                            .FirstOrDefault(it => it.ro_step > NextStep.ro_step && it.ro_return_step is null);
+        //        if (NextStep.ro_return_step != null && CurrentStep.ro_return_step is null)
+        //        {
+        //            // следующий этап подчиненный после главного
+        //            if (NextStep.ro_check == EnumCheckedStatus.Checked)
+        //            {
+        //                // он уже был рассмотрен,  делаем прыжок
+        //                NextStep = order.RouteOrders
+        //                    .FirstOrDefault(it => it.ro_step > NextStep.ro_step && it.ro_return_step is null);
 
-                    }
-                    else
-                        CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
+        //            }
+        //            else
+        //                CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
 
-                }
-                else if (NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
-                {
-                    // следующий этап после подчиненного уже основной
-                    // вохвращаемся на главный
-                    NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
-                }
+        //        }
+        //        else if (NextStep.ro_return_step is null && CurrentStep.ro_return_step != null)
+        //        {
+        //            // следующий этап после подчиненного уже основной
+        //            // вохвращаемся на главный
+        //            NextStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == CurrentStep.ro_return_step);
+        //        }
 
-            }
-            SetStatusStep(CurrentStep, NextStep, order);
+        //    }
+        //    SetStatusStep(CurrentStep, NextStep, order);
 
-            SendMail(NextStep?.User.u_email, order.o_number);
-            //SendMail(NextStep?.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. " +
-            //    $"Ссылка на программу - \"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\"");
-        }
+        //    SendMail(NextStep?.User.u_email, order.o_number);
+        //    //SendMail(NextStep?.User.u_email, $"Вам необходимо рассмотреть заказ № {order.o_number}. " +
+        //    //    $"Ссылка на программу - \"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\"");
+        //}
 
 
         //--------------------------------------------------------------------------------
         // переустановки статусов при отправке далее
         //--------------------------------------------------------------------------------
-        public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
-        {
-            int selectStatus = (int)EnumStatus.None;
+        //public static void SetStatusStep(RouteOrder step, RouteOrder nextStep, Order order)
+        //{
+        //    int selectStatus = (int)EnumStatus.None;
 
-            if (step.ro_check > EnumCheckedStatus.CheckedProcess)
-            {
-                switch ((EnumTypesStep)step.ro_typeId)
-                {
-                    case EnumTypesStep.Coordinate:
-                        selectStatus = (int)EnumStatus.Coordinated;
-                        break;
+        //    if (step.ro_check > EnumCheckedStatus.CheckedProcess)
+        //    {
+        //        switch ((EnumTypesStep)step.ro_typeId)
+        //        {
+        //            case EnumTypesStep.Coordinate:
+        //                selectStatus = (int)EnumStatus.Coordinated;
+        //                break;
 
-                    case EnumTypesStep.Approve:
-                        selectStatus = (int)EnumStatus.Approved;
-                        break;
+        //            case EnumTypesStep.Approve:
+        //                selectStatus = (int)EnumStatus.Approved;
+        //                break;
 
-                    case EnumTypesStep.Review:
-                        selectStatus = (int)EnumStatus.Coordinated;
-                        break;
+        //            case EnumTypesStep.Review:
+        //                selectStatus = (int)EnumStatus.Coordinated;
+        //                break;
 
-                    case EnumTypesStep.Notify:
-                        selectStatus = (int)EnumStatus.Coordinated;
-                        break;
+        //            case EnumTypesStep.Notify:
+        //                selectStatus = (int)EnumStatus.Coordinated;
+        //                break;
 
-                    case EnumTypesStep.Created:
-                        selectStatus = (int)EnumStatus.Created;
-                        break;
+        //            case EnumTypesStep.Created:
+        //                selectStatus = (int)EnumStatus.Created;
+        //                break;
 
-                }
+        //        }
 
-                step.ro_statusId = selectStatus;
-                order.o_statusId = selectStatus;
-            }
-            else
-                step.ro_statusId = (int)EnumStatus.Waiting;
+        //        step.ro_statusId = selectStatus;
+        //        order.o_statusId = selectStatus;
+        //    }
+        //    else
+        //        step.ro_statusId = (int)EnumStatus.Waiting;
 
-            order.o_stepRoute = step.ro_step;
+        //    order.o_stepRoute = step.ro_step;
 
-            if (nextStep != null)
-            {
-                switch ((EnumTypesStep)nextStep.ro_typeId)
-                {
-                    case EnumTypesStep.Coordinate:
-                        selectStatus = (int)EnumStatus.CoordinateWork;
-                        break;
+        //    if (nextStep != null)
+        //    {
+        //        switch ((EnumTypesStep)nextStep.ro_typeId)
+        //        {
+        //            case EnumTypesStep.Coordinate:
+        //                selectStatus = (int)EnumStatus.CoordinateWork;
+        //                break;
 
-                    case EnumTypesStep.Approve:
-                        selectStatus = (int)EnumStatus.ApprovWork;
-                        break;
+        //            case EnumTypesStep.Approve:
+        //                selectStatus = (int)EnumStatus.ApprovWork;
+        //                break;
 
-                    case EnumTypesStep.Review:
-                        selectStatus = (int)EnumStatus.CoordinateWork;
-                        break;
+        //            case EnumTypesStep.Review:
+        //                selectStatus = (int)EnumStatus.CoordinateWork;
+        //                break;
 
-                    case EnumTypesStep.Notify:
-                        selectStatus = (int)EnumStatus.CoordinateWork;
-                        break;
+        //            case EnumTypesStep.Notify:
+        //                selectStatus = (int)EnumStatus.CoordinateWork;
+        //                break;
 
-                    case EnumTypesStep.Created:
-                        selectStatus = (int)EnumStatus.Created;
-                        break;
+        //            case EnumTypesStep.Created:
+        //                selectStatus = (int)EnumStatus.Created;
+        //                break;
 
-                }
+        //        }
 
-                nextStep.ro_statusId = selectStatus;
-                nextStep.ro_check = EnumCheckedStatus.CheckedProcess;
-                order.o_statusId = selectStatus;
-                order.o_stepRoute = nextStep.ro_step;
-            }
+        //        nextStep.ro_statusId = selectStatus;
+        //        nextStep.ro_check = EnumCheckedStatus.CheckedProcess;
+        //        order.o_statusId = selectStatus;
+        //        order.o_stepRoute = nextStep.ro_step;
+        //    }
 
-        }
+        //}
 
         //--------------------------------------------------------------------------------
         // Отправка сообщения по почте

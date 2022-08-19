@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Orders.Common;
 using Orders.Infrastructure;
 using Orders.Infrastructure.Commands;
 using Orders.Infrastructure.Common;
@@ -14,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Orders.ViewModels
@@ -125,10 +127,12 @@ namespace Orders.ViewModels
         private bool CanSendCommand(object p) => true;
         private void OnSendCommandExecuted(object p)
         {
-
             OnCreateCommandExecuted(p);
 
-            ShareFunction.SendToNextStep(Order, CreateStep, ListFiles);
+            MoveOrder move = new MoveOrder(Order, EnumAction.Send, CreateStep);
+            move.MoveToNextStep(ListFiles);
+
+            //ShareFunction.SendToNextStep(Order, CreateStep, ListFiles);
         }
 
         //--------------------------------------------------------------------------------

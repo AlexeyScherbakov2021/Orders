@@ -106,6 +106,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\MoveOrder.cs" />
     <Compile Include="Infrastructure\Common\ShareFunction.cs" />
     <Compile Include="Infrastructure\Converters\IsChildStepConverter.cs" />
     <Compile Include="Infrastructure\Converters\StatusToIconConverter.cs" />

@@ -30,17 +30,27 @@ namespace Orders.ViewModels
         public bool _IsReturn  = false;
         public bool IsReturn { get => _IsReturn; set { Set(ref _IsReturn, value); OnPropertyChanged(nameof(IsVisible)); } }
         public Visibility IsVisible => IsReturn? Visibility.Collapsed : Visibility.Visible;
-    
+
+        private readonly RouteOrder _CurrentStep;
 
         //RepositoryBase repo = new RepositoryBase();
 
 
         public AddRouteWindowViewModel() { }
 
-        public AddRouteWindowViewModel(Order order )
+        public AddRouteWindowViewModel(Order order, RouteOrder CurrentStep )
         {
             CurrentOrder = order;
-            ListRouteOrder = order.RouteOrders.Where(it => it.ro_step >= order.o_stepRoute).ToList();
+            _CurrentStep = CurrentStep;
+
+            if (CurrentStep.ro_return_step == null)
+                ListRouteOrder = order.RouteOrders.Where(it => it.ro_step >= order.o_stepRoute).ToList();
+            else
+            {
+                ListRouteOrder = new List<RouteOrder>();
+                ListRouteOrder.Add(CurrentStep);
+            }
+
             SelectedRouteOrder = ListRouteOrder.FirstOrDefault();
 
             ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).OrderBy(o => o.u_name).ToList();
@@ -67,10 +77,15 @@ namespace Orders.ViewModels
             ro.ro_orderId = CurrentOrder.id;
             ro.ro_ownerId = App.CurrentUser.id;
 
-            int insertToStep;
+            //int insertToStep;
 
+            if(_CurrentStep.ro_return_step != null)
+            {
+                ro.ro_step = _CurrentStep.ro_step + 1;
+                ro.ro_return_step = _CurrentStep.ro_return_step;
+            }
             // если это был этап с возвратом
-            if (IsReturn)
+            else if (IsReturn)
             {
                 // вставить этап сразу после текущего
                 // или, если уже была вставка с возвратом, то после вставленного
@@ -78,17 +93,17 @@ namespace Orders.ViewModels
                 if(itemChild != null)
                 {
                     //itemChild.ro_return_step = null;
-                    insertToStep = itemChild.ro_step + 1;
+                    ro.ro_step = itemChild.ro_step + 1;
                 }
                 else
-                    insertToStep = CurrentOrder.o_stepRoute + 1;
+                    ro.ro_step = CurrentOrder.o_stepRoute + 1;
 
                 ro.ro_return_step = CurrentOrder.o_stepRoute;
             }
             else
-                insertToStep =  SelectedRouteOrder.ro_step + 1;
+                ro.ro_step =  SelectedRouteOrder.ro_step + 1;
 
-            ro.ro_step = insertToStep;
+            //ro.ro_step = insertToStep;
 
             // перенумерауия этапов
             List<RouteOrder> TempList = new List<RouteOrder>();
