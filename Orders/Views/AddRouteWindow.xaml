@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:Orders.ViewModels"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Добавление этапа" Height="600" Width="900" WindowStartupLocation="CenterScreen">
+        Title="Добавление этапа" Height="700" Width="900" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:AddRouteWindowViewModel/>
     </Window.DataContext>
@@ -48,7 +48,7 @@
             </Button>
         </ToolBar>
 
-        <Border DockPanel.Dock="Right" Grid.Column="1" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
+        <Border x:Name="border" DockPanel.Dock="Right" Grid.Column="1" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
             <Border.Effect>
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
@@ -56,6 +56,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25*"/>
+                    <RowDefinition Height="26"/>
                     <RowDefinition Height="26"/>
                     <RowDefinition Height="50*"/>
                 </Grid.RowDefinitions>
@@ -87,8 +88,8 @@
 
                 <CheckBox Margin="10,3" Content="Вернуть назад после рассмотрения" Grid.Row="1" IsChecked="{Binding IsReturn}" />
 
-                <GroupBox Header="Добавить после..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD" Visibility="{Binding IsVisible}">
-                    <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" 
+                <GroupBox Grid.Row="3" FontWeight="Bold" Margin="3,-12,3,3" BorderBrush="#FFADADAD" Visibility="{Binding IsVisible}">
+                    <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" Margin="0,10,0,0"
                              ItemContainerStyle="{StaticResource ListBoxItemStyleSelected}" HorizontalContentAlignment="Stretch" >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -109,6 +110,11 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </GroupBox>
+
+                <StackPanel HorizontalAlignment="Left" Margin="10,0,0,3" Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Bottom" Background="{Binding Background, ElementName=border}">
+                    <RadioButton Content="Добавить после ..." IsChecked="{Binding IsLaterStep}" Margin="5,0,10,0"/>
+                    <RadioButton Content="Добавить в ..." IsChecked="{Binding IsSameStep}" Margin="10,0"/>
+                </StackPanel>
 
             </Grid>
         </Border>

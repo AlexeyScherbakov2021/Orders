@@ -27,8 +27,13 @@ namespace Orders.ViewModels
         public List<RouteType> ListRouteType { get; }
         public RouteType SelectedType { get; set; }
 
-        public bool _IsReturn  = false;
+
+        public bool IsLaterStep { get; set; } = true;
+        public bool IsSameStep { get; set; }
+
+        private bool _IsReturn  = false;
         public bool IsReturn { get => _IsReturn; set { Set(ref _IsReturn, value); OnPropertyChanged(nameof(IsVisible)); } }
+
         public Visibility IsVisible => IsReturn? Visibility.Collapsed : Visibility.Visible;
 
         private readonly RouteOrder _CurrentStep;
@@ -69,6 +74,7 @@ namespace Orders.ViewModels
                         && (SelectedRouteOrder != null || IsReturn);
         private void OnAddRouteCommandExecuted(object p)
         {
+            int addStep = IsLaterStep ? 1 : 0;
 
             RouteOrder ro = new RouteOrder();
             ro.ro_typeId = SelectedType.id;
@@ -77,10 +83,9 @@ namespace Orders.ViewModels
             ro.ro_orderId = CurrentOrder.id;
             ro.ro_ownerId = App.CurrentUser.id;
 
-            //int insertToStep;
-
             if(_CurrentStep.ro_return_step != null)
             {
+                // текущий этап подчиненный
                 ro.ro_step = _CurrentStep.ro_step + 1;
                 ro.ro_return_step = _CurrentStep.ro_return_step;
             }
@@ -92,20 +97,18 @@ namespace Orders.ViewModels
                 RouteOrder itemChild = ListRouteOrder.FirstOrDefault(it => it.ro_return_step == CurrentOrder.o_stepRoute);
                 if(itemChild != null)
                 {
-                    //itemChild.ro_return_step = null;
-                    ro.ro_step = itemChild.ro_step + 1;
+                    ro.ro_step = itemChild.ro_step + addStep;
                 }
                 else
-                    ro.ro_step = CurrentOrder.o_stepRoute + 1;
+                    ro.ro_step = CurrentOrder.o_stepRoute + addStep;
 
                 ro.ro_return_step = CurrentOrder.o_stepRoute;
             }
             else
-                ro.ro_step =  SelectedRouteOrder.ro_step + 1;
+                ro.ro_step =  SelectedRouteOrder.ro_step + addStep;
 
-            //ro.ro_step = insertToStep;
 
-            // перенумерауия этапов
+            // перенумерация этапов
             List<RouteOrder> TempList = new List<RouteOrder>();
 
             bool IsAdded = false;
@@ -118,7 +121,7 @@ namespace Orders.ViewModels
                 }
 
                 if(item.ro_step >= ro.ro_step)
-                    item.ro_step++;
+                    item.ro_step += addStep;
 
                 TempList.Add(item);
             }

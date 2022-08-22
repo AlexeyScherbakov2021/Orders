@@ -183,9 +183,12 @@ namespace Orders.ViewModels
                 // перенумерауия этапов
                 List<RouteOrder> TempList = new List<RouteOrder>();
 
+                int corrStep = 1;
+
+
                 foreach (var item in order.RouteOrders)
                 {
-                    if (item.ro_step == SelectedRouteStep.ro_step)
+                    if (item == SelectedRouteStep)
                         continue;
 
                     if (item.ro_step >= SelectedRouteStep.ro_step)
