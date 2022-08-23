@@ -32,7 +32,10 @@ namespace Orders.Repository
         {
 
             db.Dispose();
-            db = new ModelOrder(ConfigurationManager.ConnectionStrings["ModelLocal"].ConnectionString);
+
+            SetConnect();
+
+            //db = new ModelOrder(ConfigurationManager.ConnectionStrings["ModelLocal"].ConnectionString);
 
             //return;
 
@@ -66,11 +69,8 @@ namespace Orders.Repository
             db.Database.ExecuteSqlCommand($"alter sequence numberOrder restart with {newNumber}");
         }
 
-
-        //--------------------------------------------------------------------------------------------------
-        // конструктор
-        //--------------------------------------------------------------------------------------------------
-        public RepositoryBase()
+        // Установка соединения
+        private void SetConnect()
         {
             string ConnectString;
 
@@ -80,8 +80,29 @@ namespace Orders.Repository
             ConnectString = ConfigurationManager.ConnectionStrings["ModelOrder"].ConnectionString;
             ConnectString += ";user id=fpLoginName;password=ctcnhjt,s";
 #endif
-
             db = new ModelOrder(ConnectString);
+
+        }
+
+
+
+        //--------------------------------------------------------------------------------------------------
+        // конструктор
+        //--------------------------------------------------------------------------------------------------
+        public RepositoryBase()
+        {
+//            string ConnectString;
+
+//#if DEBUG
+//            ConnectString = ConfigurationManager.ConnectionStrings["ModelLocal"].ConnectionString;
+//#else
+//            ConnectString = ConfigurationManager.ConnectionStrings["ModelOrder"].ConnectionString;
+//            ConnectString += ";user id=fpLoginName;password=ctcnhjt,s";
+//#endif
+
+//            db = new ModelOrder(ConnectString);
+
+            SetConnect();
 
             //db.Configuration.ProxyCreationEnabled = false;
             //db.Configuration.LazyLoadingEnabled = false;

@@ -195,8 +195,20 @@ namespace Orders.Infrastructure.Common
             if (string.IsNullOrEmpty(Email))
                 return;
 
-            string Message = "<html><body>Вам необходимо рассмотреть заказ № " + Text + 
-                ". Ссылка на программу - <a href=\"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\">ПО Движение заказов</ф></body></html>";
+            string Message = 
+                "<html>" +
+                    "<body>" +
+                    "<p>" +
+                        "Вам необходимо рассмотреть заказ № " + Text +
+                        ". Ссылка на программу - <a href=\"file:///s:/Общие документы НГК/ПО Движение заказов/Orders.exe\">ПО Движение заказов</a>" +
+                    "</p>" +
+                    "<p>" +
+                    "s:\\Общие документы НГК\\ПО Движение заказов\\Orders.exe" +
+                    "</p>" +
+                    "</body>" +
+                "</html>";
+            //string Message = "<html><body>Вам необходимо рассмотреть заказ № " + Text + 
+            //    ". Ссылка на программу - <a href=\"file:///s:/Производство/01_Мавричев/ПО Движение заказов/Orders.exe\">ПО Движение заказов</ф></body></html>";
 
             MailAddress from = new MailAddress("orders@ngk-ehz.ru", "Order PO");
             MailAddress to = new MailAddress(Email);
