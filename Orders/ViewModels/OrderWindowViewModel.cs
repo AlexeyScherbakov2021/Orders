@@ -152,14 +152,30 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => !IsDisabledElement; //IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        //private bool CanAddRouteCommand(object p) => !IsDisabledElement; //IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanAddRouteCommand(object p) => ((IsWorkUser && !IsAllSteps) || (IsCreateUser && IsAllSteps) ) 
+            && order.o_statusId != (int)EnumStatus.Refused;
         private void OnAddRouteCommandExecuted(object p)
         {
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(order, CurrentStep);
             AddRouteWindow winAddRoute = new AddRouteWindow();
             winAddRoute.DataContext = view;
+
+            bool start = IsAllSteps;
+
             if (winAddRoute.ShowDialog() == true)
             {
+                if(start)
+                {
+                    RouteOrder ro = order.RouteOrders.Last();
+
+                    //order.o_stepRoute = ro.ro_step;
+                    //order.o_statusId = ro.ro_statusId;
+                    //MainWindowViewModel.repo.Update(order, true);
+                    MoveOrder move = new MoveOrder(order, EnumAction.Send, ro, ro);
+                    move.MoveToNextStep(null);
+                }
+
                 OnPropertyChanged(nameof(order));
                 //RepositoryBase repo = new RepositoryBase();
                 //repo.Save();
