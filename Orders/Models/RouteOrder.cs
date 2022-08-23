@@ -43,13 +43,7 @@ namespace Orders.Models
 
         public int? ro_return_step { get; set; }
 
-        //[NotMapped]
         public int? ro_ownerId { get; set; }
-        //[NotMapped]
-        //public User Owner { get; set; }
-
-        //[NotMapped]
-        //public int? ro_child { get;set; }
 
         public virtual Order Order { get; set; }
 
@@ -61,5 +55,7 @@ namespace Orders.Models
         public virtual RouteType RouteType { get; set; }
 
         public virtual User User { get; set; }
+
+        public string NameStep => ro_step.ToString() + (ro_return_step == null ? "" : "." +  ro_return_step?.ToString());
     }
 }

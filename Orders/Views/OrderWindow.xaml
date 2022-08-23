@@ -317,7 +317,7 @@
                                                 <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <TextBlock Text="{Binding ro_step}" FontWeight="Bold" SnapsToDevicePixels="True" 
+                                        <TextBlock Text="{Binding NameStep}" FontWeight="Bold" SnapsToDevicePixels="True" 
                                                    Foreground="Black" VerticalAlignment="Center" 
                                                    HorizontalAlignment="Center" Margin="-11,0,0,0" FontSize="14" >
                                         </TextBlock>

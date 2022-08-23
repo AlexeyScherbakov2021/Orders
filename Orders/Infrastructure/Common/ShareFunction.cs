@@ -204,8 +204,7 @@ namespace Orders.Infrastructure.Common
             m.Subject = "Оповещение ПО Движение заказов";
 
             m.IsBodyHtml = true;
-            m.Body = Message;
-            
+            m.Body = Message;            
             
             
             SmtpClient smtp = new SmtpClient("zimbra.lancloud.ru", 587);
