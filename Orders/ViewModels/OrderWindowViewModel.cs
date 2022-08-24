@@ -47,7 +47,10 @@ namespace Orders.ViewModels
         {
             order = ord;
 
-            ListWrapStep = new ObservableCollection<WrapStep>( WrapStep.RouteOrderToWrapStep(order.RouteOrders));
+
+            RouteSteps route = new RouteSteps(order.RouteOrders);
+
+            //ListWrapStep = new ObservableCollection<WrapStep>( WrapStep.RouteOrderToWrapStep(order.RouteOrders));
 
             //MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
 
