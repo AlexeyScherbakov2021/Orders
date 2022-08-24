@@ -22,10 +22,12 @@ namespace Orders.ViewModels
 {
     internal class OrderWindowViewModel : ViewModel
     {
+        public ObservableCollection<WrapStep> ListWrapStep { get; set; }
+
         public User CurrentUser => App.CurrentUser;
         public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
 
-        public RouteOrder SelectedRouteStep { get; set; }
+        public WrapStep SelectedRouteStep { get; set; }
 
         private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
         private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
@@ -45,6 +47,8 @@ namespace Orders.ViewModels
         {
             order = ord;
 
+            ListWrapStep = new ObservableCollection<WrapStep>( WrapStep.RouteOrderToWrapStep(order.RouteOrders));
+
             //MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
 
             CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
@@ -63,12 +67,12 @@ namespace Orders.ViewModels
         private readonly ICommand _ReturnCommand = null;
         public ICommand ReturnCommand => _ReturnCommand ?? new LambdaCommand(OnReturnCommandExecuted, CanReturnCommand);
         private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps 
-            && SelectedRouteStep?.ro_check == EnumCheckedStatus.Checked
-            && SelectedRouteStep?.ro_return_step == null
+            && SelectedRouteStep?.Step.ro_check == EnumCheckedStatus.Checked
+            && SelectedRouteStep?.Step.ro_return_step == null
             && order.o_statusId != (int)EnumStatus.Refused;
         private void OnReturnCommandExecuted(object p)
         {
-            if(MessageBox.Show($"Вернуть заказ на этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"?",
+            if(MessageBox.Show($"Вернуть заказ на этап № {SelectedRouteStep.Step.ro_step} \"{SelectedRouteStep.Step.User.u_name}\"?",
                 "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes )
             {
                 if (string.IsNullOrEmpty(CurrentStep.ro_text) && MessageBox.Show("Вы не добавили сообщение. Продолжить возврат? ",
@@ -79,7 +83,7 @@ namespace Orders.ViewModels
                 }
 
 
-                MoveOrder move = new MoveOrder(order, EnumAction.Return, CurrentStep, SelectedRouteStep);
+                MoveOrder move = new MoveOrder(order, EnumAction.Return, CurrentStep, SelectedRouteStep.Step);
                 move.MoveToNextStep(ListFiles);
 
                 //foreach (var item in order.RouteOrders)
@@ -171,12 +175,12 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteRouteCommand = null;
         public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
-        private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.ro_ownerId == App.CurrentUser.id &&
-            SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
+        private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.Step.ro_ownerId == App.CurrentUser.id &&
+            SelectedRouteStep?.Step.ro_check == EnumCheckedStatus.CheckedNone;
 
         private void OnDeleteRouteCommandExecuted(object p)
         {
-            if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"",
+            if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.Step.ro_step} \"{SelectedRouteStep.Step.User.u_name}\"",
                 "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
 
@@ -188,16 +192,16 @@ namespace Orders.ViewModels
 
                 foreach (var item in order.RouteOrders)
                 {
-                    if (item == SelectedRouteStep)
+                    if (item == SelectedRouteStep.Step)
                         continue;
 
-                    if (item.ro_step >= SelectedRouteStep.ro_step)
+                    if (item.ro_step >= SelectedRouteStep.Step.ro_step)
                         item.ro_step--;
 
                     TempList.Add(item);
 
                 }
-                MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep);
+                MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep.Step);
                 order.RouteOrders = TempList;
                 MainWindowViewModel.repo.Update(order, true);
 

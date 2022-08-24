@@ -243,7 +243,7 @@
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
             <GroupBox Header="Маршрут заказа" BorderBrush="#FFADADAD">
-                <ListBox x:Name="listRoutes" ItemsSource="{Binding order.RouteOrders}" Margin="2" 
+                <ListBox x:Name="listRoutes" ItemsSource="{Binding ListWrapStep}" Margin="2" 
                       BorderBrush="Black" BorderThickness="0" HorizontalContentAlignment="Stretch" 
                       SelectedItem="{Binding SelectedRouteStep}" SnapsToDevicePixels="True"
                       VirtualizingPanel.ScrollUnit="Pixel"
@@ -273,10 +273,10 @@
                                         <Setter Property="BorderThickness" Value="1"/>
                                         <Setter Property="Margin" Value="23,1,0,1"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ro_statusId}" Value="2">
+                                            <DataTrigger Binding="{Binding Step.ro_statusId}" Value="2">
                                                 <Setter Property="BorderThickness" Value="1.8"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ro_return_step}" Value="{x:Null}">
+                                            <DataTrigger Binding="{Binding Step.ro_return_step}" Value="{x:Null}">
                                                 <Setter Property="Margin" Value="7,1,0,1"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -307,7 +307,7 @@
                                                 <Style TargetType="Ellipse">
                                                     <Setter Property="Fill" Value="White"/>
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ro_check}" Value="1">
+                                                        <DataTrigger Binding="{Binding Step.ro_check}" Value="1">
                                                             <Setter Property="Fill" Value="#C0F0F6"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -317,12 +317,12 @@
                                                 <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <TextBlock Text="{Binding NameStep}" FontWeight="Bold" SnapsToDevicePixels="True" 
+                                        <TextBlock Text="{Binding Step.NameStep}" FontWeight="Bold" SnapsToDevicePixels="True" 
                                                    Foreground="Black" VerticalAlignment="Center" 
                                                    HorizontalAlignment="Center" Margin="-11,0,0,0" FontSize="14" >
                                         </TextBlock>
                                     </Grid>
-                                    <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding RouteAddings}" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                    <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Step.RouteAddings}" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                                                   VerticalContentAlignment="Center" Margin="0" SnapsToDevicePixels="True">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -355,7 +355,7 @@
                                     </ItemsControl>
                                     <Border DockPanel.Dock="Bottom" BorderBrush="#FFCCCCCC" BorderThickness="0,1,0,0" Margin="2,0,0,0">
                                         <ScrollViewer MaxHeight="140" VerticalScrollBarVisibility="Auto" Focusable="False">
-                                            <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap"  ToolTip="Добавленный текст" SnapsToDevicePixels="True"/>
+                                            <TextBlock Text="{Binding Step.ro_text}" TextWrapping="Wrap"  ToolTip="Добавленный текст" SnapsToDevicePixels="True"/>
                                         </ScrollViewer>
                                     </Border>
                                     <!--<TextBlock Margin="3, -4, 0, 0" Text="{Binding ro_date_check, StringFormat=dd.MM.yyyy HH:mm:ss}"
@@ -367,8 +367,8 @@
                                             <ColumnDefinition Width="120"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding User.u_name}" FontSize="14" Grid.Column="0" FontWeight="Bold" SnapsToDevicePixels="True"/>
-                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="1" SnapsToDevicePixels="True"/>
+                                        <TextBlock Text="{Binding Step.User.u_name}" FontSize="14" Grid.Column="0" FontWeight="Bold" SnapsToDevicePixels="True"/>
+                                        <TextBlock Text="{Binding Step.RouteType.rt_name}" Grid.Column="1" SnapsToDevicePixels="True"/>
                                         <!--<TextBlock Text="{Binding RouteStatus.sr_name}" Grid.Column="2" Foreground="#FF00BB1D"/>-->
                                         <!--<fa:ImageAwesome Icon="{Binding RouteStatus.id, Converter={StaticResource StatusToImageConverter}}" Foreground="OrangeRed"
                                                 Width="18" Height="18" Grid.Column="3" ToolTip="{Binding RouteStatus.sr_name}">
@@ -376,10 +376,10 @@
                                                 <DropShadowEffect ShadowDepth="2" BlurRadius="5" Color="#FF888888"/>
                                             </fa:ImageAwesome.Effect>
                                         </fa:ImageAwesome>-->
-                                        <TextBlock Margin="0,0,0,0" Grid.Column="2" Text="{Binding ro_date_check, StringFormat=dd.MM.yyyy HH:mm:ss}" 
+                                        <TextBlock Margin="0,0,0,0" Grid.Column="2" Text="{Binding Step.ro_date_check, StringFormat=dd.MM.yyyy HH:mm:ss}" 
                                                    ToolTip="Время рассмотрения" SnapsToDevicePixels="True"/>
-                                        <Image Source="{Binding RouteStatus.id, Converter={StaticResource StatusToIconConverter}}" 
-                                               Height="20" Width="20" Grid.Column="3" ToolTip="{Binding RouteStatus.sr_name}">
+                                        <Image Source="{Binding Step.RouteStatus.id, Converter={StaticResource StatusToIconConverter}}" 
+                                               Height="20" Width="20" Grid.Column="3" ToolTip="{Binding Step.RouteStatus.sr_name}">
                                             <Image.Effect>
                                                 <DropShadowEffect ShadowDepth="1" BlurRadius="4" Color="#FF555555"/>
                                             </Image.Effect>
