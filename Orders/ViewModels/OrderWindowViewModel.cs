@@ -163,17 +163,14 @@ namespace Orders.ViewModels
 
             bool start = IsAllSteps;
 
+            if (start)
+                MessageBox.Show("Маршрут был закончен. Поэтому после добавления этапа на него сразу будет произведен переход.","Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+
             if (winAddRoute.ShowDialog() == true)
             {
                 if(start)
                 {
-                    RouteOrder ro = order.RouteOrders.Last();
-
-                    //order.o_stepRoute = ro.ro_step;
-                    //order.o_statusId = ro.ro_statusId;
-                    //MainWindowViewModel.repo.Update(order, true);
-                    MoveOrder move = new MoveOrder(order, EnumAction.Send, ro, ro);
-                    move.MoveToNextStep(null);
+                    OnSendCommandExecuted(null);
                 }
 
                 OnPropertyChanged(nameof(order));
@@ -242,6 +239,7 @@ namespace Orders.ViewModels
 
         public void ItemsControl_Drop(object sender, DragEventArgs e)
         {
+            
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);

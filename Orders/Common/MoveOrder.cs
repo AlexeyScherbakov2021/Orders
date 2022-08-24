@@ -30,9 +30,12 @@ namespace Orders.Common
         //------------------------------------------------------------------------------------------
         public void MoveToNextStep(ICollection<RouteAdding> ListFiles)
         {
-            CurrentStep.RouteAddings = ListFiles;
-            RepositoryFiles repoFiles = new RepositoryFiles();
-            repoFiles.AddFilesAsync(CurrentStep);
+            if (ListFiles != null)
+            {
+                CurrentStep.RouteAddings = ListFiles;
+                RepositoryFiles repoFiles = new RepositoryFiles();
+                repoFiles.AddFilesAsync(CurrentStep);
+            }
 
             switch (action)
             {
