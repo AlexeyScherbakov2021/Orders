@@ -39,6 +39,15 @@ namespace Orders.ViewModels
             || IsAllSteps || order.o_statusId == (int)EnumStatus.Refused;
 
 
+        public User CreateUser
+        {
+            get
+            {
+                return order?.RouteOrders.First().User;
+            }
+        }
+
+
         public OrderWindowViewModel() { }
 
         public OrderWindowViewModel(Order ord)
@@ -193,20 +202,31 @@ namespace Orders.ViewModels
                 "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
 
+                List<RouteOrder> TempList = order.RouteOrders.ToList();
+
+                int index = TempList.IndexOf(SelectedRouteStep);
+                int step = SelectedRouteStep.ro_step;
+                TempList.Remove(SelectedRouteStep);
+
                 // перенумерауия этапов
-                List<RouteOrder> TempList = new List<RouteOrder>();
-
-                foreach (var item in order.RouteOrders)
+                if (!TempList.Any(it => it.ro_step == step))
                 {
-                    if (item.ro_step == SelectedRouteStep.ro_step)
-                        continue;
-
-                    if (item.ro_step >= SelectedRouteStep.ro_step)
-                        item.ro_step--;
-
-                    TempList.Add(item);
-
+                    for (int i = index; i < TempList.Count; i++)
+                        TempList[i].ro_step--;
                 }
+                //List<RouteOrder> TempList = new List<RouteOrder>();
+
+                //foreach (var item in order.RouteOrders)
+                //{
+                //    if (item.ro_step == SelectedRouteStep.ro_step)
+                //        continue;
+
+                //    if (item.ro_step >= SelectedRouteStep.ro_step)
+                //        item.ro_step--;
+
+                //    TempList.Add(item);
+
+                //}
                 MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep);
                 order.RouteOrders = TempList;
                 MainWindowViewModel.repo.Update(order, true);

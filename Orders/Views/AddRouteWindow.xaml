@@ -48,7 +48,7 @@
             </Button>
         </ToolBar>
 
-        <Border DockPanel.Dock="Right" Grid.Column="1" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
+        <Border x:Name="border" DockPanel.Dock="Right" Grid.Column="1" Grid.Row="1" Background="#FFF1F1F1" Margin="10">
             <Border.Effect>
                 <DropShadowEffect Color="#FFBDBDBD" ShadowDepth="0" BlurRadius="20"/>
             </Border.Effect>
@@ -56,7 +56,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25*"/>
-                    <RowDefinition Height="26"/>
+                    <RowDefinition Height="36"/>
                     <RowDefinition Height="50*"/>
                 </Grid.RowDefinitions>
                 <GroupBox Header="Параметры" BorderBrush="#FFADADAD">
@@ -85,31 +85,44 @@
                     </Grid>
                 </GroupBox>
 
-                <CheckBox Margin="10,3" Content="Вернуть назад после рассмотрения" Grid.Row="1" IsChecked="{Binding IsReturn}" />
+                <CheckBox Margin="10,3" Content="Вернуть назад после рассмотрения" Grid.Row="1" 
+                          IsChecked="{Binding IsReturn}" VerticalAlignment="Top" 
+                          Command="{Binding ReturnBackCommand}"
+                          />
 
-                <GroupBox Header="Добавить после..." Grid.Row="2" FontWeight="Bold" Margin="3" BorderBrush="#FFADADAD" Visibility="{Binding IsVisible}">
-                    <ListBox ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" 
-                             ItemContainerStyle="{StaticResource ListBoxItemStyleSelected}" HorizontalContentAlignment="Stretch" >
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="28"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="100"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Ellipse Width="22" Height="22" StrokeThickness="1" Stroke="Blue" Margin="2,2,2,2"/>
-                                        <TextBlock Text="{Binding ro_step}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding User.u_name}" Grid.Column="1" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2" VerticalAlignment="Center"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </GroupBox>
-
+                <Border Grid.Row="3" >
+                    <Grid >
+                        <GroupBox Margin="5" BorderBrush="#FFADADAD" >
+                            <ListBox x:Name="listBox" ItemsSource="{Binding ListRouteOrder}" FontWeight="Normal" SelectedItem="{Binding SelectedRouteOrder}" 
+                            ItemContainerStyle="{StaticResource ListBoxItemStyleSelected}" HorizontalContentAlignment="Stretch" Margin="0,15,0,0" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="28"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Ellipse Width="22" Height="22" StrokeThickness="1" Stroke="Blue" Margin="2,2,2,2"/>
+                                                <TextBlock Text="{Binding ro_step}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding User.u_name}" Grid.Column="1" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding RouteType.rt_name}" Grid.Column="2" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </GroupBox>
+                        <StackPanel HorizontalAlignment="Left" Margin="10,0,0,0" Orientation="Horizontal" VerticalAlignment="Top" 
+                                    ClipToBounds="False"
+                                    Background="{Binding Background, ElementName=border}">
+                            <RadioButton Content="Добавить после ..." IsChecked="{Binding IsLaterStep}" Margin="3,0,10,0"/>
+                            <RadioButton Content="Добавить в этап" IsChecked="{Binding IsSameStep}" Margin="10,0" 
+                                         IsEnabled="{Binding IsEnabledParallel}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
 
