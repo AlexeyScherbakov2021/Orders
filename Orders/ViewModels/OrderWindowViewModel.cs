@@ -56,7 +56,8 @@ namespace Orders.ViewModels
 
             //MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
 
-            CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+            CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute
+                && it.ro_userId == App.CurrentUser.id && it.ro_check == EnumCheckedStatus.CheckedProcess);
             if(CurrentStep != null)
                 ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
             else

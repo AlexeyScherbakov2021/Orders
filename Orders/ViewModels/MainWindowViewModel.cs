@@ -103,14 +103,22 @@ namespace Orders.ViewModels
             {
                 // Требующие рассмотрения
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId != (int)EnumStatus.Approved 
-                        && it.o_statusId < (int)EnumStatus.Closed 
-                        && it.RouteOrders 
-                            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id)
+                    .Where(it => it.RouteOrders 
+                            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id
+                                && r.ro_check == EnumCheckedStatus.CheckedProcess)
                             .Any())
                     .Include(it => it.RouteOrders)
 
                    );
+                //ListOrders = new ObservableCollection<Order>(repo.Orders
+                //    .Where(it => it.o_statusId != (int)EnumStatus.Approved 
+                //        && it.o_statusId < (int)EnumStatus.Closed 
+                //        && it.RouteOrders 
+                //            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id)
+                //            .Any())
+                //    .Include(it => it.RouteOrders)
+
+                //   );
             }
 
             else if(CheckClosed)

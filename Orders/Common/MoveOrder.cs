@@ -35,6 +35,7 @@ namespace Orders.Common
         public void MoveToNextStep(ICollection<RouteAdding> ListFiles)
         {
             RouteOrder NextStepOne;
+            int CountWorkedStep = 1;
             //IEnumerable<RouteOrder> NextSteps = null;
             bool IsParent = false;
 
@@ -70,9 +71,11 @@ namespace Orders.Common
                     // если это подчиненная ветка
                     if (CurrentStep.ro_return_step != null)
                     {
+                        CountWorkedStep = order.RouteOrders.Count(item => item.ro_check == EnumCheckedStatus.CheckedProcess
+                            && item.ro_return_step == CurrentStep.ro_return_step);
+
                         // если есть другие выполняющиеся, то переход не делаем
-                        if (order.RouteOrders.Count(item => item.ro_check == EnumCheckedStatus.CheckedProcess
-                            && item.ro_return_step == CurrentStep.ro_return_step) > 1)
+                        if (CountWorkedStep > 1)
                             break;
                         else
                         {
@@ -100,8 +103,9 @@ namespace Orders.Common
                     // это основная ветка
                     else
                     {
+                        CountWorkedStep = order.RouteOrders.Count(item => item.ro_check == EnumCheckedStatus.CheckedProcess);
                         // если есть выполняющийся этап, то меняем только статус текущего
-                        if (order.RouteOrders.Count(item => item.ro_check == EnumCheckedStatus.CheckedProcess) > 1)
+                        if (CountWorkedStep > 1)
                             break;
 
                         NextStepOne = order.RouteOrders.FirstOrDefault(item => item.ro_step > CurrentStep.ro_step
@@ -119,9 +123,7 @@ namespace Orders.Common
 
             SetStatusStep(IsParent);
 
-            //if (NextStep is null) NextStep = CurrentStep;
-            //if (order.RouteOrders.All(item => item.ro_check == EnumCheckedStatus.Checked))
-            if (NextSteps.Count == 0)
+            if (NextSteps.Count == 0 && CountWorkedStep == 1)
                 NextSteps.Add(CurrentStep);
 
             if (NextSteps.Count > 0)
