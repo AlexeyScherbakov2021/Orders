@@ -61,7 +61,7 @@ namespace Orders.ViewModels
                 RouteAddings = ListFiles,
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
-                ro_enabled = true,
+                //ro_enabled = true,
                 ro_statusId = (int)EnumStatus.Created,
                 ro_check = EnumCheckedStatus.CheckedProcess,
             ro_ownerId = App.CurrentUser.id
@@ -98,7 +98,7 @@ namespace Orders.ViewModels
                     ro.ro_step = curStep++;
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
-                    ro.ro_enabled = true;
+                    //ro.ro_enabled = true;
                     ro.ro_statusId = (int)EnumStatus.None;
                     ro.ro_ownerId = App.CurrentUser.id;
                     Order.RouteOrders.Add(ro);

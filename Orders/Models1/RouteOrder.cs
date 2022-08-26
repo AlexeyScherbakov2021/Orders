@@ -1,7 +1,5 @@
-namespace Orders.Models
+namespace Orders.Models1
 {
-    using Orders.Infrastructure;
-    using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -9,22 +7,21 @@ namespace Orders.Models
     using System.Data.Entity.Spatial;
 
     [Table("RouteOrder")]
-    public partial class RouteOrder : IEntity
+    public partial class RouteOrder
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RouteOrder()
         {
             RouteAddings = new HashSet<RouteAdding>();
-            ChildRoutes = new HashSet<RouteOrder>();
+            RouteOrder1 = new HashSet<RouteOrder>();
         }
 
         [Key]
-        [Column("idRouteOrder")]
-        public int id { get; set; }
+        public int idRouteOrder { get; set; }
 
         public int ro_orderId { get; set; }
 
-        //public int ro_RouteId { get; set; }
+        public int ro_RouteId { get; set; }
 
         public int? ro_parentId { get; set; }
 
@@ -34,11 +31,11 @@ namespace Orders.Models
 
         public int ro_step { get; set; }
 
-        //public bool ro_enabled { get; set; }
+        public bool ro_enabled { get; set; }
 
         public string ro_text { get; set; }
 
-        public EnumCheckedStatus ro_check { get; set; }
+        public int ro_check { get; set; }
 
         public int ro_statusId { get; set; }
 
@@ -46,27 +43,24 @@ namespace Orders.Models
 
         public int? ro_return_step { get; set; }
 
-        public int ro_ownerId { get; set; }
+        public int? ro_ownerId { get; set; }
 
         public virtual Order Order { get; set; }
-
-        public virtual RouteOrder ParentRouteOrder { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteAdding> RouteAddings { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteOrder> ChildRoutes { get; set; }
+        public virtual ICollection<RouteOrder> RouteOrder1 { get; set; }
 
+        public virtual RouteOrder RouteOrder2 { get; set; }
 
-        public virtual RouteStatus RouteStatus { get; set; }
+        public virtual RouteStatu RouteStatu { get; set; }
 
         public virtual RouteType RouteType { get; set; }
 
         public virtual User User { get; set; }
-        //public virtual User Owner { get; set; }
 
-        //[NotMapped]
-        public string NameStep => (ParentRouteOrder != null ? (ParentRouteOrder.NameStep + ".") : "") +  ro_step.ToString();
+        public virtual User User1 { get; set; }
     }
 }

@@ -3,46 +3,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 
-namespace Orders.Models
+namespace Orders.Models1
 {
-    public partial class ModelOrder : DbContext
+    public partial class Model1 : DbContext
     {
-
-        public ModelOrder(string cs) : base(cs)
+        public Model1()
+            : base("name=Model1")
         {
-
         }
-
-
-//#if !DEBUG
-//        public ModelOrder()
-//        : base("name=ModelLocal")
-//        {
-//            App.Log.WriteLineLog("ModelOrder() Debug");
-//        }
-//#else
-//        public ModelOrder()
-//            : base("name=ModelOrder")
-//        {
-
-//            Database.Connection.ConnectionString = "data source=SFP\\FPSQLN;initial catalog=MoveOrders;user id=fpLoginName;password=ctcnhjt,s;MultipleActiveResultSets=True;App=EntityFramework\" providerName=\"System.Data.SqlClient";
-//            App.Log.WriteLineLog("ModelOrder() Release");
-//        }
-//#endif
-
 
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<RouteAdding> RouteAddings { get; set; }
         public virtual DbSet<RouteOrder> RouteOrders { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
-        public virtual DbSet<RouteStatus> RouteStatus { get; set; }
+        public virtual DbSet<RouteStatu> RouteStatus { get; set; }
         public virtual DbSet<RouteStep> RouteSteps { get; set; }
         public virtual DbSet<RouteType> RouteTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Order>()
                 .Property(e => e.o_name)
                 .IsUnicode(false);
@@ -82,8 +62,8 @@ namespace Orders.Models
                 .HasForeignKey(e => e.ad_routeOrderId);
 
             modelBuilder.Entity<RouteOrder>()
-                .HasMany(e => e.ChildRoutes)
-                .WithOptional(e => e.ParentRouteOrder)
+                .HasMany(e => e.RouteOrder1)
+                .WithOptional(e => e.RouteOrder2)
                 .HasForeignKey(e => e.ro_parentId);
 
             modelBuilder.Entity<Route>()
@@ -95,19 +75,19 @@ namespace Orders.Models
                 .WithRequired(e => e.Route)
                 .HasForeignKey(e => e.r_routeId);
 
-            modelBuilder.Entity<RouteStatus>()
+            modelBuilder.Entity<RouteStatu>()
                 .Property(e => e.sr_name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<RouteStatus>()
+            modelBuilder.Entity<RouteStatu>()
                 .HasMany(e => e.Orders)
-                .WithRequired(e => e.RouteStatus)
+                .WithRequired(e => e.RouteStatu)
                 .HasForeignKey(e => e.o_statusId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<RouteStatus>()
+            modelBuilder.Entity<RouteStatu>()
                 .HasMany(e => e.RouteOrders)
-                .WithRequired(e => e.RouteStatus)
+                .WithRequired(e => e.RouteStatu)
                 .HasForeignKey(e => e.ro_statusId)
                 .WillCascadeOnDelete(false);
 
@@ -127,13 +107,8 @@ namespace Orders.Models
 
             modelBuilder.Entity<RouteType>()
                 .HasMany(e => e.RouteSteps)
-                .WithRequired(e => e.RouteType)
+                .WithOptional(e => e.RouteType)
                 .HasForeignKey(e => e.r_type);
-
-            //modelBuilder.Entity<RouteType>()
-            //    .HasMany(e => e.RouteSteps)
-            //    .WithOptional(e => e.RouteType)
-            //    .HasForeignKey(e => e.r_type);
 
             modelBuilder.Entity<User>()
                 .Property(e => e.u_login)
@@ -161,21 +136,15 @@ namespace Orders.Models
                 .HasForeignKey(e => e.ro_userId)
                 .WillCascadeOnDelete(false);
 
-            //modelBuilder.Entity<User>()
-            //    .HasMany(e => e.RouteOrders)
-            //    .WithRequired(e => e.Owner)
-            //    .HasForeignKey(e => e.ro_ownerId)
-            //    .WillCascadeOnDelete(false);
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.RouteOrders1)
+                .WithOptional(e => e.User1)
+                .HasForeignKey(e => e.ro_ownerId);
 
             modelBuilder.Entity<User>()
                 .HasMany(e => e.RouteSteps)
-                .WithRequired(e => e.User)
+                .WithOptional(e => e.User)
                 .HasForeignKey(e => e.r_userId);
-
-            //modelBuilder.Entity<User>()
-            //    .HasMany(e => e.RouteSteps)
-            //    .WithOptional(e => e.User)
-            //    .HasForeignKey(e => e.r_userId);
         }
     }
 }

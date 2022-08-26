@@ -95,7 +95,7 @@ namespace Orders.ViewModels
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                 .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(i => i.ro_step == 0 
                 && i.ro_userId == App.CurrentUser.id).Any())
-                .Include(it => it.RouteOrders)
+                //.Include(it => it.RouteOrders)
                 );
 
             }
@@ -103,13 +103,11 @@ namespace Orders.ViewModels
             {
                 // Требующие рассмотрения
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId != (int)EnumStatus.Approved 
-                        && it.o_statusId < (int)EnumStatus.Closed 
-                        && it.RouteOrders 
-                            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id)
+                    .Where(it => it.RouteOrders 
+                            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id
+                                && r.ro_check == EnumCheckedStatus.CheckedProcess && r.ro_parentId == null)
                             .Any())
-                    .Include(it => it.RouteOrders)
-
+                    //.Include(it => it.RouteOrders)
                    );
             }
 
@@ -119,22 +117,23 @@ namespace Orders.ViewModels
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => 
                     r.ro_userId == App.CurrentUser.id).Any())
-                    .Include(it => it.RouteOrders)
+                    //.Include(it => it.RouteOrders)
                 );
             }
             else if(CheckWork)
             {
 
                 // В работе
-                //ListOrders = new ObservableCollection<Order>(from s in repo.Orders where s.o_statusId < (int)EnumStatus.Closed select s);
-                //repo.GetAll();
-                //ListOrders.Clear();
 
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => 
-                    r.ro_userId == App.CurrentUser.id).Any())
-                    .Include(it => it.RouteOrders)
+                    .Where(it => it.o_statusId < (int)EnumStatus.Closed 
+                            && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
                 );
+                //ListOrders = new ObservableCollection<Order>(repo.Orders
+                //    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => 
+                //    r.ro_userId == App.CurrentUser.id && r.ro_parentId != null).Any())
+                //    .Include(it => it.RouteOrders)
+                //);
 
 
             }
@@ -143,7 +142,7 @@ namespace Orders.ViewModels
                 // все заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
-                    .Include(it => it.RouteOrders)
+                    //.Include(it => it.RouteOrders)
                 );
             }
 
