@@ -60,10 +60,13 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>recycle.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -107,7 +110,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\MoveOrder.cs" />
-    <Compile Include="Common\WrapStep.cs" />
     <Compile Include="Common\ShareFunction.cs" />
     <Compile Include="Infrastructure\Converters\IsChildStepConverter.cs" />
     <Compile Include="Infrastructure\Converters\StatusToIconConverter.cs" />
@@ -129,9 +131,6 @@
     <Compile Include="ViewModels\UsersControlViewModel.cs" />
     <Compile Include="Views\AddRouteWindow.xaml.cs">
       <DependentUpon>AddRouteWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OrderWindow2.xaml.cs">
-      <DependentUpon>OrderWindow2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OrderWindow.xaml.cs">
       <DependentUpon>OrderWindow.xaml</DependentUpon>
@@ -206,10 +205,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\OrderWindow2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\OrderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

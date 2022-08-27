@@ -18,7 +18,7 @@ namespace Orders.Repository
         public IQueryable<RouteStep> RouteSteps => db.RouteSteps;
         public IQueryable<User> Users => db.Users;
         public IQueryable<RouteType> RouteTypes => db.RouteTypes;
-        public IQueryable<RouteOrder> RouteOrders => db.RouteOrders;
+        public IQueryable<RouteOrder> RouteOrders => db.RouteOrders.Where(it => it.ro_parentId == null);
         //public IQueryable<Order> Orders => db.Orders.Include(it => it.RouteOrders.Select(it2 => it2.RouteAddings)   );
         public IQueryable<Order> Orders => db.Orders;
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
@@ -28,7 +28,7 @@ namespace Orders.Repository
         //--------------------------------------------------------------------------------------------------
         // обновление записей в списке и вложенном списке
         //--------------------------------------------------------------------------------------------------
-        public void Refresh<T>(ICollection<T> item) 
+        public void Refresh() 
         {
 
             db.Dispose();
@@ -56,6 +56,15 @@ namespace Orders.Repository
             //catch { }
         }
 
+
+        public void LoadRouteOrders(Order order)
+        {
+            db.Entry(order)
+                .Collection(o => o.RouteOrders)
+                .Query()
+                .Where(it => it.ro_parentId == null)
+                .Load();
+        }
 
         //--------------------------------------------------------------------------------------------------
         // получение очередного номера
@@ -108,8 +117,8 @@ namespace Orders.Repository
 
             SetConnect();
 
-            //db.Configuration.ProxyCreationEnabled = false;
-            //db.Configuration.LazyLoadingEnabled = false;
+            db.Configuration.ProxyCreationEnabled = false;
+            db.Configuration.LazyLoadingEnabled = false;
 
             RouteTypes.Load();
             Users.Load();

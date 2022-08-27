@@ -45,7 +45,7 @@ namespace Orders.Models
         public virtual RouteStatus RouteStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteOrder> RouteOrders { get; set; }
+        public ICollection<RouteOrder> RouteOrders { get; set; }
 
 
     }

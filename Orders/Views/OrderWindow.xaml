@@ -54,7 +54,7 @@
 
                     <DockPanel Margin="0,0,0,0">
                         <Grid Width="20" Margin="0,-3,0,-3">
-                            <!--<Ellipse Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                            <Ellipse Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                  Margin="-17,0,-6,0" StrokeThickness="2" Stroke="Blue">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
@@ -67,9 +67,9 @@
                                     </Style>
                                 </Ellipse.Style>
                                 <Ellipse.Effect>
-                                    <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
+                                    <DropShadowEffect ShadowDepth="1" Color="#20000000"/>
                                 </Ellipse.Effect>
-                            </Ellipse>-->
+                            </Ellipse>
                         <Border BorderBrush="Blue" BorderThickness="2" CornerRadius="12" Height="25" Width="36" Margin="-34,0,-6,0"
                                 >
                             <Border.Style>
@@ -140,9 +140,6 @@
                         </Grid>
                     </DockPanel>
                 </Border>
-
-
-
         </HierarchicalDataTemplate>
 
         <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#1F26A0DA"/>
@@ -151,37 +148,7 @@
         <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF26A0DA"/>
         <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3D26A0DA"/>
         <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FF26A0DA"/>
-        <Style TargetType="{x:Type ListBoxItem}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Selector.IsSelectionActive" Value="False"/>
-                                    <Condition Property="IsSelected" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Background}"/>
-                                <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Border}"/>
-                            </MultiTrigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Selector.IsSelectionActive" Value="True"/>
-                                    <Condition Property="IsSelected" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Background}"/>
-                                <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Border}"/>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+
 
     </Window.Resources>
     <Grid x:Name="mainGrid" >
@@ -379,6 +346,24 @@
                       SnapsToDevicePixels="True"
                       VirtualizingPanel.ScrollUnit="Pixel"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" IsTextSearchEnabled="False">
+
+                    <!--<TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate >
+                            <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  
+                            BorderBrush="Black" Padding="0,3,3,3" CornerRadius="3" SnapsToDevicePixels="True">
+                                <TextBlock Text="{Binding NameStep}" FontWeight="Bold" SnapsToDevicePixels="True" 
+                                        Foreground="Black" VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center" FontSize="14" />
+
+                            </Border>
+                    </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>-->
+                    <TreeView.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightGray" />
+                    </TreeView.Resources>
                 </inf:ExtendedTreeView>
                 
             </GroupBox>

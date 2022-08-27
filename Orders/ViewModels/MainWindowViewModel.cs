@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Xml.Linq;
 
 namespace Orders.ViewModels
 {
@@ -74,7 +75,7 @@ namespace Orders.ViewModels
             timer.Stop();
 
             // подготовка к обновлению всех записей
-            repo.Refresh<Order>(ListOrders);
+            repo.Refresh();
 
             //if (ListOrders != null)
             //{
@@ -124,13 +125,59 @@ namespace Orders.ViewModels
             {
 
                 // В работе
-
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId < (int)EnumStatus.Closed 
-                            && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r =>
+                    r.ro_userId == App.CurrentUser.id).Any())
                 );
+
+
                 //ListOrders = new ObservableCollection<Order>(repo.Orders
-                //    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r => 
+                //    .Select(c => new
+                //    {
+                //        id = c.id,
+                //        name = c.o_name,
+                //        o_body = c.o_body,
+                //        o_buyer = c.o_buyer,
+                //        o_stepRoute = c.o_stepRoute,
+                //        o_number = c.o_number,
+                //        o_statusId = c.o_statusId,
+                //        o_date_created = c.o_date_created,
+                //        o_CardOrder = c.o_CardOrder,
+                //        list = c.RouteOrders.Where(it => it.ro_parentId == null),
+                //        RouteStatus = c.RouteStatus
+
+                //    }
+                //    ).AsEnumerable()
+                //    .Select( res => new Order
+                //    {
+                //        id = res.id,
+                //        o_name = res.name,
+                //        o_body = res.o_body,
+                //        o_buyer = res.o_buyer,
+                //        o_stepRoute = res.o_stepRoute,
+                //        o_number = res.o_number,
+                //        o_statusId = res.o_statusId,
+                //        o_CardOrder = res.o_CardOrder,
+                //        o_date_created = res.o_date_created,
+                //        RouteOrders = res.list.ToList(),
+                //        RouteStatus = res.RouteStatus
+                //    }
+
+                //    )
+                //    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r =>
+                //    r.ro_userId == App.CurrentUser.id).Any())
+
+                //);
+
+
+                //ListOrders = new ObservableCollection<Order>(repo.Orders
+                //    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r =>
+                //    r.ro_userId == App.CurrentUser.id && r.ro_parentId != null).Any())
+                //    .Include(it => it.RouteOrders)
+                //);
+
+                //ListOrders = new ObservableCollection<Order>(repo.Orders
+                //    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r =>
                 //    r.ro_userId == App.CurrentUser.id && r.ro_parentId != null).Any())
                 //    .Include(it => it.RouteOrders)
                 //);
@@ -214,6 +261,8 @@ namespace Orders.ViewModels
         private void OnDblClickCommandExecuted(object p)
         {
             timer.Stop();
+
+            repo.LoadRouteOrders(SelectedOrder);
 
             OrderWindowViewModel vm = new OrderWindowViewModel(SelectedOrder);
             OrderWindow orderWindow = new OrderWindow();

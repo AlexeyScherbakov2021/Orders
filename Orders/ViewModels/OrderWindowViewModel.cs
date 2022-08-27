@@ -29,16 +29,19 @@ namespace Orders.ViewModels
 
         public RouteOrder SelectedRouteStep { get; set; }
 
-        private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
+        //private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
+        private bool IsAllSteps =>  false;
         private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
-        private bool IsCreateUser => order?.RouteOrders.Count > 0
-                                                && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
+        private bool IsCreateUser => true;
+        //private bool IsCreateUser => order?.RouteOrders.Count > 0
+        //                                        && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
         public Order order { get; set; }
         
         private RouteOrder _CurrentStep;
         public RouteOrder CurrentStep { get => _CurrentStep; set { Set(ref _CurrentStep, value); } }
-        public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id 
-            || IsAllSteps || order.o_statusId == (int)EnumStatus.Refused;
+        public bool IsDisabledElement => false;
+        //public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id 
+        //    || IsAllSteps || order.o_statusId == (int)EnumStatus.Refused;
 
 
         public OrderWindowViewModel() { }
@@ -47,19 +50,13 @@ namespace Orders.ViewModels
         {
             order = ord;
 
-
-            RouteSteps route = new RouteSteps(order.RouteOrders);
-
-            //ListWrapStep = new ObservableCollection<WrapStep>( WrapStep.RouteOrderToWrapStep(order.RouteOrders));
-
-            //MainWindowViewModel.repo.LoadAddFiles(order.RouteOrders);
+            //RouteSteps route = new RouteSteps(order.RouteOrders);
 
             CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             if(CurrentStep != null)
                 ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
             else
                 ListFiles = new ObservableCollection<RouteAdding>();
-
         }
 
         #region Команды
@@ -85,72 +82,12 @@ namespace Orders.ViewModels
                     return;
                 }
 
-
                 MoveOrder move = new MoveOrder(order, EnumAction.Return, CurrentStep, SelectedRouteStep);
                 move.MoveToNextStep(ListFiles);
 
-                //foreach (var item in order.RouteOrders)
-                // {
-                //    // у промежуточных этапов удаляем статус
-                //    if (item.ro_step >= SelectedRouteStep.ro_step && item.ro_step < order.o_stepRoute)
-                //    {
-                //        item.ro_check = EnumCheckedStatus.CheckedNone;
-                //        item.ro_statusId = (int)EnumStatus.None;
-                //        item.ro_date_check = null;
-                //    }
-                // }
-
-                // CurrentStep.ro_statusId = (int)EnumStatus.Return;
-                // CurrentStep.ro_date_check = DateTime.Now;
-                // CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
-
-                // SelectedRouteStep.ro_statusId = (int)EnumStatus.CoordinateWork;
-                // SelectedRouteStep.ro_check = EnumCheckedStatus.CheckedProcess;
-                // order.o_stepRoute = SelectedRouteStep.ro_step;
-                // order.o_statusId = (int)EnumStatus.Return;
-
-                // ShareFunction.SendMail(SelectedRouteStep.User.u_email, order.o_number);
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
-
             
-
-            //ReturnOrderWindowViewModel view = new ReturnOrderWindowViewModel(order);
-            //ReturnOrderWindow winReturnRoute = new ReturnOrderWindow();
-            //winReturnRoute.DataContext = view;
-            //view.ReturnMessage = CurrentStep.ro_text;
-            //if (winReturnRoute.ShowDialog() == true)
-            //{
-            //    CurrentStep.ro_text = view.ReturnMessage;
-            //    foreach (var item in order.RouteOrders)
-            //    {
-            //        // у промежуточных этапов удаляем статус
-            //        if (item.ro_step >= view.SelectedRouteOrder.ro_step && item.ro_step < order.o_stepRoute)
-            //        {
-            //            item.ro_check = EnumCheckedStatus.CheckedNone;
-            //            item.ro_statusId = (int)EnumStatus.None;
-            //            item.ro_date_check = null;
-            //        }
-            //    }
-
-            //    CurrentStep.ro_statusId = (int)EnumStatus.Return;
-            //    CurrentStep.ro_date_check = DateTime.Now;
-            //    CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
-
-            //    view.SelectedRouteOrder.ro_statusId = (int)EnumStatus.CoordinateWork;
-            //    view.SelectedRouteOrder.ro_check = EnumCheckedStatus.CheckedProcess;
-            //    order.o_stepRoute = view.SelectedRouteOrder.ro_step;
-            //    order.o_statusId = (int)EnumStatus.Return;
-
-            //    //MainWindowViewModel.repo.Refresh<RouteOrder>(order.RouteOrders);
-
-            //    ShareFunction.SendMail(view.SelectedRouteOrder?.User.u_email, order.o_number);
-
-
-            //    //MainWindowViewModel.repo.Save();
-            //    //OnPropertyChanged(nameof(order));
-            //    App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
-            //}
         }
 
 
@@ -165,6 +102,15 @@ namespace Orders.ViewModels
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(order, CurrentStep);
             AddRouteWindow winAddRoute = new AddRouteWindow();
             winAddRoute.DataContext = view;
+
+            //var del = order.RouteOrders.Where(it => it.ro_parentId != null);
+
+            //List<RouteOrder> temp = order.RouteOrders.ToList();
+            //foreach (var item in del)
+            //    temp.Remove(item);
+
+            //order.RouteOrders = temp;
+
             if (winAddRoute.ShowDialog() == true)
             {
                 OnPropertyChanged(nameof(order));
@@ -283,7 +229,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
-        private bool CanCloseOrderCommand(object p) =>  IsCreateUser && (IsAllSteps || order.o_statusId == (int)EnumStatus.Refused);
+        private bool CanCloseOrderCommand(object p) =>  IsCreateUser && (IsAllSteps || order?.o_statusId == (int)EnumStatus.Refused);
         private void OnCloseOrderCommandExecuted(object p)
         {
             order.o_statusId = (int)EnumStatus.Closed;

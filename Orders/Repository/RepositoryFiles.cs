@@ -24,9 +24,15 @@ namespace Orders.Repository
         private string CurrentPath(int Year)
         {
             string NewPath = FileStorage + Year.ToString() + "\\";
-            if (!Directory.Exists(NewPath))
-                Directory.CreateDirectory(NewPath);
-
+            try
+            {
+                if (!Directory.Exists(NewPath))
+                    Directory.CreateDirectory(NewPath);
+            }
+            catch 
+            {
+                return null;
+            }
             return NewPath;
         }
 
@@ -37,6 +43,9 @@ namespace Orders.Repository
         {
             string NewName;
             string NewPath = CurrentPath(CurrentStep.Order.o_date_created.Year);
+
+            if (string.IsNullOrEmpty(NewPath))
+                return;
 
             foreach(RouteAdding item in CurrentStep.RouteAddings)
             {
@@ -64,22 +73,26 @@ namespace Orders.Repository
         {
             string NewName;
             string NewPath = CurrentPath(CurrentStep.Order.o_date_created.Year);
-            foreach (RouteAdding item in CurrentStep.RouteAddings)
-            {
-                if (item.FullName != null)
-                {
-                    NewName = NewPath + CurrentStep.id.ToString() + "." + item.ad_text;
-                    try
-                    {
-                        File.Copy(item.FullName, NewName, true);
-                    }
-                    catch { };
 
-                    // записано, обнуляем
-                    item.FullName = null;
+            if (!string.IsNullOrEmpty(NewPath))
+            {
+
+                foreach (RouteAdding item in CurrentStep.RouteAddings)
+                {
+                    if (item.FullName != null)
+                    {
+                        NewName = NewPath + CurrentStep.id.ToString() + "." + item.ad_text;
+                        try
+                        {
+                            File.Copy(item.FullName, NewName, true);
+                        }
+                        catch { };
+
+                        // записано, обнуляем
+                        item.FullName = null;
+                    }
                 }
             }
-
             return Task.FromResult(true);
         }
 
@@ -90,6 +103,9 @@ namespace Orders.Repository
         {
             string NewPath = CurrentPath(order.o_date_created.Year);
             string NewName;
+
+            if (string.IsNullOrEmpty(NewPath))
+                return;
 
             foreach(var CurrentStep in order.RouteOrders)
             {
@@ -111,6 +127,9 @@ namespace Orders.Repository
         public string GetFile(RouteAdding raFile)
         {
             string NewPath = CurrentPath(raFile.RouteOrder.Order.o_date_created.Year);
+
+            if (string.IsNullOrEmpty(NewPath))
+                return null; 
 
             //string NewPath = FileStorage + raFile.RouteOrder.Order.o_date_created.Year.ToString() + "\\";
             string NewName = NewPath + raFile.RouteOrder.id.ToString() + "." + raFile.ad_text;
