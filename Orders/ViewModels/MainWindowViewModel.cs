@@ -262,7 +262,7 @@ namespace Orders.ViewModels
         {
             timer.Stop();
 
-            repo.LoadRouteOrders(SelectedOrder);
+            //repo.LoadRouteOrders(SelectedOrder);
 
             OrderWindowViewModel vm = new OrderWindowViewModel(SelectedOrder);
             OrderWindow orderWindow = new OrderWindow();

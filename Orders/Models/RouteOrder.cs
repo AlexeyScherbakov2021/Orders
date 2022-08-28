@@ -26,6 +26,7 @@ namespace Orders.Models
 
         //public int ro_RouteId { get; set; }
 
+        [ForeignKey("ParentRouteOrder")]
         public int? ro_parentId { get; set; }
 
         public int ro_userId { get; set; }

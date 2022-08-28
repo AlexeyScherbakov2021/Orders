@@ -17,12 +17,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Shell;
 
 namespace Orders.ViewModels
 {
     internal class OrderWindowViewModel : ViewModel
     {
-        //public ObservableCollection<WrapStep> ListWrapStep { get; set; }
+        public ObservableCollection<RouteOrder> ListRouteOrders { get; set; }
 
         public User CurrentUser => App.CurrentUser;
         public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
@@ -51,8 +52,11 @@ namespace Orders.ViewModels
             order = ord;
 
             //RouteSteps route = new RouteSteps(order.RouteOrders);
+            ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
+            //ListRouteOrders = new ObservableCollection<RouteOrder>( order.RouteOrders);
+            CurrentStep = ListRouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
 
-            CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+            //CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             if(CurrentStep != null)
                 ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
             else
@@ -99,21 +103,25 @@ namespace Orders.ViewModels
         private bool CanAddRouteCommand(object p) => !IsDisabledElement; //IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnAddRouteCommandExecuted(object p)
         {
-            AddRouteWindowViewModel view = new AddRouteWindowViewModel(order, CurrentStep);
+            AddRouteWindowViewModel view = new AddRouteWindowViewModel(ListRouteOrders, CurrentStep);
             AddRouteWindow winAddRoute = new AddRouteWindow();
             winAddRoute.DataContext = view;
 
-            //var del = order.RouteOrders.Where(it => it.ro_parentId != null);
-
-            //List<RouteOrder> temp = order.RouteOrders.ToList();
-            //foreach (var item in del)
-            //    temp.Remove(item);
-
-            //order.RouteOrders = temp;
-
             if (winAddRoute.ShowDialog() == true)
             {
-                OnPropertyChanged(nameof(order));
+                //order.RouteOrders = ListRouteOrders;
+
+                //ListRouteOrders = new ObservableCollection<RouteOrder>(order.RouteOrders);
+
+                //MainWindowViewModel.repo.Update<RouteOrder>(ListRouteOrders);
+                //MainWindowViewModel.repo.Add<RouteOrder>(ro);
+
+                //CurrentOrder.RouteOrders = TempList;
+                //MainWindowViewModel.repo.Update(order, true);
+
+                ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
+
+                OnPropertyChanged(nameof(ListRouteOrders));
                 //RepositoryBase repo = new RepositoryBase();
                 //repo.Save();
             }
@@ -132,29 +140,30 @@ namespace Orders.ViewModels
             if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"",
                 "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
+                ObservableCollection<RouteOrder> tmpList;
 
-                // перенумерауия этапов
-                List<RouteOrder> TempList = new List<RouteOrder>();
+                if (SelectedRouteStep.ro_parentId != null)
+                    tmpList = new ObservableCollection<RouteOrder>(SelectedRouteStep.ParentRouteOrder.ChildRoutes);
+                else
+                    tmpList = ListRouteOrders;
 
-                int corrStep = 1;
 
-
-                foreach (var item in order.RouteOrders)
+                if (MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep))
                 {
-                    if (item == SelectedRouteStep)
-                        continue;
 
-                    if (item.ro_step >= SelectedRouteStep.ro_step)
-                        item.ro_step--;
+                    int index = tmpList.IndexOf(SelectedRouteStep);
+                    tmpList.Remove(SelectedRouteStep);
 
-                    TempList.Add(item);
+                    for (int i = index; i < tmpList.Count; i++)
+                    {
+                        tmpList[i].ro_step--;
+                    }
 
+                    MainWindowViewModel.repo.Update(SelectedRouteStep, true);
+                    //order.RouteOrders = ListRouteOrders;
+                    //MainWindowViewModel.repo.Update(order, true);
+                    //OnPropertyChanged(nameof(order));
                 }
-                MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep);
-                order.RouteOrders = TempList;
-                MainWindowViewModel.repo.Update(order, true);
-
-                OnPropertyChanged(nameof(order));
             }
         }
 

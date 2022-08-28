@@ -63,6 +63,7 @@ namespace Orders.Repository
                 .Collection(o => o.RouteOrders)
                 .Query()
                 .Where(it => it.ro_parentId == null)
+                .OrderBy(o => o.ro_step)
                 .Load();
         }
 
@@ -81,6 +82,13 @@ namespace Orders.Repository
         public void ResetNumberOrder(int newNumber = 1)
         {
             db.Database.ExecuteSqlCommand($"alter sequence numberOrder restart with {newNumber}");
+        }
+
+
+        public IEnumerable<RouteOrder> GetRouteOrders(int OrderId)
+        {
+            return db.RouteOrders.Where(it => it.ro_orderId == OrderId && it.ro_parentId == null)
+                .OrderBy(o => o.ro_step);
         }
 
 

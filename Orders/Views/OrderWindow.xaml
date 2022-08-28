@@ -340,7 +340,7 @@
             <GroupBox Header="Маршрут заказа" BorderBrush="#FFADADAD">
                 
                 <inf:ExtendedTreeView Margin="2" BorderBrush="Black" BorderThickness="0" 
-                      ItemsSource="{Binding order.RouteOrders}"
+                      ItemsSource="{Binding ListRouteOrders}"
                       SelectedItem_="{Binding SelectedRouteStep, Mode=TwoWay}"
                       HorizontalContentAlignment="Stretch" 
                       SnapsToDevicePixels="True"

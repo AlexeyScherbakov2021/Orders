@@ -18,8 +18,9 @@ namespace Orders.ViewModels
 {
     internal class AddRouteWindowViewModel : ViewModel
     {
-        private Order CurrentOrder;
+        //private Order CurrentOrder;
         public ObservableCollection<RouteOrder> ListRouteOrder { get; set; }
+        private ICollection<RouteOrder> _ListRouteOrder;
         public RouteOrder SelectedRouteOrder { get; set; }
 
 
@@ -44,11 +45,11 @@ namespace Orders.ViewModels
 
         public AddRouteWindowViewModel() { }
 
-        public AddRouteWindowViewModel(Order order, RouteOrder CurrentStep )
+        public AddRouteWindowViewModel(ICollection<RouteOrder> listSteps, RouteOrder CurrentStep )
         {
-            CurrentOrder = order;
+            //CurrentOrder = order;
             _CurrentStep = CurrentStep;
-
+            _ListRouteOrder = listSteps;
             SelectSteps();
 
             //ListRouteOrder = order.RouteOrders.Where(it => it.ro_step >= order.o_stepRoute && it.ro_parentId == null).ToList();
@@ -71,9 +72,10 @@ namespace Orders.ViewModels
         private void SelectSteps()
         {
             if(IsReturn)
-                ListRouteOrder = new ObservableCollection<RouteOrder>(CurrentOrder.RouteOrders.Where(it => it.ro_check != EnumCheckedStatus.Checked && it.ro_parentId != null));
+                ListRouteOrder = new ObservableCollection<RouteOrder>(_CurrentStep.ChildRoutes.Where(it => it.ro_check != EnumCheckedStatus.Checked));
             else
-                ListRouteOrder = new ObservableCollection<RouteOrder>( CurrentOrder.RouteOrders.Where(it => it.ro_step >= CurrentOrder.o_stepRoute && it.ro_parentId == null));
+                ListRouteOrder = new ObservableCollection<RouteOrder>(_ListRouteOrder.Where(it => it.ro_step >= _CurrentStep.ro_step 
+                        && it.ro_parentId == null));
 
             OnPropertyChanged(nameof(ListRouteOrder));
             SelectedRouteOrder = ListRouteOrder.FirstOrDefault();
@@ -101,16 +103,19 @@ namespace Orders.ViewModels
             ro.ro_typeId = SelectedType.id;
             ro.ro_userId = SelectedUser.id;
             ro.ro_statusId = (int)EnumStatus.None;
-            ro.ro_orderId = CurrentOrder.id;
+            ro.ro_orderId = _CurrentStep.ro_orderId;
             ro.ro_ownerId = App.CurrentUser.id;
             ro.ro_step = SelectedRouteOrder?.ro_step ?? 0;
 
             if(IsReturn)
             {
+                ro.ro_parentId = _CurrentStep.id;
+                //AddInRoute( _CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep);
                 _CurrentStep.ChildRoutes = AddInRoute(_CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep);
             }
             else
-                CurrentOrder.RouteOrders = AddInRoute(ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
+                //CurrentOrder.RouteOrders = AddInRoute(ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
+                AddInRoute(ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
 
             //if(_CurrentStep.ro_return_step != null)
             //{
@@ -159,10 +164,10 @@ namespace Orders.ViewModels
             //    TempList.Add(ro);
 
 
-            MainWindowViewModel.repo.Add<RouteOrder>(ro);
+            //MainWindowViewModel.repo.Add<RouteOrder>(ro);
 
             //CurrentOrder.RouteOrders = TempList;
-            MainWindowViewModel.repo.Update(CurrentOrder, true);
+            //MainWindowViewModel.repo.Update(CurrentOrder, true);
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 
         }
@@ -181,7 +186,7 @@ namespace Orders.ViewModels
                     list[i].ro_step++;
             }
 
-
+            MainWindowViewModel.repo.Add<RouteOrder>(NewStep, true);
             return list;
         }
 
