@@ -45,7 +45,7 @@ namespace Orders.ViewModels
 
         public AddRouteWindowViewModel() { }
 
-        public AddRouteWindowViewModel(ICollection<RouteOrder> listSteps, RouteOrder CurrentStep )
+        public AddRouteWindowViewModel(ObservableCollection<RouteOrder> listSteps, RouteOrder CurrentStep )
         {
             //CurrentOrder = order;
             _CurrentStep = CurrentStep;
@@ -72,6 +72,7 @@ namespace Orders.ViewModels
         private void SelectSteps()
         {
             if(IsReturn)
+                //ListRouteOrder = new ObservableCollection<RouteOrder>(_CurrentStep.ChildRoutes.Where(it => it.ro_check != EnumCheckedStatus.Checked));
                 ListRouteOrder = new ObservableCollection<RouteOrder>(_CurrentStep.ChildRoutes.Where(it => it.ro_check != EnumCheckedStatus.Checked));
             else
                 ListRouteOrder = new ObservableCollection<RouteOrder>(_ListRouteOrder.Where(it => it.ro_step >= _CurrentStep.ro_step 
@@ -111,11 +112,11 @@ namespace Orders.ViewModels
             {
                 ro.ro_parentId = _CurrentStep.id;
                 //AddInRoute( _CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep);
-                _CurrentStep.ChildRoutes = AddInRoute(_CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep);
+                _CurrentStep.ChildRoutes = new ObservableCollection<RouteOrder>( AddInRoute(_CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep));
             }
             else
                 //CurrentOrder.RouteOrders = AddInRoute(ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
-                AddInRoute(ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
+                AddInRoute(_ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
 
             //if(_CurrentStep.ro_return_step != null)
             //{

@@ -4,6 +4,7 @@ namespace Orders.Models
     using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
@@ -15,7 +16,7 @@ namespace Orders.Models
         public RouteOrder()
         {
             RouteAddings = new HashSet<RouteAdding>();
-            ChildRoutes = new HashSet<RouteOrder>();
+            ChildRoutes = new ObservableCollection<RouteOrder>();
         }
 
         [Key]
@@ -57,7 +58,7 @@ namespace Orders.Models
         public virtual ICollection<RouteAdding> RouteAddings { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RouteOrder> ChildRoutes { get; set; }
+        public virtual ObservableCollection<RouteOrder> ChildRoutes { get; set; }
 
 
         public virtual RouteStatus RouteStatus { get; set; }

@@ -119,9 +119,9 @@ namespace Orders.ViewModels
                 //CurrentOrder.RouteOrders = TempList;
                 //MainWindowViewModel.repo.Update(order, true);
 
-                ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
+                //ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
 
-                OnPropertyChanged(nameof(ListRouteOrders));
+                //OnPropertyChanged(nameof(ListRouteOrders));
                 //RepositoryBase repo = new RepositoryBase();
                 //repo.Save();
             }
@@ -142,27 +142,33 @@ namespace Orders.ViewModels
             {
                 ObservableCollection<RouteOrder> tmpList;
 
+                RouteOrder ForNotify = null;
+
                 if (SelectedRouteStep.ro_parentId != null)
-                    tmpList = new ObservableCollection<RouteOrder>(SelectedRouteStep.ParentRouteOrder.ChildRoutes);
-                else
-                    tmpList = ListRouteOrders;
-
-
-                if (MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep))
                 {
+                    tmpList = new ObservableCollection<RouteOrder>(SelectedRouteStep.ParentRouteOrder.ChildRoutes);
+                    ForNotify = SelectedRouteStep.ParentRouteOrder;
+                }
+                else
+                {
+                    tmpList = ListRouteOrders;
+                    //ForNotify = ListRouteOrders;
+                }
 
-                    int index = tmpList.IndexOf(SelectedRouteStep);
-                    tmpList.Remove(SelectedRouteStep);
+                int index = tmpList.IndexOf(SelectedRouteStep);
 
+                if (MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep, true))
+                {
+                    tmpList.RemoveAt(index);
                     for (int i = index; i < tmpList.Count; i++)
                     {
                         tmpList[i].ro_step--;
                     }
 
-                    MainWindowViewModel.repo.Update(SelectedRouteStep, true);
+                    //MainWindowViewModel.repo.Delete(SelectedRouteStep, true);
                     //order.RouteOrders = ListRouteOrders;
                     //MainWindowViewModel.repo.Update(order, true);
-                    //OnPropertyChanged(nameof(order));
+                    //OnPropertyChanged(nameof(ForNotify));
                 }
             }
         }
