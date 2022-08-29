@@ -1,5 +1,6 @@
 namespace Orders.Models
 {
+    using Orders.Infrastructure;
     using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace Orders.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class RouteStatus :  IEntity
+    public partial class RouteStatus 
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RouteStatus()
@@ -19,7 +20,7 @@ namespace Orders.Models
         [Key]
         [Column("idStatusRoute")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int id { get; set; }
+        public EnumStatus id { get; set; }
 
         [StringLength(50)]
         public string sr_name { get; set; }

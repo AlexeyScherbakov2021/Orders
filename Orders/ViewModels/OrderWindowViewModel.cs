@@ -30,19 +30,16 @@ namespace Orders.ViewModels
 
         public RouteOrder SelectedRouteStep { get; set; }
 
-        //private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
-        private bool IsAllSteps =>  false;
+        private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
         private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
-        private bool IsCreateUser => true;
-        //private bool IsCreateUser => order?.RouteOrders.Count > 0
-        //                                        && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
+        private bool IsCreateUser => order?.RouteOrders.Count > 0
+                                                && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
         public Order order { get; set; }
         
         private RouteOrder _CurrentStep;
         public RouteOrder CurrentStep { get => _CurrentStep; set { Set(ref _CurrentStep, value); } }
-        public bool IsDisabledElement => false;
-        //public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id 
-        //    || IsAllSteps || order.o_statusId == (int)EnumStatus.Refused;
+        public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id
+            || IsAllSteps || order.o_statusId == EnumStatus.Refused;
 
 
         public OrderWindowViewModel() { }
@@ -54,7 +51,12 @@ namespace Orders.ViewModels
             //RouteSteps route = new RouteSteps(order.RouteOrders);
             ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
             //ListRouteOrders = new ObservableCollection<RouteOrder>( order.RouteOrders);
-            CurrentStep = ListRouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+
+
+            // получение текущего этапа
+            //CurrentStep = ListRouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
+            CurrentStep = MainWindowViewModel.repo.RouteOrders.FirstOrDefault(it => it.ro_check == EnumCheckedStatus.CheckedProcess
+                && it.ro_userId == App.CurrentUser.id);
 
             //CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             if(CurrentStep != null)
@@ -73,7 +75,7 @@ namespace Orders.ViewModels
         private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps 
             && SelectedRouteStep?.ro_check == EnumCheckedStatus.Checked
             && SelectedRouteStep?.ro_return_step == null
-            && order.o_statusId != (int)EnumStatus.Refused;
+            && order.o_statusId != EnumStatus.Refused;
         private void OnReturnCommandExecuted(object p)
         {
             if(MessageBox.Show($"Вернуть заказ на этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"?",
@@ -86,7 +88,7 @@ namespace Orders.ViewModels
                     return;
                 }
 
-                MoveOrder move = new MoveOrder(order, EnumAction.Return, CurrentStep, SelectedRouteStep);
+                MoveOrder move = new MoveOrder(order, ListRouteOrders, EnumAction.Return, CurrentStep, SelectedRouteStep);
                 move.MoveToNextStep(ListFiles);
 
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
@@ -137,27 +139,31 @@ namespace Orders.ViewModels
 
         private void OnDeleteRouteCommandExecuted(object p)
         {
-            if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.ro_step} \"{SelectedRouteStep.User.u_name}\"",
+            if (MessageBox.Show($"Удалить этап № {SelectedRouteStep.NameStep} \"{SelectedRouteStep.User.u_name}\"",
                 "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 ObservableCollection<RouteOrder> tmpList;
                 int index;
                 bool IsChild = false;
 
+                // это подчиненный маршрут
                 if (SelectedRouteStep.ro_parentId != null)
                 {
                     index = SelectedRouteStep.ParentRouteOrder.ChildRoutes.IndexOf(SelectedRouteStep);
                     tmpList = SelectedRouteStep.ParentRouteOrder.ChildRoutes;
                     IsChild = true;
                 }
+                // \то основной маршрут
                 else
                 {
                     index = ListRouteOrders.IndexOf(SelectedRouteStep);
                     tmpList = ListRouteOrders;
                 }
 
+                // проверка на параллельные этапы
                 if (tmpList.Count(it => it.ro_step == SelectedRouteStep.ro_step) == 1)
                 {
+                    // перенумерация следующих после выьранного этапа
                     for (int i = index + 1; i < tmpList.Count; i++)
                     {
                         tmpList[i].ro_step--;
@@ -185,7 +191,7 @@ namespace Orders.ViewModels
         private void OnSendCommandExecuted(object p)
         {
 
-            MoveOrder move = new MoveOrder(order, EnumAction.Send, CurrentStep);
+            MoveOrder move = new MoveOrder(order, ListRouteOrders, EnumAction.Send, CurrentStep);
             move.MoveToNextStep(ListFiles);
 
             //ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
@@ -246,10 +252,10 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
-        private bool CanCloseOrderCommand(object p) =>  IsCreateUser && (IsAllSteps || order?.o_statusId == (int)EnumStatus.Refused);
+        private bool CanCloseOrderCommand(object p) =>  IsCreateUser && (IsAllSteps || order?.o_statusId == EnumStatus.Refused);
         private void OnCloseOrderCommandExecuted(object p)
         {
-            order.o_statusId = (int)EnumStatus.Closed;
+            order.o_statusId = EnumStatus.Closed;
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
         }
 
@@ -269,9 +275,9 @@ namespace Orders.ViewModels
                     return;
                 }
 
-                order.o_statusId = (int)EnumStatus.Refused;
+                order.o_statusId = EnumStatus.Refused;
                 CurrentStep.ro_date_check = DateTime.Now;
-                CurrentStep.ro_statusId = (int)EnumStatus.Refused;
+                CurrentStep.ro_statusId = EnumStatus.Refused;
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
         }

@@ -21,15 +21,14 @@
 
 
         <HierarchicalDataTemplate DataType="{x:Type m:RouteOrder}" ItemsSource="{Binding ChildRoutes}">
-                <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  
+                <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="20,2,1,2"
                             BorderBrush="Black" Padding="0,3,3,3" CornerRadius="3" SnapsToDevicePixels="True">
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="Margin" Value="23,1,0,1"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ro_statusId}" Value="2">
-                                    <Setter Property="BorderThickness" Value="1.8"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -346,6 +345,22 @@
                       SnapsToDevicePixels="True"
                       VirtualizingPanel.ScrollUnit="Pixel"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" IsTextSearchEnabled="False">
+
+
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <Border
+                                BorderThickness="{TemplateBinding Border.BorderThickness}"
+                                BorderBrush="{TemplateBinding Border.BorderBrush}"
+                                Background="{TemplateBinding Panel.Background}"
+                                Padding="{TemplateBinding Control.Padding}"
+                                SnapsToDevicePixels="True">
+                                <ScrollViewer HorizontalScrollBarVisibility="Hidden" >
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
 
                     <!--<TreeView.ItemTemplate>
                     <HierarchicalDataTemplate >

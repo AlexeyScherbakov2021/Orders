@@ -42,7 +42,7 @@ namespace Orders.Models
 
         public EnumCheckedStatus ro_check { get; set; }
 
-        public int ro_statusId { get; set; }
+        public EnumStatus ro_statusId { get; set; }
 
         public DateTime? ro_date_check { get; set; }
 

@@ -16,14 +16,22 @@ namespace Orders.Common
         private RouteOrder NextStep;
         private readonly Order order;
         private readonly EnumAction action;
+        private ICollection<RouteOrder> ListRouteOrder;
+        private readonly ICollection<RouteOrder> RootListRouteOrder;
 
 
-        public MoveOrder(Order ord, EnumAction act, RouteOrder CurStep, RouteOrder ToStep = null  )
+        public MoveOrder(Order ord, ICollection<RouteOrder> listStep, EnumAction act, RouteOrder CurStep, RouteOrder ToStep = null  )
         {
             CurrentStep = CurStep;
             NextStep = ToStep;
             action = act;
             order = ord;
+            RootListRouteOrder = listStep;
+
+            if (CurrentStep.ro_parentId != null)
+                ListRouteOrder = CurrentStep.ParentRouteOrder.ChildRoutes;
+            else
+                ListRouteOrder = listStep;
         }
 
         //------------------------------------------------------------------------------------------
@@ -33,41 +41,79 @@ namespace Orders.Common
             CurrentStep.RouteAddings = ListFiles;
             RepositoryFiles repoFiles = new RepositoryFiles();
             repoFiles.AddFilesAsync(CurrentStep);
+            ICollection<RouteOrder> SelectRoute = null;
+            IEnumerable<RouteOrder> ListNextStep = null;
+            bool IsNextChild = false;
+            bool IsUp = false;
 
             switch (action)
             {
                 case EnumAction.Return:
                     // промежуточные этапы
-                    foreach (var item in order.RouteOrders)
+                    foreach (var item in RootListRouteOrder)
                     {
                         if(NextStep is null)
                             throw new ArgumentNullException(nameof(NextStep));
 
                         // у промежуточных этапов удаляем статус
-                        if (item.ro_step > NextStep.ro_step && item.ro_step < CurrentStep.ro_step)
+                        if (item.ro_step >= NextStep.ro_step && item.ro_step < CurrentStep.ro_step)
                         {
                             item.ro_check = EnumCheckedStatus.CheckedNone;
-                            item.ro_statusId = (int)EnumStatus.None;
+                            item.ro_statusId = EnumStatus.None;
                             item.ro_date_check = null;
+                            foreach(var child in item.ChildRoutes)
+                            {
+                                child.ro_check = EnumCheckedStatus.CheckedNone;
+                                child.ro_statusId = EnumStatus.None;
+                                child.ro_date_check = null;
+                            }
                         }
                     }
 
+                    SelectRoute = RootListRouteOrder;
                     break;
 
                 case EnumAction.Send:
 
-                    // следующий этап
-                    NextStep = order.RouteOrders.FirstOrDefault(item => item.ro_step > CurrentStep.ro_step
-                        && item.ro_check != EnumCheckedStatus.Checked);
+                    // проверка на непройденные дочерние этапы
+                    IsNextChild = CurrentStep.ChildRoutes.Any(it => it.ro_check == EnumCheckedStatus.CheckedNone);
 
-                    // проверяем на возвратный шаг
-                    if(CurrentStep.ro_return_step != null && NextStep?.ro_return_step == null)
-                        NextStep = order.RouteOrders.FirstOrDefault(item => item.ro_step == CurrentStep.ro_return_step);
+                    SelectRoute = IsNextChild ? CurrentStep.ChildRoutes : ListRouteOrder;
+
+                    // следующий этап
+                    NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedNone);
+
+                    if(NextStep == null)
+                    {
+                        // все этапы пройдены
+                        if (CurrentStep.ro_parentId != null)
+                        {
+                            // возвращаемся выше
+                            SelectRoute = RootListRouteOrder;
+                            NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedNone);
+                            IsUp = true;
+                        }
+                    }
 
                     break;
             }
+            // изменяем статус текущего шага
+            SetStatusStep(IsNextChild);
 
-            SetStatusStep();
+            // количество выполняющихся параллельных этапов
+            int CountSameStep = SelectRoute.Count(item => item.ro_step == CurrentStep.ro_step
+                        && (item.ro_check == EnumCheckedStatus.CheckedProcess || item.ro_statusId == EnumStatus.Waiting));
+
+            // если переход на подчиненную ветку или нет параллельного этапа
+            if (IsNextChild || CountSameStep == 0 || IsUp)
+            {
+                // получаем все следующие шаги
+                ListNextStep = SelectRoute.Where(it => it.ro_step == NextStep.ro_step
+                    && it.ro_check == EnumCheckedStatus.CheckedNone);
+
+                foreach (var item in ListNextStep)
+                    SetStatusNextStep(item);
+            }
 
             if (NextStep is null) NextStep = CurrentStep;
 
@@ -80,7 +126,40 @@ namespace Orders.Common
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        private void SetStatusStep()
+        private void SetStatusNextStep(RouteOrder NextStep)
+        {
+                // если следующий шаг с возвратом, то изменяем статусы текущего шага
+                NextStep.ro_check = EnumCheckedStatus.CheckedProcess;
+
+                switch ((EnumTypesStep)NextStep.ro_typeId)
+                {
+                    case EnumTypesStep.Coordinate:
+                        NextStep.ro_statusId = EnumStatus.CoordinateWork;
+                        break;
+
+                    case EnumTypesStep.Approve:
+                        NextStep.ro_statusId = EnumStatus.ApprovWork;
+                        break;
+
+                    case EnumTypesStep.Review:
+                        NextStep.ro_statusId = EnumStatus.CoordinateWork;
+                        break;
+
+                    case EnumTypesStep.Notify:
+                        NextStep.ro_statusId = EnumStatus.CoordinateWork;
+                        break;
+
+                    case EnumTypesStep.Created:
+                        NextStep.ro_statusId = EnumStatus.Created;
+                        break;
+
+                }
+
+        }
+
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        private void SetStatusStep(bool IsChild)
         {
 
             switch (action)
@@ -88,9 +167,9 @@ namespace Orders.Common
                 // действие возврата
                 case EnumAction.Return:
                     CurrentStep.ro_date_check = DateTime.Now;
-                    CurrentStep.ro_statusId = (int)EnumStatus.Return;
+                    CurrentStep.ro_statusId = EnumStatus.Return;
                     CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
-                    NextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                    NextStep.ro_statusId = EnumStatus.CoordinateWork;
                     NextStep.ro_check = EnumCheckedStatus.CheckedProcess;
                     break;
 
@@ -98,77 +177,47 @@ namespace Orders.Common
                 // действие отправки на следующий этап
                 case EnumAction.Send:
 
-                    CurrentStep.ro_date_check = DateTime.Now;
-                    CurrentStep.ro_check = EnumCheckedStatus.Checked;
-
-                    switch ((EnumTypesStep)CurrentStep.ro_typeId)
+                    if(IsChild)
                     {
-                        case EnumTypesStep.Coordinate:
-                            CurrentStep.ro_statusId = (int)EnumStatus.Coordinated;
-                            break;
-
-                        case EnumTypesStep.Approve:
-                            CurrentStep.ro_statusId = (int)EnumStatus.Approved;
-                            break;
-
-                        case EnumTypesStep.Review:
-                            CurrentStep.ro_statusId = (int)EnumStatus.Coordinated;
-                            break;
-
-                        case EnumTypesStep.Notify:
-                            CurrentStep.ro_statusId = (int)EnumStatus.Coordinated;
-                            break;
-
-                        case EnumTypesStep.Created:
-                            CurrentStep.ro_statusId = (int)EnumStatus.Created;
-                            break;
-
+                        // передача в подуровень
+                        CurrentStep.ro_statusId = EnumStatus.Waiting;
+                        CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
                     }
-
-
-                    if (NextStep != null)
+                    else
                     {
-                        // если следующий шаг с возвратом, то изменяем статусы текущего шага
-                        if(NextStep.ro_return_step != null && CurrentStep.ro_return_step == null)
-                        {
-                            CurrentStep.ro_date_check =null;
-                            CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
-                            CurrentStep.ro_statusId = (int)EnumStatus.Waiting;
-                        }
+                        // если нет передачи на дочерний уровень
+                        CurrentStep.ro_date_check = DateTime.Now;
+                        CurrentStep.ro_check = EnumCheckedStatus.Checked;
 
-                        NextStep.ro_check = EnumCheckedStatus.CheckedProcess;
-
-                        switch ((EnumTypesStep)NextStep.ro_typeId)
+                        switch ((EnumTypesStep)CurrentStep.ro_typeId)
                         {
                             case EnumTypesStep.Coordinate:
-                                NextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                                CurrentStep.ro_statusId = EnumStatus.Coordinated;
                                 break;
 
                             case EnumTypesStep.Approve:
-                                NextStep.ro_statusId = (int)EnumStatus.ApprovWork;
+                                CurrentStep.ro_statusId = EnumStatus.Approved;
                                 break;
 
                             case EnumTypesStep.Review:
-                                NextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                                CurrentStep.ro_statusId = EnumStatus.Coordinated;
                                 break;
 
                             case EnumTypesStep.Notify:
-                                NextStep.ro_statusId = (int)EnumStatus.CoordinateWork;
+                                CurrentStep.ro_statusId = EnumStatus.Coordinated;
                                 break;
 
                             case EnumTypesStep.Created:
-                                NextStep.ro_statusId = (int)EnumStatus.Created;
+                                CurrentStep.ro_statusId = EnumStatus.Created;
                                 break;
 
                         }
-
                     }
-
-                    break; // case EnumAction.Send
+                    break;
 
 
                 default:
-                    CurrentStep.ro_statusId = (int)EnumStatus.None;
+                    CurrentStep.ro_statusId = EnumStatus.None;
                     CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
                     CurrentStep.ro_date_check = null;
                     break;

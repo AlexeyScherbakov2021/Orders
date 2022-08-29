@@ -23,7 +23,7 @@ namespace Orders.ViewModels
     internal class CreateOrderWindowViewModel : ViewModel
     {
         private readonly RepositoryBase repo = MainWindowViewModel.repo;
-        public List<Route> ListRoute { get; set; }
+        //public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
         public RouteOrder CreateStep { get; set; }
         public ObservableCollection<RouteAdding> ListFiles { get; set; } = new ObservableCollection<RouteAdding>();
@@ -49,7 +49,7 @@ namespace Orders.ViewModels
 
         public CreateOrderWindowViewModel()
         {
-            ListRoute = repo.Routes.ToList();
+            //ListRoute = repo.Routes.ToList();
             Order = new Order();
             Order.RouteOrders = new List<RouteOrder>();
             Order.o_date_created = DateTime.Now;
@@ -62,7 +62,7 @@ namespace Orders.ViewModels
                 ro_userId = App.CurrentUser.id,
                 ro_typeId = 5,
                 //ro_enabled = true,
-                ro_statusId = (int)EnumStatus.Created,
+                ro_statusId = EnumStatus.Created,
                 ro_check = EnumCheckedStatus.CheckedProcess,
             ro_ownerId = App.CurrentUser.id
             };
@@ -99,13 +99,13 @@ namespace Orders.ViewModels
                     ro.ro_userId = step.r_userId;
                     ro.ro_typeId = step.r_type;
                     //ro.ro_enabled = true;
-                    ro.ro_statusId = (int)EnumStatus.None;
+                    ro.ro_statusId = EnumStatus.None;
                     ro.ro_ownerId = App.CurrentUser.id;
                     Order.RouteOrders.Add(ro);
                 }
             }
 
-            Order.o_statusId = (int)EnumStatus.Created;
+            Order.o_statusId = EnumStatus.Created;
 
             repo.Add(Order, true);
 
@@ -129,7 +129,7 @@ namespace Orders.ViewModels
         {
             OnCreateCommandExecuted(p);
 
-            MoveOrder move = new MoveOrder(Order, EnumAction.Send, CreateStep);
+            MoveOrder move = new MoveOrder(Order, Order.RouteOrders, EnumAction.Send, CreateStep);
             move.MoveToNextStep(ListFiles);
 
             //ShareFunction.SendToNextStep(Order, CreateStep, ListFiles);

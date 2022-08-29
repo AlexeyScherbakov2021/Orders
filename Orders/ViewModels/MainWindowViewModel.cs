@@ -94,7 +94,7 @@ namespace Orders.ViewModels
             {
                 // созданные мной заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(i => i.ro_step == 0 
+                .Where(it => it.o_statusId < EnumStatus.Closed && it.RouteOrders.Where(i => i.ro_step == 0 
                 && i.ro_userId == App.CurrentUser.id).Any())
                 //.Include(it => it.RouteOrders)
                 );
@@ -116,7 +116,7 @@ namespace Orders.ViewModels
             {
                 // Закрытые заказы
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId == (int)EnumStatus.Closed && it.RouteOrders.Where(r => 
+                    .Where(it => it.o_statusId == EnumStatus.Closed && it.RouteOrders.Where(r => 
                     r.ro_userId == App.CurrentUser.id).Any())
                     //.Include(it => it.RouteOrders)
                 );
@@ -126,7 +126,7 @@ namespace Orders.ViewModels
 
                 // В работе
                 ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId < (int)EnumStatus.Closed && it.RouteOrders.Where(r =>
+                    .Where(it => it.o_statusId < EnumStatus.Closed && it.RouteOrders.Where(r =>
                     r.ro_userId == App.CurrentUser.id).Any())
                 );
 
@@ -218,7 +218,7 @@ namespace Orders.ViewModels
         private readonly ICommand _DeleteCommand = null;
         public ICommand DeleteCommand => _DeleteCommand ?? new LambdaCommand(OnDeleteCommandExecuted, CanDeleteCommand);
         private bool CanDeleteCommand(object p) => SelectedOrder != null 
-                            && (SelectedOrder.o_statusId == (int)EnumStatus.Closed || SelectedOrder.o_statusId == (int)EnumStatus.Created)
+                            && (SelectedOrder.o_statusId == EnumStatus.Closed || SelectedOrder.o_statusId == EnumStatus.Created)
                             && IsCreateUser;
         private void OnDeleteCommandExecuted(object p)
         {

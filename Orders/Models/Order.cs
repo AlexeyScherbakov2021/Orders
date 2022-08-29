@@ -33,7 +33,7 @@ namespace Orders.Models
 
         public int o_stepRoute { get; set; }
 
-        public int o_statusId { get; set; }
+        public EnumStatus o_statusId { get; set; }
 
         [NotMapped]
         public User WorkUser { get; set; }

@@ -19,7 +19,7 @@ namespace Orders.Repository
         public IQueryable<RouteStep> RouteSteps => db.RouteSteps;
         public IQueryable<User> Users => db.Users;
         public IQueryable<RouteType> RouteTypes => db.RouteTypes;
-        public IQueryable<RouteOrder> RouteOrders => db.RouteOrders.Where(it => it.ro_parentId == null);
+        public IQueryable<RouteOrder> RouteOrders => db.RouteOrders;//.Where(it => it.ro_parentId == null);
         //public IQueryable<Order> Orders => db.Orders.Include(it => it.RouteOrders.Select(it2 => it2.RouteAddings)   );
         public IQueryable<Order> Orders => db.Orders;
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
@@ -137,9 +137,9 @@ namespace Orders.Repository
             db.Configuration.ProxyCreationEnabled = false;
             db.Configuration.LazyLoadingEnabled = true;
 
-            RouteTypes.Load();
             Users.Load();
             RouteStatus.Load();
+            RouteTypes.Load();
         }
 
 

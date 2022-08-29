@@ -16,10 +16,10 @@ namespace Orders.Infrastructure.Converters
         {
             BitmapImage Source = null;
 
-            if (value is int status)
+            if (value is EnumStatus status)
             {
 
-                switch ((EnumStatus)status)
+                switch (status)
                 {
                     case EnumStatus.Created:
                         Source = new BitmapImage(new Uri("/Orders;component/Resource/создан.png", UriKind.Relative));

@@ -17,7 +17,7 @@ namespace Orders.ViewModels
         public ReportRoutesWindowViewModel()
         {
             ListOrder = MainWindowViewModel.repo.Orders
-                .Where(it => it.o_statusId == (int)EnumStatus.Approved || it.RouteOrders
+                .Where(it => it.o_statusId == EnumStatus.Approved || it.RouteOrders
                     .Where(item => item.ro_check == EnumCheckedStatus.CheckedProcess)
                     .Any())
                 .Include(ro => ro.RouteOrders.Select(s => s.User))

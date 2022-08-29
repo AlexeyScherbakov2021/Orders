@@ -103,7 +103,7 @@ namespace Orders.ViewModels
             RouteOrder ro = new RouteOrder();
             ro.ro_typeId = SelectedType.id;
             ro.ro_userId = SelectedUser.id;
-            ro.ro_statusId = (int)EnumStatus.None;
+            ro.ro_statusId = EnumStatus.None;
             ro.ro_orderId = _CurrentStep.ro_orderId;
             ro.ro_ownerId = App.CurrentUser.id;
             ro.ro_step = SelectedRouteOrder?.ro_step ?? 0;
