@@ -10,7 +10,7 @@ namespace Orders.Models
     using System.Data.Entity.Spatial;
 
     [Table("RouteOrder")]
-    public partial class RouteOrder : IEntity
+    public partial class RouteOrder : Observable, IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RouteOrder()
@@ -58,7 +58,7 @@ namespace Orders.Models
         public virtual ICollection<RouteAdding> RouteAddings { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<RouteOrder> ChildRoutes { get; set; }
+        public ObservableCollection<RouteOrder> ChildRoutes { get; set; }
 
 
         public virtual RouteStatus RouteStatus { get; set; }

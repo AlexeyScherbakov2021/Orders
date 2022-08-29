@@ -20,7 +20,7 @@ namespace Orders.ViewModels
     {
         //private Order CurrentOrder;
         public ObservableCollection<RouteOrder> ListRouteOrder { get; set; }
-        private ICollection<RouteOrder> _ListRouteOrder;
+        private ObservableCollection<RouteOrder> _ListRouteOrder;
         public RouteOrder SelectedRouteOrder { get; set; }
 
 
@@ -111,93 +111,40 @@ namespace Orders.ViewModels
             if(IsReturn)
             {
                 ro.ro_parentId = _CurrentStep.id;
-                //AddInRoute( _CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep);
-                _CurrentStep.ChildRoutes = new ObservableCollection<RouteOrder>( AddInRoute(_CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep));
+                AddInRoute( _CurrentStep.ChildRoutes, ro, SelectedRouteOrder, IsLaterStep);
             }
             else
-                //CurrentOrder.RouteOrders = AddInRoute(ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
                 AddInRoute(_ListRouteOrder, ro, SelectedRouteOrder, IsLaterStep);
 
-            //if(_CurrentStep.ro_return_step != null)
-            //{
-            //    // текущий этап подчиненный
-            //    ro.ro_step = _CurrentStep.ro_step + 1;
-            //    ro.ro_return_step = _CurrentStep.ro_return_step;
-            //}
-            //// если это был этап с возвратом
-            //else if (IsReturn)
-            //{
-            //    // вставить этап сразу после текущего
-            //    // или, если уже была вставка с возвратом, то после вставленного
-            //    RouteOrder itemChild = ListRouteOrder.FirstOrDefault(it => it.ro_return_step == CurrentOrder.o_stepRoute);
-            //    if(itemChild != null)
-            //    {
-            //        ro.ro_step = itemChild.ro_step + addStep;
-            //    }
-            //    else
-            //        ro.ro_step = CurrentOrder.o_stepRoute + addStep;
-
-            //    ro.ro_return_step = CurrentOrder.o_stepRoute;
-            //}
-            //else
-            //    ro.ro_step =  SelectedRouteOrder.ro_step + addStep;
-
-
-            //// перенумерация этапов
-            //List<RouteOrder> TempList = new List<RouteOrder>();
-
-            //bool IsAdded = false;
-            //foreach (var item in CurrentOrder.RouteOrders)
-            //{
-            //    if (item.ro_step == ro.ro_step)
-            //    {
-            //        TempList.Add(ro);
-            //        IsAdded = true;
-            //    }
-
-            //    if(item.ro_step >= ro.ro_step)
-            //        item.ro_step += addStep;
-
-            //    TempList.Add(item);
-            //}
-
-            //if(!IsAdded)
-            //    TempList.Add(ro);
-
-
-            //MainWindowViewModel.repo.Add<RouteOrder>(ro);
-
-            //CurrentOrder.RouteOrders = TempList;
-            //MainWindowViewModel.repo.Update(CurrentOrder, true);
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().DialogResult = true;
 
         }
 
-        private ICollection<RouteOrder> AddInRoute(ICollection<RouteOrder> ListStep, RouteOrder NewStep, RouteOrder InStep, bool IsAfter)
-        {
-            List<RouteOrder> list = ListStep.ToList();
 
-            int index = list.IndexOf(InStep) + 1;
-            list.Insert(index, NewStep);
+        //--------------------------------------------------------------------------------
+        // Добавление этапа в указанный подмаршрут
+        //--------------------------------------------------------------------------------
+        private ICollection<RouteOrder> AddInRoute(ObservableCollection<RouteOrder> ListStep, RouteOrder NewStep, RouteOrder InStep, bool IsAfter)
+        {
+            //List<RouteOrder> list = ListStep.ToList();
+
+            int index = ListStep.IndexOf(InStep) + 1;
+            ListStep.Insert(index, NewStep);
 
             if (IsAfter)
             {
                 // перенумерация 
-                for (int i = index; i < list.Count; i++)
-                    list[i].ro_step++;
+                for (int i = index; i < ListStep.Count; i++)
+                {
+                    ListStep[i].ro_step++;
+                    var item = ListStep[i];
+                    item.OnPropertyChanged(nameof(item.NameStep));
+                }
             }
 
             MainWindowViewModel.repo.Add<RouteOrder>(NewStep, true);
-            return list;
+            return ListStep;
         }
-
-        //private void Renumerate(List<RouteOrder> list, int index, int Add)
-        //{
-        //    for(int i = index; i < list.Count; i++)
-        //    {
-        //        list[i].ro_step += Add;
-        //    }
-        //}
 
         //--------------------------------------------------------------------------------
         // Команда Отменить
@@ -209,7 +156,6 @@ namespace Orders.ViewModels
         {
             App.Current.Windows.OfType<AddRouteWindow>().FirstOrDefault().Close();
         }
-
 
         #endregion
 

@@ -54,7 +54,7 @@
 
                     <DockPanel Margin="0,0,0,0">
                         <Grid Width="20" Margin="0,-3,0,-3">
-                            <Ellipse Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                            <!--<Ellipse Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                  Margin="-17,0,-6,0" StrokeThickness="2" Stroke="Blue">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
@@ -69,7 +69,7 @@
                                 <Ellipse.Effect>
                                     <DropShadowEffect ShadowDepth="1" Color="#20000000"/>
                                 </Ellipse.Effect>
-                            </Ellipse>
+                            </Ellipse>-->
                         <Border BorderBrush="Blue" BorderThickness="2" CornerRadius="12" Height="25" Width="36" Margin="-34,0,-6,0"
                                 >
                             <Border.Style>

@@ -1,6 +1,7 @@
 ﻿using Orders.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
@@ -87,8 +88,16 @@ namespace Orders.Repository
 
         public IEnumerable<RouteOrder> GetRouteOrders(int OrderId)
         {
-            return db.RouteOrders.Where(it => it.ro_orderId == OrderId && it.ro_parentId == null)
+            IEnumerable<RouteOrder> listRoutes = db.RouteOrders.Where(it => it.ro_orderId == OrderId && it.ro_parentId == null)
                 .OrderBy(o => o.ro_step);
+
+            foreach(var item in listRoutes)
+            {
+                item.ChildRoutes = new ObservableCollection<RouteOrder> (
+                    db.RouteOrders.Where(it => it.ro_parentId == item.id).OrderBy(o => o.ro_step));
+            }
+
+            return listRoutes;
         }
 
 
@@ -126,7 +135,7 @@ namespace Orders.Repository
             SetConnect();
 
             db.Configuration.ProxyCreationEnabled = false;
-            db.Configuration.LazyLoadingEnabled = false;
+            db.Configuration.LazyLoadingEnabled = true;
 
             RouteTypes.Load();
             Users.Load();

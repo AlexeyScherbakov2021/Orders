@@ -141,34 +141,36 @@ namespace Orders.ViewModels
                 "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 ObservableCollection<RouteOrder> tmpList;
-
-                RouteOrder ForNotify = null;
+                int index;
+                bool IsChild = false;
 
                 if (SelectedRouteStep.ro_parentId != null)
                 {
-                    tmpList = new ObservableCollection<RouteOrder>(SelectedRouteStep.ParentRouteOrder.ChildRoutes);
-                    ForNotify = SelectedRouteStep.ParentRouteOrder;
+                    index = SelectedRouteStep.ParentRouteOrder.ChildRoutes.IndexOf(SelectedRouteStep);
+                    tmpList = SelectedRouteStep.ParentRouteOrder.ChildRoutes;
+                    IsChild = true;
                 }
                 else
                 {
+                    index = ListRouteOrders.IndexOf(SelectedRouteStep);
                     tmpList = ListRouteOrders;
-                    //ForNotify = ListRouteOrders;
                 }
 
-                int index = tmpList.IndexOf(SelectedRouteStep);
-
-                if (MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep, true))
+                if (tmpList.Count(it => it.ro_step == SelectedRouteStep.ro_step) == 1)
                 {
-                    tmpList.RemoveAt(index);
-                    for (int i = index; i < tmpList.Count; i++)
+                    for (int i = index + 1; i < tmpList.Count; i++)
                     {
                         tmpList[i].ro_step--;
+                        var item = tmpList[i];
+                        item.OnPropertyChanged(nameof(item.NameStep));
                     }
+                }
 
-                    //MainWindowViewModel.repo.Delete(SelectedRouteStep, true);
-                    //order.RouteOrders = ListRouteOrders;
-                    //MainWindowViewModel.repo.Update(order, true);
-                    //OnPropertyChanged(nameof(ForNotify));
+                if (MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep))
+                {
+                    MainWindowViewModel.repo.Save();
+                    if(!IsChild)
+                        ListRouteOrders.RemoveAt(index);
                 }
             }
         }
