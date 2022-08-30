@@ -113,7 +113,7 @@
 
                 <StackPanel HorizontalAlignment="Left" Margin="10,0,0,3" Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Bottom" Background="{Binding Background, ElementName=border}">
                     <RadioButton Content="Добавить после ..." IsChecked="{Binding IsLaterStep}" Margin="5,0,10,0"/>
-                    <RadioButton Content="Добавить в ..." IsChecked="{Binding IsSameStep}" Margin="10,0"/>
+                    <RadioButton Content="Добавить в указанный этап" IsChecked="{Binding IsSameStep}" Margin="10,0"/>
                 </StackPanel>
 
             </Grid>

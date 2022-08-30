@@ -245,7 +245,6 @@ namespace Orders.ViewModels
         private void OnReportCommandExecuted(object p)
         {
             timer.Stop();
-            //ReportRoutesWindowViewModel vm = new ReportRoutesWindowViewModel();
             ReportRoutesWindow reportWindow = new ReportRoutesWindow();
             reportWindow.ShowDialog();
             timer.Start();
@@ -271,9 +270,6 @@ namespace Orders.ViewModels
             if (orderWindow.ShowDialog() == true)
             {
                 repo.Save();
-
-                //SelectedOrder.RouteStatus.OnPropertyChanged(nameof(SelectedOrder.RouteStatus.sr_name));
-
                 OnFilterCommandExecuted(null);
             }
             timer.Start();
@@ -294,8 +290,6 @@ namespace Orders.ViewModels
             {
                 Order order = (orderWindow.DataContext as CreateOrderWindowViewModel).Order;
 
-                //ListOrders.Add(order);
-                //repo.Add(order, true);
                 repo.Save();
 
                 OnFilterCommandExecuted(null);
@@ -313,9 +307,6 @@ namespace Orders.ViewModels
         private ICollection<RouteOrder> SortStepRoute(ICollection<RouteOrder> ListRO)
         {
             return ListRO.OrderBy(o => o.ro_step).ToList();
-            //return list;
-            //List<RouteOrder> list = ListRO.OrderBy(o => o.ro_step).ToList();
-            //return list;
         }
 
     }

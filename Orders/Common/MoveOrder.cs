@@ -121,7 +121,6 @@ namespace Orders.Common
                     // изменяем статус текущего шага
                     SetStatusStep(IsNextChild);
 
-
                     // есть ли в этой ветке этапы на рассмотрении
                     AllCheckStep = SelectRoute.All(item => item.ro_check == EnumCheckedStatus.Checked);
                     if (AllCheckStep)      // есть этапы на рассмотрении
@@ -129,7 +128,7 @@ namespace Orders.Common
                         // все этапы пройдены
                         if (CurrentStep.ro_parentId != null)
                         {
-                            // возвращаемся выше
+                            // возвращаемся на маршрут выше
                             SelectRoute = RootListRouteOrder;
                             NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedNone);
                             IsUp = true;
