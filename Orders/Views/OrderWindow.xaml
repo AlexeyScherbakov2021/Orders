@@ -11,7 +11,7 @@
         xmlns:m="clr-namespace:Orders.Models"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Заказ" Height="800" Width="1200" WindowStartupLocation="CenterScreen">
+        Title="Заказ" Height="800" Width="1300" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:OrderWindowViewModel/>
     </Window.DataContext>
@@ -21,7 +21,8 @@
 
 
         <HierarchicalDataTemplate DataType="{x:Type m:RouteOrder}" ItemsSource="{Binding ChildRoutes}">
-                <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="20,2,1,2"
+                <Border HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="20,2,1,2" MinWidth="500"
+                        Width="620"
                             BorderBrush="Black" Padding="0,3,3,3" CornerRadius="3" SnapsToDevicePixels="True">
                     <Border.Style>
                         <Style TargetType="Border">
@@ -52,24 +53,10 @@
                     </Border.Background>
 
                     <DockPanel Margin="0,0,0,0">
-                        <Grid Width="20" Margin="0,-3,0,-3">
-                            <!--<Ellipse Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                 Margin="-17,0,-6,0" StrokeThickness="2" Stroke="Blue">
-                                <Ellipse.Style>
-                                    <Style TargetType="Ellipse">
-                                        <Setter Property="Fill" Value="White"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ro_check}" Value="1">
-                                                <Setter Property="Fill" Value="#C0F0F6"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Ellipse.Style>
-                                <Ellipse.Effect>
-                                    <DropShadowEffect ShadowDepth="1" Color="#20000000"/>
-                                </Ellipse.Effect>
-                            </Ellipse>-->
-                        <Border BorderBrush="Blue" BorderThickness="2" CornerRadius="12" Height="25" Width="36" Margin="-34,0,-6,0"
+                        <Grid Width="20" Margin="0,-3,0,-3" >
+                        <Grid Width="120"  Margin="-64,0,-6,0" >
+                            <Border BorderBrush="Blue" BorderThickness="2" CornerRadius="12" Height="25" Padding="5,0" 
+                                HorizontalAlignment="Right" Margin="0,0,47,0" MinWidth="26"
                                 >
                             <Border.Style>
                                 <Style TargetType="Border">
@@ -85,10 +72,10 @@
                                 <DropShadowEffect ShadowDepth="1" Color="#FF9C9C9C"/>
                             </Border.Effect>
                             <TextBlock Text="{Binding NameStep}" FontWeight="Bold" SnapsToDevicePixels="True" 
-                                                   Foreground="Black" VerticalAlignment="Center" 
+                                                   Foreground="Black" VerticalAlignment="Stretch" 
                                                    HorizontalAlignment="Center" FontSize="14" />
-                        </Border>
-
+                            </Border>
+                        </Grid>
                     </Grid>
                         <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding RouteAddings}" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                                                   VerticalContentAlignment="Center" Margin="0" SnapsToDevicePixels="True">
@@ -147,8 +134,6 @@
         <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF26A0DA"/>
         <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3D26A0DA"/>
         <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FF26A0DA"/>
-
-
     </Window.Resources>
     <Grid x:Name="mainGrid" >
         <Grid.ColumnDefinitions>
@@ -341,13 +326,13 @@
                 <inf:ExtendedTreeView Margin="2" BorderBrush="Black" BorderThickness="0" 
                       ItemsSource="{Binding ListRouteOrders}"
                       SelectedItem_="{Binding SelectedRouteStep, Mode=TwoWay}"
-                      HorizontalContentAlignment="Stretch" 
                       SnapsToDevicePixels="True"
+                      HorizontalContentAlignment="Stretch"
                       VirtualizingPanel.ScrollUnit="Pixel"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" IsTextSearchEnabled="False">
 
 
-                    <ItemsControl.Template>
+                    <!--<ItemsControl.Template>
                         <ControlTemplate>
                             <Border
                                 BorderThickness="{TemplateBinding Border.BorderThickness}"
@@ -355,12 +340,12 @@
                                 Background="{TemplateBinding Panel.Background}"
                                 Padding="{TemplateBinding Control.Padding}"
                                 SnapsToDevicePixels="True">
-                                <ScrollViewer HorizontalScrollBarVisibility="Hidden" >
-                                    <ItemsPresenter />
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                    <ItemsPresenter  />
                                 </ScrollViewer>
                             </Border>
                         </ControlTemplate>
-                    </ItemsControl.Template>
+                    </ItemsControl.Template>-->
 
                     <!--<TreeView.ItemTemplate>
                     <HierarchicalDataTemplate >
