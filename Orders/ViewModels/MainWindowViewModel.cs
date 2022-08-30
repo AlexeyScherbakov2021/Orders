@@ -22,8 +22,7 @@ namespace Orders.ViewModels
     {
         private readonly DispatcherTimer timer = new DispatcherTimer();
 
-        private bool IsCreateUser => SelectedOrder?.RouteOrders.Count > 0
-                                        && SelectedOrder?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
+        private bool IsCreateUser => SelectedOrder?.o_ownerUserId == App.CurrentUser.id;
 
         public static readonly RepositoryBase repo = new RepositoryBase();
         //private readonly IRepository<RouteOrder> repoRouteOrder;
@@ -105,8 +104,8 @@ namespace Orders.ViewModels
                 // Требующие рассмотрения
                 ListOrders = new ObservableCollection<Order>(repo.Orders
                     .Where(it => it.RouteOrders 
-                            .Where(r => r.ro_step == it.o_stepRoute && r.ro_userId == App.CurrentUser.id
-                                && r.ro_check == EnumCheckedStatus.CheckedProcess && r.ro_parentId == null)
+                            .Where(r => r.ro_userId == App.CurrentUser.id
+                                && r.ro_check == EnumCheckedStatus.CheckedProcess)
                             .Any())
                     //.Include(it => it.RouteOrders)
                    );
@@ -202,8 +201,9 @@ namespace Orders.ViewModels
             // установка пользователей в работе для каждого заказа
             foreach(var item in ListOrders)
             {
-                item.WorkUser = item.RouteOrders.FirstOrDefault(it => it.ro_step == item.o_stepRoute 
-                            && it.ro_check == EnumCheckedStatus.CheckedProcess)?.User;
+                //item.WorkUser = item.RouteOrders.FirstOrDefault(it => it.ro_check == EnumCheckedStatus.CheckedProcess)?.User;
+                item.WorkUser = MainWindowViewModel.repo.RouteOrders.FirstOrDefault(it => it.ro_orderId == item.id
+                    && it.ro_check == EnumCheckedStatus.CheckedProcess)?.User;
             }
 
             OnPropertyChanged(nameof(ListOrders));

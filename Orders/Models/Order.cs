@@ -35,8 +35,13 @@ namespace Orders.Models
 
         public EnumStatus o_statusId { get; set; }
 
+        public int o_ownerUserId { get; set; }
+
         [NotMapped]
         public User WorkUser { get; set; }
+
+        public virtual User Owner { get; set; }
+
 
         public DateTime o_date_created { get; set; }
         public string o_buyer { get; set; }

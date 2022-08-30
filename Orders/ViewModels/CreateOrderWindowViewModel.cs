@@ -23,7 +23,7 @@ namespace Orders.ViewModels
     internal class CreateOrderWindowViewModel : ViewModel
     {
         private readonly RepositoryBase repo = MainWindowViewModel.repo;
-        //public List<Route> ListRoute { get; set; }
+        public List<Route> ListRoute { get; set; }
         public Order Order { get; set; }
         public RouteOrder CreateStep { get; set; }
         public ObservableCollection<RouteAdding> ListFiles { get; set; } = new ObservableCollection<RouteAdding>();
@@ -49,11 +49,12 @@ namespace Orders.ViewModels
 
         public CreateOrderWindowViewModel()
         {
-            //ListRoute = repo.Routes.ToList();
+            ListRoute = repo.Routes.ToList();
             Order = new Order();
             Order.RouteOrders = new List<RouteOrder>();
             Order.o_date_created = DateTime.Now;
             Order.o_stepRoute = 0;
+            Order.o_ownerUserId = App.CurrentUser.id;
 
             CreateStep = new RouteOrder
             {

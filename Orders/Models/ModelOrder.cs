@@ -161,6 +161,12 @@ namespace Orders.Models
                 .HasForeignKey(e => e.ro_userId)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Orders)
+                .WithRequired(e => e.Owner)
+                .HasForeignKey(e => e.o_ownerUserId)
+                .WillCascadeOnDelete(false);
+
             //modelBuilder.Entity<User>()
             //    .HasMany(e => e.RouteOrders)
             //    .WithRequired(e => e.Owner)
@@ -170,7 +176,8 @@ namespace Orders.Models
             modelBuilder.Entity<User>()
                 .HasMany(e => e.RouteSteps)
                 .WithRequired(e => e.User)
-                .HasForeignKey(e => e.r_userId);
+                .HasForeignKey(e => e.r_userId)
+                .WillCascadeOnDelete(false);
 
             //modelBuilder.Entity<User>()
             //    .HasMany(e => e.RouteSteps)

@@ -74,7 +74,12 @@ namespace Orders.ViewModels
         public ICommand ReturnCommand => _ReturnCommand ?? new LambdaCommand(OnReturnCommandExecuted, CanReturnCommand);
         private bool CanReturnCommand(object p) => IsWorkUser && !IsAllSteps 
             && SelectedRouteStep?.ro_check == EnumCheckedStatus.Checked
-            && SelectedRouteStep?.ro_return_step == null
+            && _CurrentStep?.ro_parentId == null
+            && MainWindowViewModel.repo.RouteOrders.Count(it => it.ro_step == _CurrentStep.ro_step
+                    && it.ro_parentId == _CurrentStep.ro_parentId
+                    && it.ro_check == EnumCheckedStatus.CheckedProcess) == 1
+            && _CurrentStep.ro_step != SelectedRouteStep.ro_step
+            && SelectedRouteStep?.ro_parentId == null
             && order.o_statusId != EnumStatus.Refused;
         private void OnReturnCommandExecuted(object p)
         {
@@ -102,7 +107,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => !IsDisabledElement; //IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
+        private bool CanAddRouteCommand(object p) => !IsDisabledElement && _CurrentStep.ro_parentId == null;
         private void OnAddRouteCommandExecuted(object p)
         {
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(ListRouteOrders, CurrentStep);
@@ -134,8 +139,9 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteRouteCommand = null;
         public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
-        private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.ro_ownerId == App.CurrentUser.id &&
-            SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
+        private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.ro_ownerId == App.CurrentUser.id 
+            && SelectedRouteStep?.ro_statusId != EnumStatus.Waiting
+            && SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
 
         private void OnDeleteRouteCommandExecuted(object p)
         {
@@ -153,7 +159,7 @@ namespace Orders.ViewModels
                     tmpList = SelectedRouteStep.ParentRouteOrder.ChildRoutes;
                     IsChild = true;
                 }
-                // \то основной маршрут
+                // Это основной маршрут
                 else
                 {
                     index = ListRouteOrders.IndexOf(SelectedRouteStep);

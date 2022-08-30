@@ -23,59 +23,47 @@ namespace Orders.ViewModels
         private ObservableCollection<RouteOrder> _ListRouteOrder;
         public RouteOrder SelectedRouteOrder { get; set; }
 
-
         public List<User> ListUser { get; }
         public User SelectedUser { get; set; }
         public List<RouteType> ListRouteType { get; }
         public RouteType SelectedType { get; set; }
 
-
         public bool IsLaterStep { get; set; } = true;
-        public bool IsSameStep { get; set; }
+
+        private bool _IsSameStep;
+        public bool IsSameStep { get => _IsSameStep; set { Set(ref _IsSameStep, value); SelectSteps(); } }
 
         private bool _IsReturn  = false;
         public bool IsReturn { get => _IsReturn; set { Set(ref _IsReturn, value); SelectSteps(); } }
 
-        //public Visibility IsVisible => IsReturn? Visibility.Collapsed : Visibility.Visible;
-
         private readonly RouteOrder _CurrentStep;
-
-        //RepositoryBase repo = new RepositoryBase();
-
 
         public AddRouteWindowViewModel() { }
 
         public AddRouteWindowViewModel(ObservableCollection<RouteOrder> listSteps, RouteOrder CurrentStep )
         {
-            //CurrentOrder = order;
             _CurrentStep = CurrentStep;
             _ListRouteOrder = listSteps;
             SelectSteps();
-
-            //ListRouteOrder = order.RouteOrders.Where(it => it.ro_step >= order.o_stepRoute && it.ro_parentId == null).ToList();
-
-            //if (CurrentStep.ro_return_step == null)
-            //    ListRouteOrder = order.RouteOrders.Where(it => it.ro_step >= order.o_stepRoute).ToList();
-            //else
-            //{
-            //    ListRouteOrder = new List<RouteOrder>();
-            //    ListRouteOrder.Add(CurrentStep);
-            //}
-
-            //SelectedRouteOrder = ListRouteOrder.FirstOrDefault();
 
             ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).OrderBy(o => o.u_name).ToList();
             ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created).ToList();
             SelectedType = ListRouteType[0];
         }
 
+        //--------------------------------------------------------------------------------
+        // Получение нужного списка этапов-целей для добавления
+        //--------------------------------------------------------------------------------
         private void SelectSteps()
         {
-            if(IsReturn)
+            int StartStep = IsSameStep ? _CurrentStep.ro_step + 1 : _CurrentStep.ro_step;
+
+
+            if (IsReturn)
                 //ListRouteOrder = new ObservableCollection<RouteOrder>(_CurrentStep.ChildRoutes.Where(it => it.ro_check != EnumCheckedStatus.Checked));
                 ListRouteOrder = new ObservableCollection<RouteOrder>(_CurrentStep.ChildRoutes.Where(it => it.ro_check != EnumCheckedStatus.Checked));
             else
-                ListRouteOrder = new ObservableCollection<RouteOrder>(_ListRouteOrder.Where(it => it.ro_step >= _CurrentStep.ro_step 
+                ListRouteOrder = new ObservableCollection<RouteOrder>(_ListRouteOrder.Where(it => it.ro_step >= StartStep
                         && it.ro_parentId == null));
 
             OnPropertyChanged(nameof(ListRouteOrder));

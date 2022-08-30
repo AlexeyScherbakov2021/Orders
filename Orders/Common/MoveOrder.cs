@@ -2,11 +2,13 @@
 using Orders.Infrastructure.Common;
 using Orders.Models;
 using Orders.Repository;
+using Orders.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Orders.Common
 {
@@ -45,18 +47,29 @@ namespace Orders.Common
             IEnumerable<RouteOrder> ListNextStep = null;
             bool IsNextChild = false;
             bool IsUp = false;
+            bool AllCheckStep = false;
 
             switch (action)
             {
                 case EnumAction.Return:
+
+                    if (NextStep is null)
+                        throw new ArgumentNullException(nameof(NextStep));
+
+                    // сброс статусов для подчиненного маршрута
+                    foreach (var child in CurrentStep.ChildRoutes)
+                    {
+                        child.ro_check = EnumCheckedStatus.CheckedNone;
+                        child.ro_statusId = EnumStatus.None;
+                        child.ro_date_check = null;
+                    }
+
                     // промежуточные этапы
                     foreach (var item in RootListRouteOrder)
                     {
-                        if(NextStep is null)
-                            throw new ArgumentNullException(nameof(NextStep));
 
                         // у промежуточных этапов удаляем статус
-                        if (item.ro_step >= NextStep.ro_step && item.ro_step < CurrentStep.ro_step)
+                        if (item.ro_step > NextStep.ro_step && item.ro_step < CurrentStep.ro_step)
                         {
                             item.ro_check = EnumCheckedStatus.CheckedNone;
                             item.ro_statusId = EnumStatus.None;
@@ -70,8 +83,33 @@ namespace Orders.Common
                         }
                     }
 
-                    SelectRoute = RootListRouteOrder;
-                    break;
+                    // изменяем статус текущего шага
+                    SetStatusStep(IsNextChild);
+
+                    ListNextStep = RootListRouteOrder.Where(it => it.ro_step == NextStep.ro_step
+                        && it.ro_check == EnumCheckedStatus.Checked);
+
+                    if (ListNextStep.Count() > 1
+                        && MessageBox.Show("Вернуть на выбранный этап или на все?\n" +
+                        "Да - на выбранный.\n" +
+                        "Нет - на все.", "Вопрос", 
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        ListNextStep = new RouteOrder[] { NextStep };
+                    }
+
+                    // обновляем статусы для следующих этапов
+                    foreach (var item in ListNextStep)
+                    {
+                        SetStatusNextStep(item);
+                        ShareFunction.SendMail(item.User.u_email, order.o_number);
+                    }
+
+                    order.o_statusId = NextStep.ro_statusId;
+                    order.o_stepRoute = NextStep.ro_step;
+
+                    return;
+
 
                 case EnumAction.Send:
 
@@ -80,10 +118,13 @@ namespace Orders.Common
 
                     SelectRoute = IsNextChild ? CurrentStep.ChildRoutes : ListRouteOrder;
 
-                    // следующий этап
-                    NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedNone);
+                    // изменяем статус текущего шага
+                    SetStatusStep(IsNextChild);
 
-                    if(NextStep == null)
+
+                    // есть ли в этой ветке этапы на рассмотрении
+                    AllCheckStep = SelectRoute.All(item => item.ro_check == EnumCheckedStatus.Checked);
+                    if (AllCheckStep)      // есть этапы на рассмотрении
                     {
                         // все этапы пройдены
                         if (CurrentStep.ro_parentId != null)
@@ -93,34 +134,53 @@ namespace Orders.Common
                             NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedNone);
                             IsUp = true;
                         }
+                        break;
                     }
 
+                    // следующий этап
+                    NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedNone);
+
+                    if (NextStep == null)
+                        NextStep = SelectRoute.FirstOrDefault(item => item.ro_check == EnumCheckedStatus.CheckedProcess);
+
                     break;
+
             }
-            // изменяем статус текущего шага
-            SetStatusStep(IsNextChild);
 
             // количество выполняющихся параллельных этапов
             int CountSameStep = SelectRoute.Count(item => item.ro_step == CurrentStep.ro_step
                         && (item.ro_check == EnumCheckedStatus.CheckedProcess || item.ro_statusId == EnumStatus.Waiting));
 
-            // если переход на подчиненную ветку или нет параллельного этапа
-            if (IsNextChild || CountSameStep == 0 || IsUp)
+            if (NextStep is null)
             {
-                // получаем все следующие шаги
-                ListNextStep = SelectRoute.Where(it => it.ro_step == NextStep.ro_step
-                    && it.ro_check == EnumCheckedStatus.CheckedNone);
-
-                foreach (var item in ListNextStep)
-                    SetStatusNextStep(item);
+                // все этапы завершены, этапов больше нет
+                NextStep = CurrentStep;
+                // отправка оповещения инициатору
+                User Owner = MainWindowViewModel.repo.Users.FirstOrDefault(it => it.id == NextStep.ro_ownerId);
+                ShareFunction.SendMail(Owner.u_email, order.o_number);
             }
+            else
+            {
+                // если переход на подчиненную ветку или нет параллельного этапа
+                // IsNextChild - будет переход в дочернюю ветку
+                // IsUp - возврат из дочерней ветки
+                if (IsNextChild || CountSameStep == 0 || IsUp)
+                {
+                    // получаем все следующие шаги
+                    ListNextStep = SelectRoute.Where(it => it.ro_step == NextStep.ro_step
+                        && it.ro_check == EnumCheckedStatus.CheckedNone);
 
-            if (NextStep is null) NextStep = CurrentStep;
+                    // обновляем статусы для следующих этапов
+                    foreach (var item in ListNextStep)
+                    {
+                        SetStatusNextStep(item);
+                        ShareFunction.SendMail(item.User.u_email, order.o_number);
+                    }
+                }
+            }
 
             order.o_statusId = NextStep.ro_statusId;
             order.o_stepRoute = NextStep.ro_step;
-
-            ShareFunction.SendMail(NextStep.User.u_email, order.o_number);
 
         }
 
@@ -169,8 +229,8 @@ namespace Orders.Common
                     CurrentStep.ro_date_check = DateTime.Now;
                     CurrentStep.ro_statusId = EnumStatus.Return;
                     CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
-                    NextStep.ro_statusId = EnumStatus.CoordinateWork;
-                    NextStep.ro_check = EnumCheckedStatus.CheckedProcess;
+                    //NextStep.ro_statusId = EnumStatus.CoordinateWork;
+                    //NextStep.ro_check = EnumCheckedStatus.CheckedProcess;
                     break;
 
 
