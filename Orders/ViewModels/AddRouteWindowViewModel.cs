@@ -21,7 +21,9 @@ namespace Orders.ViewModels
         //private Order CurrentOrder;
         public ObservableCollection<RouteOrder> ListRouteOrder { get; set; }
         private ObservableCollection<RouteOrder> _ListRouteOrder;
-        public RouteOrder SelectedRouteOrder { get; set; }
+        
+        private RouteOrder _SelectedRouteOrder;
+        public RouteOrder SelectedRouteOrder { get => _SelectedRouteOrder; set { Set(ref _SelectedRouteOrder, value); } }
 
         public List<User> ListUser { get; }
         public User SelectedUser { get; set; }

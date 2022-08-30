@@ -248,6 +248,7 @@
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="22"/>
+                        <RowDefinition Height="22"/>
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="150"/>
@@ -255,35 +256,38 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock x:Name="textBlock" Text="Номер" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock x:Name="textBlock" Text="Номер"  VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_number}" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
-                    <TextBlock Text="Наименование ГП (работ, услуг)" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Наименование ГП (работ, услуг)" Grid.Row="1"  VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_name}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
 
-                    <TextBlock Text="Покупатель" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Покупатель" Grid.Row="2"  VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_buyer}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
 
-                    <TextBlock Text="Карта заказа" Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Карта заказа" Grid.Row="3" VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_CardOrder}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
 
-                    <TextBlock Text="Статус" Grid.Row="4" Grid.ColumnSpan="7" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Статус" Grid.Row="4"  VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.RouteStatus.sr_name}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
-                    <TextBlock Text="Время создания" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Время создания" Grid.Row="5"  VerticalAlignment="Center" Height="16" />
                     <TextBlock Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
-                    <TextBlock Text="Описание заказа" Grid.Row="6" VerticalAlignment="Center" Height="16" />
-                    <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="7"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFF8F8F8" VerticalScrollBarVisibility="Auto"/>
+                    <TextBlock Text="Инициатор" Grid.Row="6" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="{Binding order.Owner.u_name}" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
 
-                    <TextBlock Text="Добавить сообщение" Grid.Row="8" VerticalAlignment="Center" Height="16" Grid.ColumnSpan="2" />
-                    <TextBox Text="{Binding CurrentStep.ro_text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9"
+                    <TextBlock Text="Описание заказа" Grid.Row="7" VerticalAlignment="Center" Height="16" />
+                    <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="8"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFF8F8F8" VerticalScrollBarVisibility="Auto"/>
+
+                    <TextBlock Text="Добавить сообщение" Grid.Row="9" VerticalAlignment="Center" Height="16" Grid.ColumnSpan="2" />
+                    <TextBox Text="{Binding CurrentStep.ro_text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="10"
                              IsReadOnly="{Binding IsDisabledElement}"
                              Grid.ColumnSpan="2" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
 
-                    <TextBlock Text="Прикрепить файлы" Grid.Row="10" VerticalAlignment="Center" Height="16" />
+                    <TextBlock Text="Прикрепить файлы" Grid.Row="11" VerticalAlignment="Center" Height="16" />
 
-                    <Button Command="{Binding BrowseCommand}" Grid.Row="10" Grid.Column="1" Width="55" Height="23" 
+                    <Button Command="{Binding BrowseCommand}" Grid.Row="11" Grid.Column="1" Width="55" Height="23" 
                             HorizontalAlignment="Left" VerticalAlignment="Center" 
                             Style="{DynamicResource ButtonStyleShadow}" Padding="0,-3,0,-3">
                         <fa:ImageAwesome Icon="Solid_Paperclip" Foreground="Blue" Stretch="Uniform" Width="18" 
@@ -291,7 +295,7 @@
                         </fa:ImageAwesome>
                     </Button>
                     <ItemsControl ItemsSource="{Binding ListFiles}" BorderBrush="Black" BorderThickness="1,1,1,1" 
-                                  Grid.Row="11" Grid.ColumnSpan="2" AllowDrop="True" Background="White">
+                                  Grid.Row="12" Grid.ColumnSpan="2" AllowDrop="True" Background="White">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Drop">
                                 <i:CallMethodAction MethodName="ItemsControl_Drop" TargetObject="{Binding}"/>
