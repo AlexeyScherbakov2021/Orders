@@ -5,6 +5,7 @@ using Orders.Repository;
 using Orders.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,24 +147,33 @@ namespace Orders.Common
 
             }
 
-            // количество выполняющихся параллельных этапов
-            int CountSameStep = SelectRoute.Count(item => item.ro_step == CurrentStep.ro_step
-                        && (item.ro_check == EnumCheckedStatus.CheckedProcess || item.ro_statusId == EnumStatus.Waiting));
+            // количество выполняющихся параллельных этапов в текущий момент
+            int CountSameStep = MainWindowViewModel.repo.RouteOrders.AsNoTracking()
+                .Count(it => it.ro_step == CurrentStep.ro_step
+                        && it.ro_parentId == CurrentStep.ro_parentId
+                        && it.ro_orderId == CurrentStep.ro_orderId
+                        && (it.ro_check == EnumCheckedStatus.CheckedProcess || it.ro_statusId == EnumStatus.Waiting));
+
+
+            //int CountSameStep = SelectRoute.Count(item => item.ro_step == CurrentStep.ro_step
+            //            && (item.ro_check == EnumCheckedStatus.CheckedProcess || item.ro_statusId == EnumStatus.Waiting));
 
             if (NextStep is null)
             {
                 // все этапы завершены, этапов больше нет
-                NextStep = CurrentStep;
+                //NextStep = CurrentStep;
                 // отправка оповещения инициатору
-                User Owner = MainWindowViewModel.repo.Users.FirstOrDefault(it => it.id == NextStep.ro_ownerId);
+                User Owner = MainWindowViewModel.repo.Users.FirstOrDefault(it => it.id == CurrentStep.ro_ownerId);
                 ShareFunction.SendMail(Owner.u_email, order.o_number);
+                order.o_statusId = CurrentStep.ro_statusId;
+                order.o_stepRoute = CurrentStep.ro_step;
             }
             else
             {
                 // если переход на подчиненную ветку или нет параллельного этапа
                 // IsNextChild - будет переход в дочернюю ветку
                 // IsUp - возврат из дочерней ветки
-                if (IsNextChild || CountSameStep == 0 || IsUp)
+                if (IsNextChild || CountSameStep <= 1 || IsUp)
                 {
                     // получаем все следующие шаги
                     ListNextStep = SelectRoute.Where(it => it.ro_step == NextStep.ro_step
@@ -175,11 +185,12 @@ namespace Orders.Common
                         SetStatusNextStep(item);
                         ShareFunction.SendMail(item.User.u_email, order.o_number);
                     }
+
+                    order.o_statusId = NextStep.ro_statusId;
+                    order.o_stepRoute = NextStep.ro_step;
                 }
             }
 
-            order.o_statusId = NextStep.ro_statusId;
-            order.o_stepRoute = NextStep.ro_step;
 
         }
 

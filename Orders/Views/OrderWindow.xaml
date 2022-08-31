@@ -11,7 +11,7 @@
         xmlns:m="clr-namespace:Orders.Models"
         xmlns:local="clr-namespace:Orders.Views"
         mc:Ignorable="d"
-        Title="Заказ" Height="800" Width="1300" WindowStartupLocation="CenterScreen">
+        Title="Заказ" Height="800" Width="1350" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:OrderWindowViewModel/>
     </Window.DataContext>
@@ -218,6 +218,15 @@
                         </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Выйти" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
+            <Button Margin="2" IsCancel="True" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_DoorOpen" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Обновить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
 
             </Button>

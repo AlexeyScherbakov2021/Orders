@@ -13,15 +13,21 @@ namespace Orders.ViewModels
     {
         public List<Order> ListOrder { get; set; }
 
+        public string Filter { get; set; } = "Filter";
 
         public ReportRoutesWindowViewModel()
         {
             ListOrder = MainWindowViewModel.repo.Orders
-                .Where(it => it.o_statusId == EnumStatus.Approved || it.RouteOrders
-                    .Where(item => item.ro_check == EnumCheckedStatus.CheckedProcess)
-                    .Any())
+                .Where(it => it.o_statusId < EnumStatus.Closed )
                 .Include(ro => ro.RouteOrders.Select(s => s.User))
                 .ToList();
+
+            //ListOrder = MainWindowViewModel.repo.Orders
+            //    .Where(it => it.o_statusId == EnumStatus.Approved || it.RouteOrders
+            //        .Where(item => item.ro_check == EnumCheckedStatus.CheckedProcess)
+            //        .Any())
+            //    .Include(ro => ro.RouteOrders.Select(s => s.User))
+            //    .ToList();
 
             foreach(var item in ListOrder)
             {

@@ -56,6 +56,7 @@ namespace Orders.ViewModels
             // получение текущего этапа
             //CurrentStep = ListRouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             CurrentStep = MainWindowViewModel.repo.RouteOrders.FirstOrDefault(it => it.ro_check == EnumCheckedStatus.CheckedProcess
+                && it.ro_orderId == order.id
                 && it.ro_userId == App.CurrentUser.id);
 
             //CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
@@ -66,6 +67,21 @@ namespace Orders.ViewModels
         }
 
         #region Команды
+
+        //--------------------------------------------------------------------------------
+        // Команда Обновить
+        //--------------------------------------------------------------------------------
+        private readonly ICommand _RefreshCommand = null;
+        public ICommand RefreshCommand => _RefreshCommand ?? new LambdaCommand(OnRefreshCommandExecuted, CanRefreshCommand);
+        private bool CanRefreshCommand(object p) => true;
+        private void OnRefreshCommandExecuted(object p)
+        {
+            MainWindowViewModel.repo.Refresh();
+            ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
+            OnPropertyChanged(nameof(ListRouteOrders));
+
+
+        }
 
         //--------------------------------------------------------------------------------
         // Команда Вернуть
@@ -169,7 +185,7 @@ namespace Orders.ViewModels
                 // проверка на параллельные этапы
                 if (tmpList.Count(it => it.ro_step == SelectedRouteStep.ro_step) == 1)
                 {
-                    // перенумерация следующих после выьранного этапа
+                    // перенумерация следующих после выбранного этапа
                     for (int i = index + 1; i < tmpList.Count; i++)
                     {
                         tmpList[i].ro_step--;
@@ -177,6 +193,12 @@ namespace Orders.ViewModels
                         item.OnPropertyChanged(nameof(item.NameStep));
                     }
                 }
+
+                // удаление дочерних маршрутов
+                List<RouteOrder> ListChild = SelectedRouteStep.ChildRoutes.ToList();
+                foreach (var child in ListChild)
+                    MainWindowViewModel.repo.Delete<RouteOrder>(child);
+
 
                 if (MainWindowViewModel.repo.Delete<RouteOrder>(SelectedRouteStep))
                 {
