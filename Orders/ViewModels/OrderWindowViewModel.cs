@@ -38,9 +38,9 @@ namespace Orders.ViewModels
         
         private RouteOrder _CurrentStep;
         public RouteOrder CurrentStep { get => _CurrentStep; set { Set(ref _CurrentStep, value); } }
-        public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id
-            || IsAllSteps || order.o_statusId == EnumStatus.Refused;
-
+        
+        public bool IsDisabledElement => CurrentStep?.ro_userId != App.CurrentUser.id || IsAllSteps 
+            || order.o_statusId == EnumStatus.Refused;
 
         public OrderWindowViewModel() { }
 
@@ -76,10 +76,44 @@ namespace Orders.ViewModels
         private bool CanRefreshCommand(object p) => true;
         private void OnRefreshCommandExecuted(object p)
         {
-            MainWindowViewModel.repo.Refresh();
-            ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
-            OnPropertyChanged(nameof(ListRouteOrders));
+            //string text = CurrentStep.ro_text;
 
+            //MainWindowViewModel.repo.Update<RouteOrder>(CurrentStep);
+
+            MainWindowViewModel.repo.Refresh();
+
+            if(CurrentStep != null)
+                MainWindowViewModel.repo.Update<RouteOrder>(CurrentStep);
+
+            ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
+
+            //MainWindowViewModel.repo.Update<RouteOrder>(CurrentStep);
+
+            if (CurrentStep != null)
+            {
+                RouteOrder ro = ListRouteOrders.Single(it => it.id == CurrentStep.id);
+                int index = ListRouteOrders.IndexOf(ro);
+                ro = CurrentStep;
+                ListRouteOrders[index] = CurrentStep;
+            }
+
+            //if (CurrentStep is null)
+            //{
+            //    CurrentStep = MainWindowViewModel.repo.RouteOrders.FirstOrDefault(it => it.ro_check == EnumCheckedStatus.CheckedProcess
+            //        && it.ro_orderId == order.id
+            //        && it.ro_userId == App.CurrentUser.id);
+            //}
+            //CurrentStep.ro_text = text;
+
+            //if (CurrentStep != null)
+            //    ListFiles = new ObservableCollection<RouteAdding>(CurrentStep.RouteAddings);
+            //else
+            //    ListFiles = new ObservableCollection<RouteAdding>();
+
+            OnPropertyChanged(nameof(IsDisabledElement));
+            OnPropertyChanged(nameof(ListFiles));
+            OnPropertyChanged(nameof(ListRouteOrders));
+            CommandManager.InvalidateRequerySuggested();
 
         }
 
@@ -92,6 +126,7 @@ namespace Orders.ViewModels
             && SelectedRouteStep?.ro_check == EnumCheckedStatus.Checked
             && _CurrentStep?.ro_parentId == null
             && MainWindowViewModel.repo.RouteOrders.Count(it => it.ro_step == _CurrentStep.ro_step
+                    && it.ro_orderId == _CurrentStep.ro_orderId
                     && it.ro_parentId == _CurrentStep.ro_parentId
                     && it.ro_check == EnumCheckedStatus.CheckedProcess) == 1
             && _CurrentStep.ro_step != SelectedRouteStep.ro_step
@@ -123,7 +158,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => !IsDisabledElement && _CurrentStep.ro_parentId == null;
+        private bool CanAddRouteCommand(object p) => !IsDisabledElement && _CurrentStep?.ro_parentId == null;
         private void OnAddRouteCommandExecuted(object p)
         {
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(ListRouteOrders, CurrentStep);
@@ -221,6 +256,7 @@ namespace Orders.ViewModels
 
             MoveOrder move = new MoveOrder(order, ListRouteOrders, EnumAction.Send, CurrentStep);
             move.MoveToNextStep(ListFiles);
+            //MainWindowViewModel.repo.Update<RouteOrder>(CurrentStep);
 
             //ShareFunction.SendToNextStep(order, CurrentStep, ListFiles);
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;

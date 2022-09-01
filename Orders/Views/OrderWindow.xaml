@@ -336,13 +336,13 @@
             </Border.Effect>
             <GroupBox Header="Маршрут заказа" BorderBrush="#FFADADAD">
                 
-                <inf:ExtendedTreeView Margin="2" BorderBrush="Black" BorderThickness="0" 
+                <inf:ExtendedTreeView x:Name="listRoutes" Margin="2" BorderBrush="Black" BorderThickness="0" 
                       ItemsSource="{Binding ListRouteOrders}"
                       SelectedItem_="{Binding SelectedRouteStep, Mode=TwoWay}"
                       SnapsToDevicePixels="True"
                       HorizontalContentAlignment="Stretch"
                       VirtualizingPanel.ScrollUnit="Pixel"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto" IsTextSearchEnabled="False">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" IsTextSearchEnabled="False" >
 
 
                     <!--<ItemsControl.Template>
