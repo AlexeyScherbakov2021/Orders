@@ -23,7 +23,7 @@ namespace Orders.Models
 
         public int ro_orderId { get; set; }
 
-        public int ro_RouteId { get; set; }
+        //public int ro_RouteId { get; set; }
 
         public int ro_userId { get; set; }
 
