@@ -331,9 +331,9 @@ namespace Orders.ViewModels
         private bool CanRefuseCommand(object p) => !IsDisabledElement; // IsWorkUser && !IsAllSteps && order.o_statusId != (int)EnumStatus.Refused;
         private void OnRefuseCommandExecuted(object p)
         {
-            if(MessageBox.Show("Подтверждаете отказ?","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Подтверждаете отказ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                if(string.IsNullOrEmpty(CurrentStep.ro_text))
+                if (string.IsNullOrEmpty(CurrentStep.ro_text))
                 {
                     MessageBox.Show("В сообщении нужно указать причину.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
@@ -342,6 +342,19 @@ namespace Orders.ViewModels
                 order.o_statusId = EnumStatus.Refused;
                 CurrentStep.ro_date_check = DateTime.Now;
                 CurrentStep.ro_statusId = EnumStatus.Refused;
+                CurrentStep.ro_check = EnumCheckedStatus.CheckedNone;
+
+                // убрать все статусы рассмотрения
+                foreach (var item in order.RouteOrders)
+                {
+                    if (item.ro_statusId == EnumStatus.Waiting
+                        || item.ro_statusId == EnumStatus.ApprovWork
+                        || item.ro_statusId == EnumStatus.CoordinateWork)
+                    {
+                        item.ro_statusId = EnumStatus.None;
+                        item.ro_check = EnumCheckedStatus.CheckedNone;
+                    }
+                }
                 App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
             }
         }

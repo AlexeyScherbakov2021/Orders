@@ -209,6 +209,15 @@
                     <TextBlock Text="В архив" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
             </Button>
+            <Button Margin="2" IsCancel="True" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
+                <DockPanel Margin="4,0">
+                    <fa:ImageAwesome Icon="Solid_DoorOpen" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
+                    </fa:ImageAwesome>
+                    <TextBlock Text="Обновить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
+                </DockPanel>
+
+            </Button>
             <Button Margin="2" IsCancel="True" Command="{Binding CancelCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
                 <DockPanel Margin="4,0">
                     <fa:ImageAwesome Icon="Solid_DoorOpen" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
@@ -218,15 +227,6 @@
                         </fa:ImageAwesome.Effect>-->
                     </fa:ImageAwesome>
                     <TextBlock Text="Выйти" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
-                </DockPanel>
-
-            </Button>
-            <Button Margin="2" IsCancel="True" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
-                <DockPanel Margin="4,0">
-                    <fa:ImageAwesome Icon="Solid_DoorOpen" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
-                                     HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
-                    </fa:ImageAwesome>
-                    <TextBlock Text="Обновить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
 
             </Button>
@@ -266,25 +266,25 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock x:Name="textBlock" Text="Номер"  VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.o_number}" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
+                    <TextBox Text="{Binding order.o_number}" Grid.Column="1" IsReadOnly="True" VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Наименование ГП (работ, услуг)" Grid.Row="1"  VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.o_name}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
+                    <TextBox Text="{Binding order.o_name}" Grid.Row="1" Grid.Column="1" IsReadOnly="True"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Покупатель" Grid.Row="2"  VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.o_buyer}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
+                    <TextBox Text="{Binding order.o_buyer}" Grid.Row="2" Grid.Column="1" IsReadOnly="True"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Карта заказа" Grid.Row="3" VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.o_CardOrder}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16" />
+                    <TextBox Text="{Binding order.o_CardOrder}" Grid.Row="3" Grid.Column="1" IsReadOnly="True"  VerticalAlignment="Center" FontWeight="Bold"  Background="#f6f6f6" />
 
                     <TextBlock Text="Статус" Grid.Row="4"  VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.RouteStatus.sr_name}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
+                    <TextBox Text="{Binding order.RouteStatus.sr_name}" Grid.Row="4" Grid.Column="1" IsReadOnly="True"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Время создания" Grid.Row="5"  VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
+                    <TextBox Text="{Binding order.o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}"  IsReadOnly="True"  Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Инициатор" Grid.Row="6" VerticalAlignment="Center" Height="16" />
-                    <TextBlock Text="{Binding order.Owner.u_name}" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" Height="16"/>
+                    <TextBox Text="{Binding order.Owner.u_name}" Grid.Row="6" Grid.Column="1" IsReadOnly="True"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Описание заказа" Grid.Row="7" VerticalAlignment="Center" Height="16" />
                     <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="8"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFF8F8F8" VerticalScrollBarVisibility="Auto"/>
