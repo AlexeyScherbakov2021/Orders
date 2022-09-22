@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Orders.ViewModels
 {
@@ -18,8 +19,9 @@ namespace Orders.ViewModels
 
         public SettingWindowViewModel()
         {
-            UserViewModel = new UsersControlViewModel(repo);
+            UserViewModel = new UsersControlViewModel();
             RouteViewModel = new RouteControlViewModel(repo);
+
         }
     }
 }

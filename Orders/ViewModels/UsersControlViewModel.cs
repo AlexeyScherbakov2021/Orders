@@ -2,10 +2,12 @@
 using Orders.Models;
 using Orders.Repository;
 using Orders.ViewModels.Base;
+using Orders.Wrapping;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +21,14 @@ namespace Orders.ViewModels
     {
         RepositoryBase repo;
 
-        private ObservableCollection<User> _ListUser;
-        public ObservableCollection<User> ListUser
+        //public ObservableCollection<Role> ListRole { get; set; }
+
+
+
+
+
+        private ObservableCollection<RoleUserWrap> _ListUser;
+        public ObservableCollection<RoleUserWrap> ListUser
         {
             get => _ListUser;
             set
@@ -43,7 +51,7 @@ namespace Orders.ViewModels
         CollectionViewSource _listUserViewSource;
         public ICollectionView ListUserView => _listUserViewSource?.View;
 
-        public User SelectedUser { get; set; }
+        public RoleUserWrap SelectedUser { get; set; }
 
         #region Команды
         //--------------------------------------------------------------------------------
@@ -54,7 +62,7 @@ namespace Orders.ViewModels
         private void OnAddCommandExecuted(object p)
         {
             User newUser = new User { u_login = "Пользователь", u_role = 0 };
-            ListUser.Add(newUser);
+            //ListUser.Add(newUser);
             ListUserView.MoveCurrentToLast();
             repo.Add(newUser, true);
         }
@@ -65,11 +73,11 @@ namespace Orders.ViewModels
         private bool CanDeleteCommand(object p) => SelectedUser != null;
         private void OnDeleteCommandExecuted(object p)
         {
-            if (MessageBox.Show($"Удалить {SelectedUser.u_login}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                if(repo.Delete(SelectedUser, true))
-                    ListUser.Remove(SelectedUser);
-            }
+            //if (MessageBox.Show($"Удалить {SelectedUser.u_login}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            //{
+            //    if (repo.Delete(SelectedUser, true))
+            //        ListUser.Remove(SelectedUser);
+            //}
         }
 
         //--------------------------------------------------------------------------------
@@ -88,11 +96,29 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         // Конструктор 
         //--------------------------------------------------------------------------------
-        public UsersControlViewModel(RepositoryBase repoBase)
+        public UsersControlViewModel() 
         {
-            repo = repoBase;
-            ListUser = new ObservableCollection<User>(repo.Users);
+            repo = SettingWindowViewModel.repo;
+            var listUser = new ObservableCollection<User>(repo.Users.Include(it => it.RolesUser));
+            ListUser = new ObservableCollection<RoleUserWrap>();
+
+            foreach (var item in listUser)
+            {
+                RoleUserWrap wrap = new RoleUserWrap(item);
+                ListUser.Add(wrap);
+            }
+
+            //ListRole = new ObservableCollection<Role>(repo.Roles);
+            //OnPropertyChanged(nameof(ListRole));
+
         }
+        //public UsersControlViewModel(RepositoryBase repoBase) : this()
+        //{
+        //    repo = repoBase;
+        //    ListUser = new ObservableCollection<User>(repo.Users);
+        //    ListRole = new ObservableCollection<Role>(repo.Roles);
+        //    OnPropertyChanged(nameof(ListRole));
+        //}
 
     }
 }

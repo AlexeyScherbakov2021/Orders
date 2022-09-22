@@ -8,6 +8,22 @@
              xmlns:local="clr-namespace:Orders.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" >
+    <UserControl.Resources>
+        <vm:UsersControlViewModel x:Key="model"/>
+
+        <!--<Style TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <CheckBox x:Name="box" Content="{Binding role_name}" IsChecked="{Binding IsCheckRole, Mode=TwoWay}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            
+        </Style>-->
+        
+    </UserControl.Resources>
     <!--<UserControl.DataContext>
         <vm:UsersControlViewModel/>
     </UserControl.DataContext>-->
@@ -62,11 +78,32 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
             </DataGrid.Resources>-->
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Пользователь" Binding="{Binding u_login}" Width="140"/>
-                        <DataGridTextColumn Header="Пароль" Binding="{Binding u_pass}" Width="130"/>
-                        <DataGridCheckBoxColumn Header="Админ" Binding="{Binding u_role}" Width="50"/>
-                        <DataGridTextColumn Header="ФИО" Binding="{Binding u_name}" Width="180"/>
-                        <DataGridTextColumn Header="Эл. почта" Binding="{Binding u_email}" Width="150"/>
+                        <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_login}" />
+                        <DataGridTextColumn Header="Пароль" Binding="{Binding User.u_pass}" />
+                        <DataGridCheckBoxColumn Header="Админ" Binding="{Binding User.u_role}"/>
+                        <DataGridTextColumn Header="ФИО" Binding="{Binding User.u_name}"/>
+                        <DataGridTextColumn Header="Эл. почта" Binding="{Binding User.u_email}" />
+                        <!--<DataGridComboBoxColumn Header="Роли" ItemsSource="{Binding ListRole, Source={StaticResource model}}" 
+                            DisplayMemberPath="role_name" />-->
+                        <DataGridTemplateColumn Header="Права" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <ToggleButton x:Name="TogglePopupButton" />
+                                        <Popup IsOpen="{Binding IsChecked, ElementName=TogglePopupButton}">
+                                            <ListBox x:Name="list" ItemsSource="{Binding ListRole}" 
+                                                     Padding="5" >
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding role_name}" IsChecked="{Binding IsCheckRole, Mode=TwoWay}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Popup>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

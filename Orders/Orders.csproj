@@ -121,6 +121,8 @@
     <Compile Include="Infrastructure\SpinControl\SpinControl.xaml.cs">
       <DependentUpon>SpinControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\RoleUser.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
     <Compile Include="Repository\RepositoryFiles.cs" />
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Views\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapping\RoleUserWrap.cs" />
     <Page Include="Infrastructure\SpinControl\SpinControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -14,6 +14,7 @@ namespace Orders.Models
             RouteOrders = new HashSet<RouteOrder>();
             RouteSteps = new HashSet<RouteStep>();
             Orders = new HashSet<Order>();
+            RolesUser = new HashSet<RoleUser>();
         }
 
         [Key]
@@ -43,8 +44,10 @@ namespace Orders.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
 
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RouteStep> RouteSteps { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RoleUser> RolesUser { get; set; }
     }
 }

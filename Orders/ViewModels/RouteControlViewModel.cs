@@ -177,7 +177,7 @@ namespace Orders.ViewModels
         private void OnStepUpCommandExecuted(object p)
         {
             RouteStep step = SelectedRoute.RouteSteps.FirstOrDefault(it => it.r_step == SelectedStep.r_step - 1);
-            int index = SelectedRoute.RouteSteps.IndexOf(step) + 1;
+            int index = SelectedRoute.RouteSteps.IndexOf(step);// + 1;
             step.r_step++;
             SelectedStep.r_step--;
 
@@ -186,6 +186,7 @@ namespace Orders.ViewModels
 
             step.OnPropertyChanged(nameof(step.r_step));
             SelectedStep.OnPropertyChanged(nameof(SelectedStep.r_step));
+            //OnPropertyChanged(nameof(SelectedRoute.RouteSteps));
             repo.Save();
         }
 
@@ -198,7 +199,7 @@ namespace Orders.ViewModels
         private void OnStepDownCommandExecuted(object p)
         {
             RouteStep step = SelectedRoute.RouteSteps.FirstOrDefault(it => it.r_step == SelectedStep.r_step + 1);
-            int index = SelectedRoute.RouteSteps.IndexOf(step) - 1;
+            int index = SelectedRoute.RouteSteps.IndexOf(step); // - 1;
             step.r_step--;
             SelectedStep.r_step++;
 

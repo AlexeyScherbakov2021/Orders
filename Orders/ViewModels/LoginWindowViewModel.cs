@@ -7,6 +7,7 @@ using Orders.ViewModels.Base;
 using Orders.Views;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -83,7 +84,7 @@ namespace Orders.ViewModels
             //winLogin = App.Current.Windows.OfType<LoginWindow>().First();
 
             repo = new RepositoryBase();
-            ListUser = repo.Users.OrderBy(o => o.u_login).ToArray();
+            ListUser = repo.Users.Include(it => it.RolesUser).OrderBy(o => o.u_login).ToArray();
 
             if( ListUser is null ||  ListUser.Count() == 0 || !ListUser.Any(it => it.u_role == 1))
             {

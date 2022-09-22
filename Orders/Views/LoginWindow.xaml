@@ -29,7 +29,7 @@
                       ItemsSource="{Binding ListUser}" 
                       SelectedItem="{Binding SelectUser}"
                       Margin="-17,-72,-93,78" Grid.Row="0" 
-                      VerticalAlignment="Center" Width="212" SelectedValuePath="{Binding Password}">
+                      VerticalAlignment="Center" Width="212">
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel/>

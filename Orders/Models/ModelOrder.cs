@@ -39,6 +39,9 @@ namespace Orders.Models
         public virtual DbSet<RouteStep> RouteSteps { get; set; }
         public virtual DbSet<RouteType> RouteTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RoleUser> RoleUser { get; set; }
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -162,10 +165,17 @@ namespace Orders.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<User>()
+                .HasMany(e => e.RolesUser)
+                .WithRequired(e => e.Users)
+                .HasForeignKey(e => e.ru_user_id)
+                .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<User>()
                 .HasMany(e => e.Orders)
                 .WithRequired(e => e.Owner)
                 .HasForeignKey(e => e.o_ownerUserId)
                 .WillCascadeOnDelete(false);
+
 
             //modelBuilder.Entity<User>()
             //    .HasMany(e => e.RouteOrders)

@@ -23,6 +23,7 @@ namespace Orders.Repository
         //public IQueryable<Order> Orders => db.Orders.Include(it => it.RouteOrders.Select(it2 => it2.RouteAddings)   );
         public IQueryable<Order> Orders => db.Orders;
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
+        public IQueryable<Role> Roles => db.Roles.AsNoTracking();
 
 
 
