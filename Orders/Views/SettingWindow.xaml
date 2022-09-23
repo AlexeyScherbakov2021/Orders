@@ -9,10 +9,15 @@
         xmlns:spin="clr-namespace:SpinUpDown.SpinControl"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Настройки" Height="650" Width="900" WindowStartupLocation="CenterScreen">
+        Title="Настройки" Height="650" Width="900" WindowStartupLocation="CenterScreen"  >
     <Window.DataContext>
         <vm:SettingWindowViewModel/>
     </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <TabControl x:Name="tab" >
 

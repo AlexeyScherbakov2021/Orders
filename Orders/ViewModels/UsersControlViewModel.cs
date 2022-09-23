@@ -21,11 +21,11 @@ namespace Orders.ViewModels
     {
         RepositoryBase repo;
 
+        private string _Filter = "";
+        public string Filter { get => _Filter; set { if (Set(ref _Filter, value)) { _listUserViewSource.View.Refresh(); } } }
+
+
         //public ObservableCollection<Role> ListRole { get; set; }
-
-
-
-
 
         private ObservableCollection<RoleUserWrap> _ListUser;
         public ObservableCollection<RoleUserWrap> ListUser
@@ -38,20 +38,46 @@ namespace Orders.ViewModels
                     _listUserViewSource = new CollectionViewSource();
                     _listUserViewSource.Source = value;
                     _listUserViewSource.View.Refresh();
-                    ListUserView.CurrentChanged += ListUserView_CurrentChanged;
+                    _listUserViewSource.Filter += _ListView_Filter;
+                    //ListUserView.CurrentChanged += ListUserView_CurrentChanged;
                 }
             }
         }
 
-        private void ListUserView_CurrentChanged(object sender, EventArgs e)
+
+        private void _ListView_Filter(object sender, FilterEventArgs e)
         {
-            repo.Save();
+            if (e.Item is RoleUserWrap UserWrap)
+            {
+                if (!UserWrap.User.u_login.ToLower().StartsWith(Filter.ToLower())
+                    && !UserWrap.User.u_name.ToLower().StartsWith(Filter.ToLower()))
+                    e.Accepted = false;
+            }
+
+            //e.Accepted = false;
         }
+
+
+        //private void ListUserView_CurrentChanged(object sender, EventArgs e)
+        //{
+        //}
 
         CollectionViewSource _listUserViewSource;
         public ICollectionView ListUserView => _listUserViewSource?.View;
 
-        public RoleUserWrap SelectedUser { get; set; }
+        private RoleUserWrap _SelectedUser;
+        public RoleUserWrap SelectedUser 
+        { 
+            get => _SelectedUser; 
+            set
+            {
+                if (Set(ref _SelectedUser, value)) return;
+                //if(_SelectedUser != null)
+                _SelectedUser?.SettingFromRole(repo);
+                _SelectedUser = value;
+                repo.Save();
+            }
+        }
 
         #region Команды
         //--------------------------------------------------------------------------------
@@ -61,10 +87,13 @@ namespace Orders.ViewModels
         private bool CanAddCommand(object p) => true;
         private void OnAddCommandExecuted(object p)
         {
-            User newUser = new User { u_login = "Пользователь", u_role = 0 };
-            //ListUser.Add(newUser);
-            ListUserView.MoveCurrentToLast();
-            repo.Add(newUser, true);
+            RoleUserWrap newUser = new RoleUserWrap(new User { u_login = "Пользователь", u_role = 0 });
+            //User newUser = new User { u_login = "Пользователь", u_role = 0 };
+
+            ListUser.Add(newUser);
+            //ListUserView.MoveCurrentToLast();
+            SelectedUser = newUser;
+            repo.Add(newUser.User, true);
         }
         //--------------------------------------------------------------------------------
         // Команда Удалить
@@ -73,11 +102,11 @@ namespace Orders.ViewModels
         private bool CanDeleteCommand(object p) => SelectedUser != null;
         private void OnDeleteCommandExecuted(object p)
         {
-            //if (MessageBox.Show($"Удалить {SelectedUser.u_login}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            //{
-            //    if (repo.Delete(SelectedUser, true))
-            //        ListUser.Remove(SelectedUser);
-            //}
+            if (MessageBox.Show($"Удалить {SelectedUser.User.u_login}", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                if (repo.Delete(SelectedUser.User, true))
+                    ListUser.Remove(SelectedUser);
+            }
         }
 
         //--------------------------------------------------------------------------------
@@ -87,7 +116,7 @@ namespace Orders.ViewModels
         //private bool CanSelectOtdelCommand(object p) => true;
         //private void OnSelectOtdelCommandExecuted(object p)
         //{
-        //    repoUser.Update(SelectedUser);
+        //    repoUser.Update(SelectedUser.User);
         //    ListUserView.Refresh();
         //}
 
@@ -112,6 +141,7 @@ namespace Orders.ViewModels
             //OnPropertyChanged(nameof(ListRole));
 
         }
+
         //public UsersControlViewModel(RepositoryBase repoBase) : this()
         //{
         //    repo = repoBase;

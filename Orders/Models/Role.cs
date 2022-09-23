@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orders.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +13,7 @@ namespace Orders.Models
     public class Role
     {
         [Key]
-        public int role_Id { get; set; }
+        public EnumRoles role_Id { get; set; }
         public string role_name { get; set; }
 
         [NotMapped]

@@ -4,4 +4,6 @@
     public enum EnumTypesStep : int { Coordinate = 1,  Approve, Review, Notify, Created };
     public enum EnumAction : int { Send, Return, Refuse, Close};
     public enum EnumCheckedStatus : int { CheckedNone = 0, CheckedProcess,  Checked };
+
+    public enum EnumRoles : int { User = 0, Admin, ViewAllOrder, EditOtherRoutes, CloseOtherOrders, VisibleSumma, EditSumma };
 }

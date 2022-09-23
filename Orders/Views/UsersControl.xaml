@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:vm="clr-namespace:Orders.ViewModels"
             xmlns:fa="http://schemas.fontawesome.com/icons/"
+             xmlns:inf="clr-namespace:Orders.Infrastructure"
              xmlns:local="clr-namespace:Orders.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" >
@@ -58,10 +59,14 @@
 
                 </Button>
             </UniformGrid>
-            <Grid >
-
+            <DockPanel >
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="5,4">
+                    <fa:ImageAwesome Icon="Solid_Filter" Width="16" Foreground="Blue" Margin="5,0" ToolTip="Фильтрация" />
+                    <TextBox Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="200" ToolTip="Фильтрация"/>
+                </StackPanel>
+                
                 <DataGrid x:Name="dataGrid" ItemsSource="{Binding ListUserView}" SelectedItem="{Binding SelectedUser}"
-                    Style="{StaticResource DataGridStyle}" Margin="3" >
+                    Style="{StaticResource DataGridStyle}" Margin="3" inf:DataGridScrollSelect.SelectingItem="{Binding SelectedUser, Mode=TwoWay}" >
                     <!--<i:Interaction.Triggers>
                         <i:EventTrigger EventName="CellEditEnding">
                             <i:InvokeCommandAction Command="{Binding EndEditCommand}"/>
@@ -78,17 +83,24 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
             </DataGrid.Resources>-->
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_login}" />
+                        <DataGridTextColumn Header="Пользователь" Binding="{Binding User.u_login}"  />
                         <DataGridTextColumn Header="Пароль" Binding="{Binding User.u_pass}" />
                         <DataGridCheckBoxColumn Header="Админ" Binding="{Binding User.u_role}"/>
                         <DataGridTextColumn Header="ФИО" Binding="{Binding User.u_name}"/>
                         <DataGridTextColumn Header="Эл. почта" Binding="{Binding User.u_email}" />
-                        <!--<DataGridComboBoxColumn Header="Роли" ItemsSource="{Binding ListRole, Source={StaticResource model}}" 
-                            DisplayMemberPath="role_name" />-->
+                        <!--<DataGridComboBoxColumn Header="Роли" ItemsSource="{Binding ListRole}" DisplayMemberPath="role_name" />-->
+
                         <DataGridTemplateColumn Header="Права" >
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Grid>
+                                    <ComboBox Style="{DynamicResource ComboBoxSimple}" ItemsSource="{Binding ListRole}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Content="{Binding role_name}" IsChecked="{Binding IsCheckRole, Mode=TwoWay}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <!--<Grid>
                                         <ToggleButton x:Name="TogglePopupButton" />
                                         <Popup IsOpen="{Binding IsChecked, ElementName=TogglePopupButton}">
                                             <ListBox x:Name="list" ItemsSource="{Binding ListRole}" 
@@ -100,13 +112,13 @@
                                                 </ListBox.ItemTemplate>
                                             </ListBox>
                                         </Popup>
-                                    </Grid>
+                                    </Grid>-->
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-            </Grid>
+            </DockPanel>
 
         </DockPanel>
 

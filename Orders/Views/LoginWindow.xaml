@@ -37,6 +37,5 @@
                 </ComboBox.ItemsPanel>
             </ComboBox>
         </Grid>
-
     </Grid>
 </Window>

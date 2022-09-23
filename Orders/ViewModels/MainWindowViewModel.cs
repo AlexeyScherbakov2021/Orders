@@ -38,6 +38,16 @@ namespace Orders.ViewModels
         public bool CheckWork { get; set; }
         public bool CheckAll { get; set; }
 
+        #region Права доступа ---------------------------
+        private bool _IsViewAllOrders;      // просмотр всех заказов
+        private bool _IsEditOtherRoute;     // редактирование чужих маршрутов
+        private bool _IsCloseOtherOrder;    // закрытие чужих заказов
+        private bool _IsVisibleSumma;       // видимость суммы заказа
+        private bool _IsEditsumma;          // возможность редактирования суммы
+        #endregion
+
+
+
         public MainWindowViewModel()
         {
             //App.CurrentUser = new User { id = 11, u_name = "Создатель заказов", u_role = 0 };
@@ -46,6 +56,11 @@ namespace Orders.ViewModels
             //ListOrders = new ObservableCollection<Order>(repo.Orders
             //    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any() )
             //    );
+            _IsViewAllOrders = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.ViewAllOrder);
+            _IsEditOtherRoute = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditOtherRoutes);
+            _IsCloseOtherOrder = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.CloseOtherOrders);
+            _IsVisibleSumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.VisibleSumma);
+            _IsEditsumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma);
 
             timer.Interval = new TimeSpan(0, 0, 10);
             timer.Tick += Timer_Tick;
@@ -122,12 +137,11 @@ namespace Orders.ViewModels
             }
             else if(CheckWork)
             {
-
                 // В работе
-                ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.o_statusId < EnumStatus.Closed && it.RouteOrders.Where(r =>
-                    r.ro_userId == App.CurrentUser.id).Any())
-                );
+                ListOrders = /*_IsViewAllOrders
+                    ? ListOrders = new ObservableCollection<Order>(repo.Orders.Where(it => it.o_statusId < EnumStatus.Closed ))
+                    :*/ ListOrders = new ObservableCollection<Order>(repo.Orders
+                        .Where(it => it.o_statusId < EnumStatus.Closed && it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any()));
 
 
                 //ListOrders = new ObservableCollection<Order>(repo.Orders
@@ -186,10 +200,12 @@ namespace Orders.ViewModels
             else if(CheckAll)
             {
                 // все заказы
-                ListOrders = new ObservableCollection<Order>(repo.Orders
-                    .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
-                    //.Include(it => it.RouteOrders)
-                );
+                ListOrders = _IsViewAllOrders 
+                    ? new ObservableCollection<Order>(repo.Orders)
+                    : new ObservableCollection<Order>(repo.Orders
+                        .Where(it => it.RouteOrders.Where(r => r.ro_userId == App.CurrentUser.id).Any())
+                        //.Include(it => it.RouteOrders)
+                        );
             }
 
             // сортировка этапов для всех заказов
