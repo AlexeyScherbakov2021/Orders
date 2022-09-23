@@ -28,6 +28,17 @@ namespace Orders.ViewModels
         public User CurrentUser => App.CurrentUser;
         public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
 
+        public double HeightSumma { get; set; }
+
+        #region Права доступа ---------------------------
+        private bool _IsEditOtherRoute;     // редактирование чужих маршрутов
+        private bool _IsCloseOtherOrder;    // закрытие чужих заказов
+        private bool _IsVisibleSumma;       // видимость суммы заказа
+        private bool _IsEditsumma;          // возможность редактирования суммы
+        #endregion
+
+
+
         public RouteOrder SelectedRouteStep { get; set; }
 
         private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
@@ -48,10 +59,16 @@ namespace Orders.ViewModels
         {
             order = ord;
 
+            _IsEditOtherRoute = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditOtherRoutes);
+            _IsCloseOtherOrder = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.CloseOtherOrders);
+            _IsVisibleSumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.VisibleSumma);
+            _IsEditsumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma);
+
+            HeightSumma = _IsVisibleSumma || _IsEditsumma ? 22 : 0;
+
             //RouteSteps route = new RouteSteps(order.RouteOrders);
             ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
             //ListRouteOrders = new ObservableCollection<RouteOrder>( order.RouteOrders);
-
 
             // получение текущего этапа
             //CurrentStep = ListRouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
@@ -316,7 +333,7 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
-        private bool CanCloseOrderCommand(object p) =>  IsCreateUser && (IsAllSteps || order?.o_statusId == EnumStatus.Refused);
+        private bool CanCloseOrderCommand(object p) =>  (IsCreateUser || _IsCloseOtherOrder) && (IsAllSteps || order?.o_statusId == EnumStatus.Refused);
         private void OnCloseOrderCommandExecuted(object p)
         {
             order.o_statusId = EnumStatus.Closed;

@@ -128,10 +128,9 @@
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />
     <Compile Include="ViewModels\OrderWindowViewModel.cs" />
     <Compile Include="ViewModels\ReportRoutesWindowViewModel.cs" />
-    <Compile Include="ViewModels\ReturnOrderWindowViewModel.cs" />
-    <Compile Include="ViewModels\RouteControlViewModel.cs" />
-    <Compile Include="ViewModels\SettingWindowViewModel.cs" />
-    <Compile Include="ViewModels\UsersControlViewModel.cs" />
+    <Compile Include="ViewModels\Admin\RouteControlViewModel.cs" />
+    <Compile Include="ViewModels\Admin\SettingWindowViewModel.cs" />
+    <Compile Include="ViewModels\Admin\UsersControlViewModel.cs" />
     <Compile Include="Views\AddRouteWindow.xaml.cs">
       <DependentUpon>AddRouteWindow.xaml</DependentUpon>
     </Compile>
@@ -141,16 +140,13 @@
     <Compile Include="Views\ReportRoutesWindow.xaml.cs">
       <DependentUpon>ReportRoutesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ReturnOrderWindow.xaml.cs">
-      <DependentUpon>ReturnOrderWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RouteControl.xaml.cs">
+    <Compile Include="Views\Admin\RouteControl.xaml.cs">
       <DependentUpon>RouteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingWindow.xaml.cs">
+    <Compile Include="Views\Admin\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UsersControl.xaml.cs">
+    <Compile Include="Views\Admin\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wrapping\RoleUserWrap.cs" />
@@ -225,19 +221,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ReturnOrderWindow.xaml">
+    <Page Include="Views\Admin\RouteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RouteControl.xaml">
+    <Page Include="Views\Admin\SettingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\UsersControl.xaml">
+    <Page Include="Views\Admin\UsersControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

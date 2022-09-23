@@ -36,7 +36,7 @@ namespace Orders.ViewModels
         private bool CanClosingCommand(object p) => true;
         private void OnClosingCommandExecuted(object p)
         {
-            repo.Save();
+            UserViewModel.SaveUsers();
         }
         #endregion
     }

@@ -6,6 +6,7 @@
             xmlns:vm="clr-namespace:Orders.ViewModels"
             xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:inf="clr-namespace:Orders.Infrastructure"
+            xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Orders.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" >
@@ -68,8 +69,8 @@
                 <DataGrid x:Name="dataGrid" ItemsSource="{Binding ListUserView}" SelectedItem="{Binding SelectedUser}"
                     Style="{StaticResource DataGridStyle}" Margin="3" inf:DataGridScrollSelect.SelectingItem="{Binding SelectedUser, Mode=TwoWay}" >
                     <!--<i:Interaction.Triggers>
-                        <i:EventTrigger EventName="CellEditEnding">
-                            <i:InvokeCommandAction Command="{Binding EndEditCommand}"/>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding SelectOtdelCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>-->
 

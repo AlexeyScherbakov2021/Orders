@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace Orders.ViewModels
 {
-    internal class UsersControlViewModel : ViewModel
+    internal class UsersControlViewModel : ViewModel //, IDisposable
     {
         RepositoryBase repo;
 
@@ -44,7 +44,6 @@ namespace Orders.ViewModels
             }
         }
 
-
         private void _ListView_Filter(object sender, FilterEventArgs e)
         {
             if (e.Item is RoleUserWrap UserWrap)
@@ -53,14 +52,9 @@ namespace Orders.ViewModels
                     && !UserWrap.User.u_name.ToLower().StartsWith(Filter.ToLower()))
                     e.Accepted = false;
             }
-
-            //e.Accepted = false;
         }
 
 
-        //private void ListUserView_CurrentChanged(object sender, EventArgs e)
-        //{
-        //}
 
         CollectionViewSource _listUserViewSource;
         public ICollectionView ListUserView => _listUserViewSource?.View;
@@ -71,13 +65,33 @@ namespace Orders.ViewModels
             get => _SelectedUser; 
             set
             {
-                if (Set(ref _SelectedUser, value)) return;
-                //if(_SelectedUser != null)
-                _SelectedUser?.SettingFromRole(repo);
+                if (Equals(_SelectedUser, value)) return;
+
+                OnPropertyChanged(nameof(SelectedUser));
+                SaveUsers();
+                //if (_SelectedUser != null)
+                //    _SelectedUser?.SettingFromRole(repo);
                 _SelectedUser = value;
-                repo.Save();
+                //repo.Save();
             }
         }
+
+
+        //public void Dispose() => Dispose(true);
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //}
+
+
+        public void SaveUsers()
+        {
+            if (_SelectedUser is null) return;
+
+            _SelectedUser.SettingFromRole(repo);
+            repo.Save();
+        }
+
+
 
         #region Команды
         //--------------------------------------------------------------------------------
@@ -109,23 +123,24 @@ namespace Orders.ViewModels
             }
         }
 
-        //--------------------------------------------------------------------------------
-        // Событие окончания редактирования ячейки
-        //-------------------------------------------------------------------------------
-        //public ICommand SelectOtdelCommand => new LambdaCommand(OnSelectOtdelCommandExecuted, CanSelectOtdelCommand);
-        //private bool CanSelectOtdelCommand(object p) => true;
-        //private void OnSelectOtdelCommandExecuted(object p)
-        //{
-        //    repoUser.Update(SelectedUser.User);
-        //    ListUserView.Refresh();
-        //}
 
-        #endregion
+            //--------------------------------------------------------------------------------
+            // Событие окончания редактирования ячейки
+            //-------------------------------------------------------------------------------
+            //public ICommand SelectOtdelCommand => new LambdaCommand(OnSelectOtdelCommandExecuted, CanSelectOtdelCommand);
+            //private bool CanSelectOtdelCommand(object p) => true;
+            //private void OnSelectOtdelCommandExecuted(object p)
+            //{
+            //    //repoUser.Update(SelectedUser.User);
+            //    //ListUserView.Refresh();
+            //}
 
-        //--------------------------------------------------------------------------------
-        // Конструктор 
-        //--------------------------------------------------------------------------------
-        public UsersControlViewModel() 
+            #endregion
+
+            //--------------------------------------------------------------------------------
+            // Конструктор 
+            //--------------------------------------------------------------------------------
+            public UsersControlViewModel() 
         {
             repo = SettingWindowViewModel.repo;
             var listUser = new ObservableCollection<User>(repo.Users.Include(it => it.RolesUser));
@@ -137,18 +152,7 @@ namespace Orders.ViewModels
                 ListUser.Add(wrap);
             }
 
-            //ListRole = new ObservableCollection<Role>(repo.Roles);
-            //OnPropertyChanged(nameof(ListRole));
-
         }
-
-        //public UsersControlViewModel(RepositoryBase repoBase) : this()
-        //{
-        //    repo = repoBase;
-        //    ListUser = new ObservableCollection<User>(repo.Users);
-        //    ListRole = new ObservableCollection<Role>(repo.Roles);
-        //    OnPropertyChanged(nameof(ListRole));
-        //}
 
     }
 }

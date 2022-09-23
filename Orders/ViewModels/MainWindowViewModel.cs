@@ -47,7 +47,6 @@ namespace Orders.ViewModels
         #endregion
 
 
-
         public MainWindowViewModel()
         {
             //App.CurrentUser = new User { id = 11, u_name = "Создатель заказов", u_role = 0 };

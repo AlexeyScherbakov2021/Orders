@@ -28,6 +28,15 @@ namespace Orders.ViewModels
         public RouteOrder CreateStep { get; set; }
         public ObservableCollection<RouteAdding> ListFiles { get; set; } = new ObservableCollection<RouteAdding>();
 
+
+        // поле Сумма и ее видимость
+        public decimal Summa { get; set; }
+
+        private double _Height = 24;
+        public double Height { get => _Height; set => Set(ref _Height, value); }
+
+
+
         private Route _SelectedRoute;
         public Route SelectedRoute 
         { 
@@ -47,6 +56,9 @@ namespace Orders.ViewModels
 
 
 
+        //--------------------------------------------------------------------------------
+        // конструктор
+        //--------------------------------------------------------------------------------
         public CreateOrderWindowViewModel()
         {
             ListRoute = repo.Routes.ToList();
@@ -75,6 +87,8 @@ namespace Orders.ViewModels
             //Order.o_number = "001";
 
             Order.RouteOrders.Add(CreateStep);
+
+            Height = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma) ? 24 : 0;
         }
 
 

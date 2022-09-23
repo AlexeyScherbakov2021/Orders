@@ -37,6 +37,8 @@ namespace Orders.Models
 
         public int o_ownerUserId { get; set; }
 
+        public decimal? o_summa { get; set; }
+
         [NotMapped]
         public User WorkUser { get; set; }
 
