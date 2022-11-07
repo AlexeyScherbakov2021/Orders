@@ -103,7 +103,7 @@
                         </ItemsControl>
                         <Border DockPanel.Dock="Bottom" BorderBrush="#FFCCCCCC" BorderThickness="0,1,0,0" Margin="2,0,0,0">
                             <ScrollViewer MaxHeight="140" VerticalScrollBarVisibility="Auto" Focusable="False">
-                                <TextBlock Text="{Binding ro_text}" TextWrapping="Wrap"  ToolTip="Добавленный текст" SnapsToDevicePixels="True"/>
+                                <TextBox Text="{Binding ro_text}" BorderThickness="0" TextWrapping="Wrap"  ToolTip="Добавленный текст" IsReadOnly="True" SnapsToDevicePixels="True"/>
                             </ScrollViewer>
                         </Border>
                         <Grid Margin="2,0,0,0">
@@ -211,7 +211,7 @@
             </Button>
             <Button Margin="2" IsCancel="True" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonStyleShadow}" VerticalAlignment="Stretch" >
                 <DockPanel Margin="4,0">
-                    <fa:ImageAwesome Icon="Solid_DoorOpen" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
+                    <fa:ImageAwesome Icon="Solid_Redo" Foreground="Blue" Stretch="Uniform" Width="20" Margin="0,0,10,0" 
                                      HorizontalAlignment="Left" Height="20" DockPanel.Dock="Left" >
                     </fa:ImageAwesome>
                     <TextBlock Text="Обновить" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
