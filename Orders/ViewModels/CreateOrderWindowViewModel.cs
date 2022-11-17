@@ -30,12 +30,10 @@ namespace Orders.ViewModels
 
 
         // поле Сумма и ее видимость
-        public decimal Summa { get; set; }
+        //public decimal Summa { get; set; }
 
         private double _Height = 24;
         public double Height { get => _Height; set => Set(ref _Height, value); }
-
-
 
         private Route _SelectedRoute;
         public Route SelectedRoute 

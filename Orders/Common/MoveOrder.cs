@@ -108,7 +108,7 @@ namespace Orders.Common
 
                     order.o_statusId = NextStep.ro_statusId;
                     order.o_stepRoute = NextStep.ro_step;
-
+                    order.o_LastTimeStep = CurrentStep.ro_date_check;
                     return;
 
 
@@ -167,6 +167,7 @@ namespace Orders.Common
                 ShareFunction.SendMail(Owner.u_email, order.o_number);
                 order.o_statusId = CurrentStep.ro_statusId;
                 order.o_stepRoute = CurrentStep.ro_step;
+                order.o_LastTimeStep = CurrentStep.ro_date_check;
             }
             else
             {
@@ -188,6 +189,7 @@ namespace Orders.Common
 
                     order.o_statusId = NextStep.ro_statusId;
                     order.o_stepRoute = NextStep.ro_step;
+                    order.o_LastTimeStep = CurrentStep.ro_date_check;
                 }
             }
 

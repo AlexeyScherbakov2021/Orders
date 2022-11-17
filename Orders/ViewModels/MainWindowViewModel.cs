@@ -28,8 +28,13 @@ namespace Orders.ViewModels
         //private readonly IRepository<RouteOrder> repoRouteOrder;
         public ObservableCollection<Order> ListOrders { get; set; }
                
-        public Order SelectedOrder { get; set; }
 
+        public Order SelectedOrder { get; set; }
+#if DEBUG
+        public string Title { get; set; } = "Список заказов (отладочная версия)";
+#else
+        public string Title { get; set; } = "Список заказов";
+#endif
         public User CurrentUser  => App.CurrentUser;
 
         public bool CheckCreated { get; set; }
@@ -38,13 +43,13 @@ namespace Orders.ViewModels
         public bool CheckWork { get; set; }
         public bool CheckAll { get; set; }
 
-        #region Права доступа ---------------------------
+#region Права доступа ---------------------------
         private bool _IsViewAllOrders;      // просмотр всех заказов
         private bool _IsEditOtherRoute;     // редактирование чужих маршрутов
         private bool _IsCloseOtherOrder;    // закрытие чужих заказов
         private bool _IsVisibleSumma;       // видимость суммы заказа
         private bool _IsEditsumma;          // возможность редактирования суммы
-        #endregion
+#endregion
 
 
         public MainWindowViewModel()
@@ -74,7 +79,7 @@ namespace Orders.ViewModels
             OnFilterCommandExecuted(null);
         }
 
-        #region Команды
+#region Команды
 
         //--------------------------------------------------------------------------------
         // Команда Фильтровать заказы
@@ -310,7 +315,7 @@ namespace Orders.ViewModels
         }
 
 
-        #endregion
+#endregion
 
         //--------------------------------------------------------------------------------
         // Сортировка маршрута по номерам

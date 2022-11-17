@@ -96,7 +96,7 @@
                     <TextBox Text="{Binding Order.o_CardOrder, Mode=TwoWay}"  Grid.Row="7" />
 
                     <TextBlock Text="Сумма" Grid.Row="8" VerticalAlignment="Center" />
-                    <TextBox Text="{Binding Summa, Mode=TwoWay, StringFormat=0.##}"  Grid.Row="9" />
+                    <TextBox Text="{Binding Order.o_summa, Mode=TwoWay, StringFormat=0.##}"  Grid.Row="9" />
 
                     <TextBlock Text="Текстовое дополнение" Grid.Row="10" VerticalAlignment="Center" />
                     <TextBox Text="{Binding Order.o_body, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="11" VerticalScrollBarVisibility="Auto"/>

@@ -28,13 +28,14 @@ namespace Orders.ViewModels
         public User CurrentUser => App.CurrentUser;
         public ObservableCollection<RouteAdding> ListFiles { get; set; }// = new ObservableCollection<RouteAdding>();
 
-        public double HeightSumma { get; set; }
+        public double HeightSumma { get; set; } = 22;
 
         #region Права доступа ---------------------------
         private bool _IsEditOtherRoute;     // редактирование чужих маршрутов
         private bool _IsCloseOtherOrder;    // закрытие чужих заказов
         private bool _IsVisibleSumma;       // видимость суммы заказа
-        private bool _IsEditsumma;          // возможность редактирования суммы
+        //private bool _IsNotEditSumma = false;          // возможность редактирования суммы
+        public bool IsNotEditSumma { get; set; }          
         #endregion
 
 
@@ -62,9 +63,9 @@ namespace Orders.ViewModels
             _IsEditOtherRoute = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditOtherRoutes);
             _IsCloseOtherOrder = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.CloseOtherOrders);
             _IsVisibleSumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.VisibleSumma);
-            _IsEditsumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma);
+            IsNotEditSumma = !App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma);
 
-            HeightSumma = _IsVisibleSumma || _IsEditsumma ? 22 : 0;
+            HeightSumma = _IsVisibleSumma || !IsNotEditSumma ? 22 : 0;
 
             //RouteSteps route = new RouteSteps(order.RouteOrders);
             ListRouteOrders = new ObservableCollection<RouteOrder>(MainWindowViewModel.repo.GetRouteOrders(order.id));
@@ -74,7 +75,7 @@ namespace Orders.ViewModels
             //CurrentStep = ListRouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             CurrentStep = MainWindowViewModel.repo.RouteOrders.FirstOrDefault(it => it.ro_check == EnumCheckedStatus.CheckedProcess
                 && it.ro_orderId == order.id
-                && it.ro_userId == App.CurrentUser.id);
+                /*&& it.ro_userId == App.CurrentUser.id*/);
 
             //CurrentStep = order.RouteOrders.FirstOrDefault(it => it.ro_step == order.o_stepRoute);
             if(CurrentStep != null)
@@ -175,7 +176,12 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
-        private bool CanAddRouteCommand(object p) => !IsDisabledElement && _CurrentStep?.ro_parentId == null;
+        private bool CanAddRouteCommand(object p) => 
+            ( CurrentStep?.ro_userId == App.CurrentUser.id || _IsEditOtherRoute )
+            && !IsAllSteps
+            && order.o_statusId != EnumStatus.Refused
+            && _CurrentStep?.ro_parentId == null;
+
         private void OnAddRouteCommandExecuted(object p)
         {
             AddRouteWindowViewModel view = new AddRouteWindowViewModel(ListRouteOrders, CurrentStep);
@@ -207,7 +213,8 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _DeleteRouteCommand = null;
         public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
-        private bool CanDeleteRouteCommand(object p) => SelectedRouteStep?.ro_ownerId == App.CurrentUser.id 
+        private bool CanDeleteRouteCommand(object p) => 
+            ( SelectedRouteStep?.ro_ownerId == App.CurrentUser.id || _IsEditOtherRoute)
             && SelectedRouteStep?.ro_statusId != EnumStatus.Waiting
             && SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
 

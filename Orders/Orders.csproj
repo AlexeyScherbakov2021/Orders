@@ -110,6 +110,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\DataGridColumnProxy.cs" />
     <Compile Include="Common\MoveOrder.cs" />
     <Compile Include="Common\ShareFunction.cs" />
     <Compile Include="Infrastructure\Converters\IsChildStepConverter.cs" />

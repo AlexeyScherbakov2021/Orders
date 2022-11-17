@@ -7,6 +7,8 @@ namespace Orders.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Linq;
+    using System.Windows;
 
     public partial class Order : IEntity
 
@@ -38,6 +40,7 @@ namespace Orders.Models
         public int o_ownerUserId { get; set; }
 
         public decimal? o_summa { get; set; }
+        public DateTime? o_LastTimeStep { get; set; }
 
         [NotMapped]
         public User WorkUser { get; set; }
@@ -53,7 +56,6 @@ namespace Orders.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public ICollection<RouteOrder> RouteOrders { get; set; }
-
 
     }
 }

@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -30,8 +31,15 @@ namespace Orders.ViewModels
 
         public CollectionViewSource _ListOrderView { get; set; } = new CollectionViewSource();
 
+        public Visibility IsVisibleSumma { get; set; } 
+
         public ReportRoutesWindowViewModel()
         {
+            IsVisibleSumma = 
+                App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.VisibleSumma || it.ru_role_id == EnumRoles.EditSumma)
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+
             ListOrder = MainWindowViewModel.repo.Orders
                 .Where(it => it.o_statusId < EnumStatus.Closed )
                 .Include(ro => ro.RouteOrders.Select(s => s.User))

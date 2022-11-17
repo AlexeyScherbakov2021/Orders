@@ -10,7 +10,7 @@
         xmlns:local="clr-namespace:Orders"
         xmlns:local1="clr-namespace:Orders.Views" x:Class="Orders.Views.MainWindow"
         mc:Ignorable="d"
-        Title="Список заказов" Height="600" Width="900" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" Height="600" Width="1000" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <!--<conv:StatusToImageConverter x:Key="StatusToImageConverter"/>-->
         <conv:StatusToIconConverter x:Key="StatusToIconConverter"/>
@@ -111,6 +111,7 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Время создания" Binding="{Binding o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Width="120"/>
                         <DataGridTextColumn Header="У кого в работе" Binding="{Binding WorkUser.u_name}" Width="*"/>
+                        <DataGridTextColumn Header="Время на этапе" Binding="{Binding o_LastTimeStep, StringFormat=dd.MM.yyyy HH:mm:ss}" Width="120"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
