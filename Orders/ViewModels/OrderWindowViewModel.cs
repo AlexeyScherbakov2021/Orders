@@ -34,7 +34,7 @@ namespace Orders.ViewModels
         private bool _IsEditOtherRoute;     // редактирование чужих маршрутов
         private bool _IsCloseOtherOrder;    // закрытие чужих заказов
         private bool _IsVisibleSumma;       // видимость суммы заказа
-        //private bool _IsNotEditSumma = false;          // возможность редактирования суммы
+        private bool _IsContinueOrder;      // продолжение законченного заказа
         public bool IsNotEditSumma { get; set; }          
         #endregion
 
@@ -64,7 +64,8 @@ namespace Orders.ViewModels
             _IsCloseOtherOrder = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.CloseOtherOrders);
             _IsVisibleSumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.VisibleSumma);
             IsNotEditSumma = !App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma);
-
+            _IsContinueOrder = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.ContinueOrder);
+            
             HeightSumma = _IsVisibleSumma || !IsNotEditSumma ? 22 : 0;
 
             //RouteSteps route = new RouteSteps(order.RouteOrders);
@@ -178,18 +179,40 @@ namespace Orders.ViewModels
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
         private bool CanAddRouteCommand(object p) => 
             ( CurrentStep?.ro_userId == App.CurrentUser.id || _IsEditOtherRoute || IsCreateUser)
-            && !IsAllSteps
+            && (!IsAllSteps || _IsContinueOrder)
             && order.o_statusId != EnumStatus.Refused
             && _CurrentStep?.ro_parentId == null;
 
         private void OnAddRouteCommandExecuted(object p)
         {
-            AddRouteWindowViewModel view = new AddRouteWindowViewModel(ListRouteOrders, CurrentStep);
+            RouteOrder _CurStep;
+
+            if(CurrentStep is null)
+            {
+                if (MessageBox.Show("Заказ был завершен. После добавления этапа, на него произойдет отправка. Продолжить?","Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                    return;
+                _CurStep = ListRouteOrders.LastOrDefault();
+            }
+            else
+                _CurStep = CurrentStep;
+
+
+            AddRouteWindowViewModel view = new AddRouteWindowViewModel(ListRouteOrders, _CurStep);
             AddRouteWindow winAddRoute = new AddRouteWindow();
             winAddRoute.DataContext = view;
 
+            bool IsSendToStep = IsAllSteps;
+
             if (winAddRoute.ShowDialog() == true)
             {
+                if(IsSendToStep)
+                {
+                    // были пройдены все этапы
+                    MoveOrder move = new MoveOrder(order, ListRouteOrders, EnumAction.Send, _CurStep);
+                    move.SendToStep(ListRouteOrders.LastOrDefault());
+                    App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+                }
+
                 //order.RouteOrders = ListRouteOrders;
 
                 //ListRouteOrders = new ObservableCollection<RouteOrder>(order.RouteOrders);

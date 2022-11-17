@@ -297,5 +297,15 @@ namespace Orders.Common
 
         }
 
+        public void SendToStep(RouteOrder NextStep)
+        {
+            NextStep.ro_statusId = EnumStatus.CoordinateWork;
+            NextStep.ro_check = EnumCheckedStatus.CheckedProcess;
+            ShareFunction.SendMail(NextStep.User.u_email, order.o_number);
+            order.o_statusId = NextStep.ro_statusId;
+            order.o_stepRoute = NextStep.ro_step;
+            order.o_LastTimeStep = CurrentStep.ro_date_check;
+        }
+
     }
 }
