@@ -183,6 +183,7 @@ namespace Orders.ViewModels
             ( CurrentStep?.ro_userId == App.CurrentUser.id || _IsEditOtherRoute || IsCreateUser)
             && (!IsAllSteps || _IsContinueOrder)
             && order.o_statusId != EnumStatus.Refused
+            && order.o_statusId != EnumStatus.Closed
             && _CurrentStep?.ro_parentId == null;
 
         private void OnAddRouteCommandExecuted(object p)
@@ -377,7 +378,9 @@ namespace Orders.ViewModels
         //--------------------------------------------------------------------------------
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
-        private bool CanCloseOrderCommand(object p) =>  (IsCreateUser || _IsCloseOtherOrder) && (IsAllSteps || order?.o_statusId == EnumStatus.Refused);
+        private bool CanCloseOrderCommand(object p) =>  
+            (IsCreateUser || _IsCloseOtherOrder) && (IsAllSteps || order?.o_statusId == EnumStatus.Refused)
+            && order?.o_statusId != EnumStatus.Closed;
         private void OnCloseOrderCommandExecuted(object p)
         {
             order.o_statusId = EnumStatus.Closed;
