@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:Orders.Views"
         xmlns:pr="clr-namespace:DataGridColumnVisibility"
         xmlns:cmd="clr-namespace:Orders.Infrastructure.Commands"
+        xmlns:conv="clr-namespace:Orders.Infrastructure.Converters"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         mc:Ignorable="d"
         Title="Отчет по заказам" Height="700" Width="1200" WindowStartupLocation="CenterScreen"
@@ -15,6 +16,7 @@
         <vm:ReportRoutesWindowViewModel/>
     </Window.DataContext>
     <Window.Resources>
+        <conv:StatusToIconConverter x:Key="StatusToIconConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,6 +37,9 @@
                     <TextBlock Text="Закрыть" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14"/>
                 </DockPanel>
             </Button>
+            <CheckBox Content="+Закрытые" IsChecked="{Binding IsAddClosed, Mode=TwoWay}"
+                      Command="{Binding FilterCommand}"
+                      VerticalAlignment="Center" Margin="10,0" />
         </ToolBarPanel>
 
         <Grid Grid.Row="1" Margin="4,4,8,0" Background="#FFE4E4FF">
@@ -112,6 +117,11 @@
 
 
         <DataGrid ItemsSource="{Binding _ListOrderView.View}" Margin="10,2,10,10" Grid.Row="2" IsReadOnly="True" Style="{StaticResource DataGridStyle}">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
             <DataGrid.Resources>
                 <pr:BindingProxy x:Key="ColumnVisible" Data="{Binding IsVisibleSumma}"   />
             </DataGrid.Resources>
@@ -123,7 +133,25 @@
                 <DataGridTextColumn x:Name="col1"  Header="Наименование" Binding="{Binding o_name}"  />
                 <DataGridTextColumn x:Name="col2" Header="Покупатель" Binding="{Binding o_buyer}" />
                 <DataGridTextColumn x:Name="col3" Header="Карта заказа" Binding="{Binding o_CardOrder}"  />
-                <DataGridTextColumn x:Name="col4" Header="Статус" Binding="{Binding RouteStatus.sr_name}" />
+                <DataGridTemplateColumn Width="160" Header="Статус" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Margin="6, 0" Height="18" Width="18" Source="{Binding RouteStatus.id, Converter={StaticResource StatusToIconConverter}}">
+                                    <Image.Effect>
+                                        <DropShadowEffect ShadowDepth="0" BlurRadius="2" Color="#FF999999"/>
+                                    </Image.Effect>
+                                </Image>
+                                <TextBlock Text="{Binding RouteStatus.sr_name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <!--<DataGridTextColumn x:Name="col4" Header="Статус" Binding="{Binding RouteStatus.sr_name}" />-->
+                
+                <DataGridTextColumn Header="Инициатор" Binding="{Binding Owner.u_name}"  />
                 <DataGridTextColumn Header="Время создания" Binding="{Binding o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}"  />
                 <DataGridTextColumn Header="На этапе" Binding="{Binding WorkUser.u_name}"  />
                 <DataGridTextColumn Header="Время на этапе" Binding="{Binding o_LastTimeStep, StringFormat=dd.MM.yyyy HH:mm:ss}"  />

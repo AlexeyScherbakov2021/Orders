@@ -88,6 +88,12 @@
             <GroupBox Header="Список заказов" FontWeight="Bold" FontSize="14" >
                 <DataGrid ItemsSource="{Binding ListOrders}" IsReadOnly="True"  SelectedItem="{Binding SelectedOrder}" 
                           Style="{StaticResource DataGridStyle}" Margin="2" FontSize="12" FontWeight="Normal">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DblClickCommand}" />
                     </DataGrid.InputBindings>
@@ -110,8 +116,9 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Время создания" Binding="{Binding o_date_created, StringFormat=dd.MM.yyyy HH:mm:ss}" Width="120"/>
-                        <DataGridTextColumn Header="У кого в работе" Binding="{Binding WorkUser.u_name}" Width="*"/>
+                        <DataGridTextColumn Header="У кого в работе" Binding="{Binding WorkUser.u_name}"/>
                         <DataGridTextColumn Header="Время на этапе" Binding="{Binding o_LastTimeStep, StringFormat=dd.MM.yyyy HH:mm:ss}" Width="120"/>
+                        <DataGridTextColumn Header="Инициатор" Binding="{Binding Owner.u_name}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
 

@@ -18,6 +18,8 @@ namespace Orders.ViewModels
 {
     internal class ReportRoutesWindowViewModel : ViewModel
     {
+        public bool IsAddClosed {  get; set; }
+
         private string _FilterName = "";
         public string FilterName { get => _FilterName; set { if(Set(ref _FilterName, value)) { _ListOrderView.View.Refresh(); }}}
 
@@ -40,13 +42,25 @@ namespace Orders.ViewModels
                 ? Visibility.Visible 
                 : Visibility.Collapsed;
 
-            ListOrder = MainWindowViewModel.repo.Orders
-                .Where(it => it.o_statusId < EnumStatus.Closed )
-                .Include(ro => ro.RouteOrders.Select(s => s.User))
-                .ToList();
+            //if (IsAddClosed)
+            //{
+            //    ListOrder = MainWindowViewModel.repo.Orders
+            //        //.Where(it => it.o_statusId <= EnumStatus.Closed)
+            //        .Include(ro => ro.RouteOrders.Select(s => s.User))
+            //        .ToList();
+            //}
+            //else
+            //{
+            //    ListOrder = MainWindowViewModel.repo.Orders
+            //        .Where(it => it.o_statusId < EnumStatus.Closed)
+            //        .Include(ro => ro.RouteOrders.Select(s => s.User))
+            //        .ToList();
+            //}
 
-            _ListOrderView.Source = ListOrder;
-            _ListOrderView.Filter += _ListOrderView_Filter;
+            //_ListOrderView.Source = ListOrder;
+            //_ListOrderView.Filter += _ListOrderView_Filter;
+
+            QueryOrders();
 
             //ListOrder = MainWindowViewModel.repo.Orders
             //    .Where(it => it.o_statusId == EnumStatus.Approved || it.RouteOrders
@@ -62,6 +76,10 @@ namespace Orders.ViewModels
             }
         }
 
+
+        //--------------------------------------------------------------------------------------
+        // функция фильтрации 
+        //--------------------------------------------------------------------------------------
         private void _ListOrderView_Filter(object sender, FilterEventArgs e)
         {
             if(e.Item is Order order )
@@ -77,8 +95,33 @@ namespace Orders.ViewModels
                     e.Accepted = false;
             }
 
-            //e.Accepted = false;
         }
+
+
+        //--------------------------------------------------------------------------------------
+        // получение списка заказови 
+        //--------------------------------------------------------------------------------------
+        private void QueryOrders()
+        {
+            if (IsAddClosed)
+            {
+                ListOrder = MainWindowViewModel.repo.Orders
+                    //.Where(it => it.o_statusId <= EnumStatus.Closed)
+                    //.Include(ro => ro.RouteOrders.Select(s => s.User))
+                    .ToList();
+            }
+            else
+            {
+                ListOrder = MainWindowViewModel.repo.Orders
+                    .Where(it => it.o_statusId < EnumStatus.Closed)
+                    //.Include(ro => ro.RouteOrders.Select(s => s.User))
+                    .ToList();
+            }
+
+            _ListOrderView.Source = ListOrder;
+            _ListOrderView.Filter += _ListOrderView_Filter;
+        }
+
 
         #region Команды
 
@@ -100,11 +143,11 @@ namespace Orders.ViewModels
         // Команда Фильтр по тексту
         //--------------------------------------------------------------------------------
         private readonly ICommand _FilterCommand = null;
-        public ICommand FilterCommand => _FilterCommand ?? new LambdaCommand(OnClearFilterCommandExecuted, CanClearFilterCommand);
+        public ICommand FilterCommand => _FilterCommand ?? new LambdaCommand(OnFilterCommandExecuted, CanFilterCommand);
         private bool CanFilterCommand(object p) => true;
         private void OnFilterCommandExecuted(object p)
         {
-
+            QueryOrders();
         }
 
         #endregion

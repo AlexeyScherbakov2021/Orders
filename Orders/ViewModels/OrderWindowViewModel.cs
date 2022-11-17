@@ -44,8 +44,8 @@ namespace Orders.ViewModels
 
         private bool IsAllSteps =>  order?.RouteOrders.All(it => it.ro_check == EnumCheckedStatus.Checked) ?? false;
         private bool IsWorkUser => CurrentStep?.ro_userId == App.CurrentUser.id;
-        private bool IsCreateUser => order?.RouteOrders.Count > 0
-                                                && order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
+        private bool IsCreateUser => order?.RouteOrders.Count > 0 && order?.Owner.id == App.CurrentUser.id;
+        //&& order?.RouteOrders.FirstOrDefault().ro_userId == App.CurrentUser.id;
         public Order order { get; set; }
         
         private RouteOrder _CurrentStep;
@@ -177,7 +177,7 @@ namespace Orders.ViewModels
         private readonly ICommand _AddRouteCommand = null;
         public ICommand AddRouteCommand => _AddRouteCommand ?? new LambdaCommand(OnAddRouteCommandExecuted, CanAddRouteCommand);
         private bool CanAddRouteCommand(object p) => 
-            ( CurrentStep?.ro_userId == App.CurrentUser.id || _IsEditOtherRoute )
+            ( CurrentStep?.ro_userId == App.CurrentUser.id || _IsEditOtherRoute || IsCreateUser)
             && !IsAllSteps
             && order.o_statusId != EnumStatus.Refused
             && _CurrentStep?.ro_parentId == null;
@@ -214,7 +214,7 @@ namespace Orders.ViewModels
         private readonly ICommand _DeleteRouteCommand = null;
         public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
         private bool CanDeleteRouteCommand(object p) => 
-            ( SelectedRouteStep?.ro_ownerId == App.CurrentUser.id || _IsEditOtherRoute)
+            ( SelectedRouteStep?.ro_ownerId == App.CurrentUser.id || _IsEditOtherRoute || IsCreateUser)
             && SelectedRouteStep?.ro_statusId != EnumStatus.Waiting
             && SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
 
