@@ -35,6 +35,7 @@ namespace Orders.ViewModels
         private bool _IsCloseOtherOrder;    // закрытие чужих заказов
         private bool _IsVisibleSumma;       // видимость суммы заказа
         private bool _IsContinueOrder;      // продолжение законченного заказа
+        private bool _IsDeleteCurrentStep;  // удаление этапа на рассмотрении
         public bool IsNotEditSumma { get; set; }          
         #endregion
 
@@ -65,7 +66,8 @@ namespace Orders.ViewModels
             _IsVisibleSumma = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.VisibleSumma);
             IsNotEditSumma = !App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.EditSumma);
             _IsContinueOrder = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.ContinueOrder);
-            
+            _IsDeleteCurrentStep = App.CurrentUser.RolesUser.Any(it => it.ru_role_id == EnumRoles.DeleteCurrentStep);
+
             HeightSumma = _IsVisibleSumma || !IsNotEditSumma ? 22 : 0;
 
             //RouteSteps route = new RouteSteps(order.RouteOrders);
@@ -238,8 +240,9 @@ namespace Orders.ViewModels
         public ICommand DeleteRouteCommand => _DeleteRouteCommand ?? new LambdaCommand(OnDeleteRouteCommandExecuted, CanDeleteRouteCommand);
         private bool CanDeleteRouteCommand(object p) => 
             ( SelectedRouteStep?.ro_ownerId == App.CurrentUser.id || _IsEditOtherRoute || IsCreateUser)
-            && SelectedRouteStep?.ro_statusId != EnumStatus.Waiting
-            && SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone;
+            && (SelectedRouteStep?.ro_statusId != EnumStatus.Waiting )
+            && (SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedNone 
+                || (_IsDeleteCurrentStep && SelectedRouteStep?.ro_check == EnumCheckedStatus.CheckedProcess));
 
         private void OnDeleteRouteCommandExecuted(object p)
         {
@@ -249,6 +252,17 @@ namespace Orders.ViewModels
                 ObservableCollection<RouteOrder> tmpList;
                 int index;
                 bool IsChild = false;
+
+                if(SelectedRouteStep.ro_check == EnumCheckedStatus.CheckedProcess)
+                {
+                    if (MessageBox.Show("После удаления будет отправка следующий этап. Продолжить?", "Предупреждение", 
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                        return;
+
+                    MoveOrder move = new MoveOrder(order, ListRouteOrders, EnumAction.Send, SelectedRouteStep);
+                    move.MoveToNextStep(new List<RouteAdding>());
+                    App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
+                }
 
                 // это подчиненный маршрут
                 if (SelectedRouteStep.ro_parentId != null)
