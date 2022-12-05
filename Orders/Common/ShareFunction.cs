@@ -248,7 +248,7 @@ namespace Orders.Infrastructure.Common
 
             SmtpClient smtp = new SmtpClient("zimbra.lancloud.ru", 587);
 
-            smtp.Credentials = new NetworkCredential("a.scherbakov@ngk-ehz.ru", "Jjbr9uxa");
+            smtp.Credentials = new NetworkCredential("a.scherbakov@ngk-ehz.ru", "T5PUf5FL");
             smtp.EnableSsl = true;
             await smtp.SendMailAsync(m);
         }

@@ -289,7 +289,7 @@
                     <TextBox Text="{Binding order.Owner.u_name}" Grid.Row="6" Grid.Column="1" IsReadOnly="True"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Сумма" Grid.Row="8" VerticalAlignment="Center" Height="16" />
-                    <TextBox Text="{Binding order.o_summa}" Grid.Row="8" Grid.Column="1" IsReadOnly="{Binding IsNotEditSumma}"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
+                    <TextBox Text="{Binding order.o_summa, StringFormat=N}" Validation.ErrorTemplate="{x:Null}" Grid.Row="8" Grid.Column="1" IsReadOnly="{Binding IsNotEditSumma}"  VerticalAlignment="Center" FontWeight="Bold" Background="#f6f6f6"/>
 
                     <TextBlock Text="Описание заказа" Grid.Row="9" VerticalAlignment="Center" Height="16" />
                     <TextBox Text="{Binding order.o_body}" IsReadOnly="True" Grid.Row="10"  Grid.ColumnSpan="2" TextWrapping="Wrap" Background="#FFF4F4F4" VerticalScrollBarVisibility="Auto"/>
