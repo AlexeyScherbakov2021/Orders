@@ -262,9 +262,9 @@
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="22"/>
-                        <RowDefinition Height="150"/>
+                        <RowDefinition Height="20*"/>
                         <RowDefinition Height="26"/>
-                        <RowDefinition/>
+                        <RowDefinition Height="15*"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock x:Name="textBlock" Text="Номер"  VerticalAlignment="Center" Height="16" />
