@@ -117,6 +117,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridCheckBoxColumn Header="Скрыть" Binding="{Binding User.u_hide}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

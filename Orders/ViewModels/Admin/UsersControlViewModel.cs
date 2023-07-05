@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Orders.ViewModels
 {
@@ -120,6 +121,8 @@ namespace Orders.ViewModels
             {
                 if (repo.Delete(SelectedUser.User, true))
                     ListUser.Remove(SelectedUser);
+                else
+                    MessageBox.Show("Удалить запись невозможно. В это случае можно скрыть.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

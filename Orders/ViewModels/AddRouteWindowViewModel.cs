@@ -48,7 +48,7 @@ namespace Orders.ViewModels
             _ListRouteOrder = listSteps;
             SelectSteps();
 
-            ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1).OrderBy(o => o.u_name).ToList();
+            ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1 && it.u_hide == false).OrderBy(o => o.u_name).ToList();
             ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created).ToList();
             SelectedType = ListRouteType[0];
         }

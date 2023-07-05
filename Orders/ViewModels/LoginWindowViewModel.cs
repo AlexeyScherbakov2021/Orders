@@ -84,7 +84,7 @@ namespace Orders.ViewModels
             //winLogin = App.Current.Windows.OfType<LoginWindow>().First();
 
             repo = new RepositoryBase();
-            ListUser = repo.Users.Include(it => it.RolesUser).OrderBy(o => o.u_login).ToArray();
+            ListUser = repo.Users.Where(it => it.u_hide == false).Include(it => it.RolesUser).OrderBy(o => o.u_login).ToArray();
 
             if( ListUser is null ||  ListUser.Count() == 0 || !ListUser.Any(it => it.u_role == 1))
             {

@@ -38,6 +38,19 @@ namespace Orders.ViewModels
         {
             UserViewModel.SaveUsers();
         }
+
+        //public ICommand TabChangeCommand => new LambdaCommand(OnTabChangeCommandExecuted, CanTabChangeCommand);
+        //private bool CanTabChangeCommand(object p) => true;
+        //private void OnTabChangeCommandExecuted(object p)
+        //{
+            //if(p is SelectionChangedEventArgs e)
+            //{
+            //    if((e.Source as TabControl).SelectedIndex == 1)
+            //    {
+            //        //RouteViewModel.RefreshCommand.Execute(null);
+            //    }
+            //}
+        //}
         #endregion
     }
 }
