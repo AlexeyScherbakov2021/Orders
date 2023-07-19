@@ -379,10 +379,21 @@ namespace Orders.ViewModels
         private readonly ICommand _CloseOrderCommand = null;
         public ICommand CloseOrderCommand => _CloseOrderCommand ?? new LambdaCommand(OnCloseOrderCommandExecuted, CanCloseOrderCommand);
         private bool CanCloseOrderCommand(object p) =>  
-            (IsCreateUser || _IsCloseOtherOrder) && (IsAllSteps || order?.o_statusId == EnumStatus.Refused)
+            (IsCreateUser || _IsCloseOtherOrder) /*&& (IsAllSteps || order?.o_statusId == EnumStatus.Refused)*/
             && order?.o_statusId != EnumStatus.Closed;
         private void OnCloseOrderCommandExecuted(object p)
         {
+            if(!IsAllSteps || order?.o_statusId == EnumStatus.Refused)
+            {
+                if (MessageBox.Show("Не все этапы пройдены. Все равно отправить а архив?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    RouteOrder ro = order.RouteOrders.FirstOrDefault(it => it.ro_check == EnumCheckedStatus.CheckedProcess);
+                    ro.ro_check = EnumCheckedStatus.CheckedNone;
+                }
+                else
+                    return;
+            }
+
             order.o_statusId = EnumStatus.Closed;
             App.Current.Windows.OfType<OrderWindow>().FirstOrDefault().DialogResult = true;
         }
