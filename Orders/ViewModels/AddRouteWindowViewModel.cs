@@ -49,7 +49,7 @@ namespace Orders.ViewModels
             SelectSteps();
 
             ListUser = MainWindowViewModel.repo.Users.Where(it => it.u_role != 1 && it.u_hide == false).OrderBy(o => o.u_name).ToList();
-            ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created).ToList();
+            ListRouteType = MainWindowViewModel.repo.RouteTypes.Where(it => it.id != EnumTypesStep.Created).ToList();
             SelectedType = ListRouteType[0];
         }
 
@@ -91,7 +91,7 @@ namespace Orders.ViewModels
             //ICollection<RouteOrder> TempList = null;
 
             RouteOrder ro = new RouteOrder();
-            ro.ro_typeId = SelectedType.id;
+            ro.ro_typeId = (EnumTypesStep)SelectedType.id;
             ro.ro_userId = SelectedUser.id;
             ro.ro_statusId = EnumStatus.None;
             ro.ro_orderId = _CurrentStep.ro_orderId;

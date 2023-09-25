@@ -1,5 +1,6 @@
 namespace Orders.Models
 {
+    using Orders.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ namespace Orders.Models
     using System.Data.Entity.Spatial;
 
     [Table("RouteType")]
-    public partial class RouteType : IEntity
+    public partial class RouteType //: IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RouteType()
@@ -19,7 +20,7 @@ namespace Orders.Models
         [Key]
         [Column("idRouteType")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int id { get; set; }
+        public EnumTypesStep id { get; set; }
 
         [StringLength(50)]
         public string rt_name { get; set; }

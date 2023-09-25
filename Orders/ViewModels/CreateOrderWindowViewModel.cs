@@ -71,7 +71,7 @@ namespace Orders.ViewModels
                 ro_step = 0,
                 RouteAddings = ListFiles,
                 ro_userId = App.CurrentUser.id,
-                ro_typeId = 5,
+                ro_typeId = EnumTypesStep.Created,
                 //ro_enabled = true,
                 ro_statusId = EnumStatus.Created,
                 ro_check = EnumCheckedStatus.CheckedProcess,
@@ -117,6 +117,15 @@ namespace Orders.ViewModels
                     Order.RouteOrders.Add(ro);
                 }
             }
+
+            // Добавление себя в конце маршрута
+            RouteOrder routeOrder = new RouteOrder();
+            routeOrder.ro_step = curStep++;
+            routeOrder.ro_userId = App.CurrentUser.id;
+            routeOrder.ro_typeId = EnumTypesStep.Notify;
+            routeOrder.ro_statusId = EnumStatus.None;
+            routeOrder.ro_ownerId = App.CurrentUser.id;
+            Order.RouteOrders.Add(routeOrder);
 
             Order.o_statusId = EnumStatus.Created;
 

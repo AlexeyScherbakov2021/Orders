@@ -75,7 +75,7 @@ namespace Orders.ViewModels
             //repo = repoBase;
             repo = new RepositoryBase();
             ListUser = new ObservableCollection<User>( repo.Users.Where(it => it.u_role < 1 && it.u_hide == false).OrderBy(o => o.u_name));
-            ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes.Where(it => it.id != (int)EnumTypesStep.Created));
+            ListRouteType = new ObservableCollection<RouteType>( repo.RouteTypes.Where(it => it.id != EnumTypesStep.Created));
             ListRouteType[0].IsCheck = true;
             ListRoute = new ObservableCollection<Route>(repo.Routes.Include(it => it.RouteSteps));
 
@@ -135,7 +135,7 @@ namespace Orders.ViewModels
                 r_step = LastStep,
                 r_enabled = true,
                 r_userId = SelectAddUser.id,
-                r_type = ListRouteType.Single(it => it.IsCheck == true).id
+                r_type = (EnumTypesStep)ListRouteType.Single(it => it.IsCheck == true).id
             };
 
             SelectedRoute.RouteSteps.Add(step);

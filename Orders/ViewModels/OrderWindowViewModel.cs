@@ -16,13 +16,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System;
 using System.Windows.Shell;
+using System.Collections.Specialized;
 
 namespace Orders.ViewModels
 {
     internal class OrderWindowViewModel : ViewModel
     {
+        static RouteAdding routeAdding = null;
+
         public ObservableCollection<RouteOrder> ListRouteOrders { get; set; }
 
         public User CurrentUser => App.CurrentUser;
@@ -453,6 +458,66 @@ namespace Orders.ViewModels
                     Process.Start(TempFileName);
 
             }
+        }
+
+        //--------------------------------------------------------------------------------
+        // Команда 
+        //--------------------------------------------------------------------------------
+        //private readonly ICommand _OpenFileCommand = null;
+        public ICommand MouseDownCommand => new LambdaCommand(OnMouseDownCommandExecuted, CanMouseDownCommand);
+        private bool CanMouseDownCommand(object p) => true;
+        private void OnMouseDownCommandExecuted(object p)
+        {
+
+            //if (p is RouteAdding ra)
+            //{
+                routeAdding = p as RouteAdding;
+            //}
+            //else
+            //    routeAdding = null;
+
+        }
+
+
+        //--------------------------------------------------------------------------------
+        // Команда 
+        //--------------------------------------------------------------------------------
+        //private readonly ICommand _OpenFileCommand = null;
+        public ICommand MouseMoveCommand => new LambdaCommand(OnMouseMoveCommandExecuted, CanMouseMoveCommand);
+        private bool CanMouseMoveCommand(object p) => true;
+        private void OnMouseMoveCommandExecuted(object p)
+        {
+            if (p is MouseEventArgs e)
+
+                if (Mouse.LeftButton == MouseButtonState.Pressed)
+                {
+
+                    RepositoryFiles repoFiles = new RepositoryFiles();
+                    string TempFileName = repoFiles.GetFile(routeAdding);
+
+                    if (TempFileName != null)
+                    {
+                        TextBlock tb = e.OriginalSource as TextBlock;
+                        DataObject data = new DataObject();
+                        string[] listString = new string[] { TempFileName };
+
+                        //StringCollection sl = new StringCollection();
+                        //sl.Add(TempFileName);
+
+                        //data.SetFileDropList(sl);
+
+                        //if (data.GetDataPresent(DataFormats.FileDrop))
+                        //{
+                        //    string[] files = (string[])data.GetData(DataFormats.FileDrop);
+                        //}
+
+                        data.SetData(DataFormats.FileDrop, listString);
+
+                        DragDrop.DoDragDrop(tb, data, DragDropEffects.Copy);
+
+                    }
+                }
+
         }
 
         //--------------------------------------------------------------------------------

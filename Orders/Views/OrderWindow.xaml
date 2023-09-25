@@ -87,15 +87,25 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="LightYellow" CornerRadius="2" BorderThickness="0.8" BorderBrush="Gray" 
-                                                        Margin="2, 2, 2, 2" Padding="2, 0" HorizontalAlignment="Left" Cursor="Hand" SnapsToDevicePixels="True">
+                                                        Margin="2, 2, 2, 2" Padding="2, 0" HorizontalAlignment="Left" Cursor="Hand" SnapsToDevicePixels="True"  >
                                         <Border.Effect>
                                             <DropShadowEffect ShadowDepth="0" BlurRadius="6" Color="#10000000"/>
                                         </Border.Effect>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseMove">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.MouseMoveCommand, ElementName=listRoutes}" 
+                                                     PassEventArgsToCommand="True"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.MouseDownCommand, ElementName=listRoutes}" 
+                                                     CommandParameter="{Binding }"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
                                         <Border.InputBindings>
                                             <MouseBinding Gesture="LeftDoubleClick" 
                                                                       Command="{Binding DataContext.OpenFileCommand, ElementName=listRoutes}" 
                                                                       CommandParameter="{Binding }"/>
-                                        </Border.InputBindings>
+                                    </Border.InputBindings>
                                         <TextBlock Text="{Binding ad_text}" SnapsToDevicePixels="True"/>
                                     </Border>
                                 </DataTemplate>

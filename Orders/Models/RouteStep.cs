@@ -1,5 +1,6 @@
 namespace Orders.Models
 {
+    using Orders.Infrastructure;
     using Orders.ViewModels.Base;
     using System;
     using System.Collections.Generic;
@@ -26,7 +27,8 @@ namespace Orders.Models
 
         public int r_userId { get; set; }
 
-        public int r_type { get; set; }
+        [Column(TypeName = "int")]
+        public EnumTypesStep r_type { get; set; }
 
         public bool r_enabled { get; set; }
 

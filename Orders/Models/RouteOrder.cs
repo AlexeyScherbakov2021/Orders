@@ -32,7 +32,7 @@ namespace Orders.Models
 
         public int ro_userId { get; set; }
 
-        public int ro_typeId { get; set; }
+        public EnumTypesStep ro_typeId { get; set; }
 
         public int ro_step { get; set; }
 
