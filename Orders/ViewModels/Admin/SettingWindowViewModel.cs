@@ -5,6 +5,7 @@ using Orders.ViewModels.Base;
 using Orders.Wrapping;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Orders.ViewModels
     {
         public static RepositoryBase repo = new RepositoryBase();
 
+        public ObservableCollection<Setting> listSetting { get; set; }
         public UsersControlViewModel UserViewModel { get; set; }
         public RouteControlViewModel RouteViewModel { get; set; }
 
@@ -26,6 +28,7 @@ namespace Orders.ViewModels
             UserViewModel = new UsersControlViewModel();
             RouteViewModel = new RouteControlViewModel(repo);
 
+            listSetting = new ObservableCollection<Setting> (repo.Setting);
         }
 
         #region Команды
@@ -37,6 +40,7 @@ namespace Orders.ViewModels
         private void OnClosingCommandExecuted(object p)
         {
             UserViewModel.SaveUsers();
+            repo.Save();
         }
 
         //public ICommand TabChangeCommand => new LambdaCommand(OnTabChangeCommandExecuted, CanTabChangeCommand);

@@ -41,10 +41,21 @@ namespace Orders.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<RoleUser> RoleUser { get; set; }
-        
+        public virtual DbSet<Setting> Setting { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Setting>()
+                .Property(e => e.s_name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Setting>()
+                .Property(e => e.s_value)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Setting>()
+                .Property(e => e.s_measure)
+                .IsUnicode(false);
 
             modelBuilder.Entity<Order>()
                 .Property(e => e.o_name)

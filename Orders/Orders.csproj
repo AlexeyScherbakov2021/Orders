@@ -124,6 +124,7 @@
     </Compile>
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\RoleUser.cs" />
+    <Compile Include="Models\Setting.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
     <Compile Include="Repository\RepositoryFiles.cs" />
     <Compile Include="ViewModels\AddRouteWindowViewModel.cs" />

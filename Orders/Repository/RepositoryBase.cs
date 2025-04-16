@@ -24,6 +24,7 @@ namespace Orders.Repository
         public IQueryable<Order> Orders => db.Orders;
         public IQueryable<RouteStatus> RouteStatus => db.RouteStatus;
         public IQueryable<Role> Roles => db.Roles.AsNoTracking();
+        public IQueryable<Setting> Setting => db.Setting;
 
 
 
